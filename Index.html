@@ -720,7 +720,6 @@
     </div>
 
     <script>
-        // 11 Official KLC Classes matching spreadsheet exact names and codes
         const DEFAULT_KLC_CLASSES = [
             { id: 'ENG-SD-K', name: 'BEGINNER ENGLISH 1', category: 'English', schedule: 'Monday & Wednesday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
             { id: 'ENG-SD-B1', name: 'BEGINNER ENGLISH 2', category: 'English', schedule: 'Monday & Wednesday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
@@ -736,7 +735,6 @@
             { id: 'COMP-SMA-B1', name: 'BASIC COMPUTER 5', category: 'Computer', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' }
         ];
 
-        // Default 32 Official KLC Students mapped directly from Spreadsheet rows (ID, Name, Kode Kelas, Nama Kelas)
         const DEFAULT_STUDENTS_SHEET = [
             { id: 'SD-K-01', name: 'NI KADEK MELIYANI', classes: ['ENG-SD-K'] },
             { id: 'SD-K-02', name: 'PUTU NGURAH DANANJAYA', classes: ['ENG-SD-K'] },
@@ -777,7 +775,6 @@
             { id: 'SMA-B1-02', name: 'I MADE ANDREYANA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'] }
         ];
 
-        // Global State variables
         window.klcClasses = [];
         window.students = [];
         window.logs = [];
@@ -834,23 +831,14 @@
             }
 
             let gasUrl = localStorage.getItem('klc_gas_url');
-            if (gasUrl) {
-                if (gasUrl.includes('https://') && gasUrl.indexOf('https://', 8) !== -1) {
-                    gasUrl = gasUrl.substring(0, gasUrl.indexOf('https://', 8));
-                    localStorage.setItem('klc_gas_url', gasUrl);
-                }
-                const gasInput = document.getElementById('gasEndpointUrl');
-                if (gasInput) gasInput.value = gasUrl;
-                window.updateSyncBadge(true);
-                window.fetchDataFromGoogleSheets();
-            } else {
+            if (!gasUrl) {
                 const cleanDefaultUrl = "https://script.google.com/macros/s/AKfycbwhjvzFm8SEtKFc7IsC8j9W62_XEN4KrCeCMV-vSs_l9a5qXnTizO-bTIUiF-n8e0v7vA/exec";
                 localStorage.setItem('klc_gas_url', cleanDefaultUrl);
-                const gasInput = document.getElementById('gasEndpointUrl');
-                if (gasInput) gasInput.value = cleanDefaultUrl;
-                window.updateSyncBadge(true);
-                window.fetchDataFromGoogleSheets();
+                gasUrl = cleanDefaultUrl;
             }
+            const gasInput = document.getElementById('gasEndpointUrl');
+            if (gasInput) gasInput.value = gasUrl;
+            window.updateSyncBadge(true);
         };
 
         window.setupDefaultDates = function() {
@@ -1018,7 +1006,7 @@
 
             window.showToast('Fetching latest data from Google Sheets...', 'info');
 
-            fetch(url)
+            fetch(url, { method: 'GET', mode: 'cors' })
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.status === 'success') {
@@ -1037,12 +1025,12 @@
                         window.updateSyncBadge(true);
                         window.showToast('Data synchronized from Google Sheets!', 'success');
                     } else {
-                        window.showToast('Spreadsheet returned empty status. Using local data.', 'warning');
+                        window.showToast('Spreadsheet returned empty status. Using local storage data.', 'warning');
                     }
                 })
                 .catch(err => {
-                    console.error('Fetch error:', err);
-                    window.showToast('CORS/Network error. Using built-in spreadsheet student records.', 'info');
+                    console.warn('Fetch fallback to local/CORS mode:', err);
+                    window.showToast('Running standalone with Local Storage & pre-loaded students.', 'info');
                 });
         };
 
@@ -1077,13 +1065,13 @@
             const classId = selectKelas.value.trim().toUpperCase();
             const tanggal = dateInput.value;
 
-            // Flexible filter checking exact code matches in student.classes array
+            // Flexible filter checking student.classes array or string
             const filteredStudents = window.students.filter(s => {
                 if (!s) return false;
                 if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
                 
                 if (Array.isArray(s.classes)) {
-                    return s.classes.some(c => c.trim().toUpperCase() === classId);
+                    return s.classes.some(c => c && c.trim().toUpperCase() === classId);
                 } else if (typeof s.classes === 'string') {
                     return s.classes.toUpperCase().includes(classId);
                 }
@@ -1164,7 +1152,7 @@
 
         window.markAllStatus = function(status) {
             const classId = document.getElementById('absensiSelectKelas').value.trim().toUpperCase();
-            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classId) && (s.status === 'Active' || s.status === 'Aktif'));
+            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classId) && (s.status === 'Active' || s.status === 'Aktif'));
             classStudents.forEach(s => {
                 window.setRowStatus(s.id, status);
             });
@@ -1180,7 +1168,7 @@
             const className = window.getClassName(classId);
             const tanggal = dateInput.value;
 
-            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classId.trim().toUpperCase()) && (s.status === 'Active' || s.status === 'Aktif'));
+            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classId.trim().toUpperCase()) && (s.status === 'Active' || s.status === 'Aktif'));
 
             if (classStudents.length === 0) {
                 window.showToast('No students to submit attendance for.', 'warning');
@@ -1243,7 +1231,7 @@
 
             const filtered = window.students.filter(s => {
                 const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
-                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classFilter) : true;
+                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classFilter) : true;
                 return matchSearch && matchClass;
             });
 
@@ -1316,7 +1304,7 @@
 
             let filteredStudents = window.students.filter(s => {
                 const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
-                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classFilter) : true;
+                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classFilter) : true;
                 return matchSearch && matchClass;
             });
 
@@ -1464,7 +1452,7 @@
             const checkboxesDiv = document.getElementById('modalClassCheckboxes');
             let cbHtml = '';
             (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(cls => {
-                const isChecked = Array.isArray(student.classes) && student.classes.some(c => c.trim().toUpperCase() === cls.id.toUpperCase()) ? 'checked' : '';
+                const isChecked = Array.isArray(student.classes) && student.classes.some(c => c && c.trim().toUpperCase() === cls.id.toUpperCase()) ? 'checked' : '';
                 cbHtml += `
                     <label class="flex items-center space-x-2.5 p-2 hover:bg-white rounded-xl cursor-pointer text-xs font-extrabold text-slate-700 transition">
                         <input type="checkbox" name="modalClasses" value="${cls.id}" ${isChecked} class="rounded text-sky-600 w-4 h-4">
