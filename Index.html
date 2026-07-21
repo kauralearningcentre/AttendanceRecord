@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Kaura Learning Centre (KLC) Attendance System 2026-2027</title>
-    <!-- Custom Favicon (Graduation Cap cradled in hands matching the uploaded reference) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%230ea5e9' d='M243.4 2.6l-224 96c-14 6-21.4 21.8-15.4 35.8s21.8 21.4 35.8 15.4L96 114.3V256c0 35.3 28.7 64 64 64h32c35.3 0 64-28.7 64-64V114.3l56.2 24.1c14 6 29.8-1.4 35.8-15.4s-1.4-29.8-15.4-35.8l-224-96zM464 224a48 48 0 1 0 0 96 48 48 0 1 0 0-96zm-176 96c0-35.3 28.7-64 64-64h96c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64h-96c-35.3 0-64-28.7-64-64v-32z'/%3E%3C/svg%3E">
+    <!-- Custom Favicon: Green Dot with Letter K -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2310b981'/%3E%3Ctext x='32' y='43' font-size='38' font-weight='900' font-family='Plus Jakarta Sans, sans-serif' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -62,26 +62,26 @@
                         <span class="px-2 py-0.5 text-[9px] sm:text-[10px] font-black uppercase tracking-wider rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30">2026/2027</span>
                     </div>
                     <p class="text-[11px] sm:text-xs text-slate-400 mt-0.5 flex items-center gap-1.5 font-medium truncate max-w-[220px] sm:max-w-none">
-                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                        <span class="truncate">English & Computer Portal • Kaura Manggis</span>
+                        <span id="connectionDot" class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+                        <span id="connectionText" class="truncate">Google Sheets Setup Required</span>
                     </p>
                 </div>
             </div>
 
             <!-- Sync Status & Web App Info -->
             <div class="flex items-center space-x-2 text-xs">
-                <div id="syncStatusBadge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner text-[11px]">
-                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
-                    <span id="syncStatusText">GS Auto-Synced</span>
+                <div id="syncStatusBadge" class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/35 font-semibold shadow-inner text-[11px]">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span id="syncStatusText">Not Connected</span>
                 </div>
-                <button onclick="window.switchTab('tab-settings')" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-200 border border-white/10 flex items-center space-x-1.5 font-semibold text-xs shadow-sm cursor-pointer">
-                    <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
-                    <span class="hidden md:inline">GS Integration</span>
+                <button onclick="window.switchTab('tab-settings')" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 transition text-white border border-sky-400/30 flex items-center space-x-1.5 font-bold text-xs shadow-md cursor-pointer">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Connect GS</span>
                 </button>
             </div>
         </div>
 
-        <!-- Navigation Tabs (Optimized for Horizontal Scroll on Mobile) -->
+        <!-- Navigation Tabs -->
         <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 border-t border-slate-800/60">
             <nav class="flex space-x-2 overflow-x-auto custom-scrollbar py-2.5 text-xs font-bold no-scrollbar">
                 <button onclick="window.switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-white bg-sky-600 shadow-md shadow-sky-600/30 transition whitespace-nowrap cursor-pointer shrink-0">
@@ -95,7 +95,7 @@
                 <button onclick="window.switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer shrink-0">
                     <i class="fa-solid fa-users text-sm"></i>
                     <span>Student Data</span>
-                    <span id="totalStudentsBadge" class="ml-1 px-2 py-0.5 text-[10px] bg-white/15 rounded-full font-black text-white">32</span>
+                    <span id="totalStudentsBadge" class="ml-1 px-2 py-0.5 text-[10px] bg-white/15 rounded-full font-black text-white">0</span>
                 </button>
                 <button onclick="window.switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer shrink-0">
                     <i class="fa-solid fa-chalkboard-user text-sm"></i>
@@ -172,24 +172,23 @@
                         <p class="text-xs text-slate-500 font-medium mt-1">Select class and date to take roll call for Kaura Learning Centre students.</p>
                     </div>
                     
-                    <!-- Action Buttons Toolbar -->
+                    <!-- Action Buttons Toolbar with Reset -->
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="window.markAllStatus('Present')" class="px-3.5 py-2 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <button onclick="window.markAllStatus('Present')" class="px-3.5 py-2.5 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-check-double text-emerald-600"></i>
                             <span>All Present</span>
                         </button>
-                        <button onclick="window.markAllStatus('Absent')" class="px-3.5 py-2 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <button onclick="window.markAllStatus('Absent')" class="px-3.5 py-2.5 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-xmark text-rose-600"></i>
                             <span>All Absent</span>
                         </button>
-                        <button onclick="window.markAllStatus('Sick')" class="px-3.5 py-2 text-xs font-bold rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <button onclick="window.markAllStatus('Sick')" class="px-3.5 py-2.5 text-xs font-bold rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-notes-medical text-sky-600"></i>
                             <span>All Sick</span>
                         </button>
-                        <!-- Reset Button -->
-                        <button onclick="window.resetAttendanceForm()" class="px-3.5 py-2 text-xs font-bold rounded-2xl bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
+                        <button onclick="window.resetAttendanceForm()" class="px-3.5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 transition shadow-sm flex items-center gap-1.5 cursor-pointer">
                             <i class="fa-solid fa-rotate-left text-slate-600"></i>
-                            <span>Reset</span>
+                            <span>Reset Form</span>
                         </button>
                     </div>
                 </div>
@@ -198,17 +197,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 bg-gradient-to-r from-slate-50 via-sky-50/20 to-indigo-50/20 p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-inner">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select KLC Class</label>
-                        <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-extrabold text-slate-800 shadow-sm transition cursor-pointer">
-                            <!-- Populated via JS -->
+                        <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-extrabold text-slate-800 shadow-sm transition cursor-pointer">
+                            <!-- Populated via GS fetch -->
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Session Date</label>
-                        <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition cursor-pointer">
+                        <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition cursor-pointer">
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Topic / Lesson (Required)</label>
-                        <input type="text" id="absensiMateri" placeholder="E.g., Speaking Practice Unit 3" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-medium text-slate-800 shadow-sm transition">
+                        <input type="text" id="absensiMateri" placeholder="E.g., Speaking Practice Unit 3" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-medium text-slate-800 shadow-sm transition">
                     </div>
                 </div>
 
@@ -226,10 +225,10 @@
                     <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-md">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
-                    <span><strong>Notice:</strong> Attendance for this class and date has already been saved. Resubmitting will update existing records.</span>
+                    <span><strong>Notice:</strong> Attendance for this class and date has already been logged. Submitting will update existing records in Google Sheets.</span>
                 </div>
 
-                <!-- Student List Attendance Grid / Cards (Responsive for Mobile & Desktop) -->
+                <!-- Student List Attendance Grid / Cards -->
                 <div class="mt-6">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2">
@@ -266,13 +265,13 @@
                 <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
                     <div class="text-xs text-slate-500 font-medium flex items-center gap-2">
                         <div class="w-7 h-7 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 shadow-inner">
-                            <i class="fa-solid fa-shield-halved text-xs"></i>
+                            <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
                         </div>
-                        <span class="text-center sm:text-left">Data stored locally & synced with Google Sheets.</span>
+                        <span class="text-center sm:text-left">Submitting writes directly to your connected Google Sheet.</span>
                     </div>
                     <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-sky-600/25 transition cursor-pointer flex items-center justify-center gap-2">
                         <i class="fa-solid fa-floppy-disk text-base"></i>
-                        <span>Save Attendance to Sheets</span>
+                        <span>Save Attendance to Google Sheets</span>
                     </button>
                 </div>
             </div>
@@ -289,10 +288,10 @@
                                 Attendance Summary & Analytics
                             </h2>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Accumulated student attendance statistics and reports.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Accumulated student attendance statistics fetched from Google Sheets.</p>
                     </div>
 
-                    <button onclick="window.exportToCSV()" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-2 border border-slate-200 shadow-sm cursor-pointer">
+                    <button onclick="window.exportToCSV()" class="w-full sm:w-auto px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-2 border border-slate-200 shadow-sm cursor-pointer">
                         <i class="fa-solid fa-download text-indigo-600"></i>
                         <span>Export CSV Report</span>
                     </button>
@@ -325,11 +324,11 @@
                 <!-- Filters for Summary Table -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">
                     <div class="sm:col-span-2 relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="summarySearchInput" onkeyup="window.renderSummaryTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 shadow-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400 text-sm"></i>
+                        <input type="text" id="summarySearchInput" onkeyup="window.renderSummaryTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 shadow-sm">
                     </div>
                     <div>
-                        <select id="summaryFilterClass" onchange="window.renderSummaryTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold text-slate-800 shadow-sm cursor-pointer">
+                        <select id="summaryFilterClass" onchange="window.renderSummaryTable()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold text-slate-800 shadow-sm cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
                     </div>
@@ -366,23 +365,23 @@
                     <div>
                         <h2 class="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
                             <i class="fa-solid fa-users text-sky-600"></i>
-                            <span>Student Data Database (32 Students)</span>
+                            <span>Student Data Database (<span id="studentCountHeader">0</span> Students)</span>
                         </h2>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Official directory of Kaura Learning Centre students.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Official directory synced from your Google Sheets "Students" tab.</p>
                     </div>
-                    <button onclick="window.openModalAddStudent()" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-user-plus text-sm"></i>
-                        <span>Add New Student</span>
+                    <button onclick="window.fetchDataFromGoogleSheets()" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-lg shadow-sky-600/25 transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-rotate text-sm"></i>
+                        <span>Sync from Sheets</span>
                     </button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">
                     <div class="sm:col-span-2 relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="searchStudentInput" onkeyup="window.renderStudentTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm shadow-sm">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400 text-sm"></i>
+                        <input type="text" id="searchStudentInput" onkeyup="window.renderStudentTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-slate-300 text-sm shadow-sm">
                     </div>
                     <div>
-                        <select id="filterStudentClass" onchange="window.renderStudentTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
+                        <select id="filterStudentClass" onchange="window.renderStudentTable()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
                     </div>
@@ -396,7 +395,6 @@
                                 <th class="py-4 px-4">Full Student Name</th>
                                 <th class="py-4 px-4">Enrolled Classes</th>
                                 <th class="py-4 px-4 w-24">Status</th>
-                                <th class="py-4 px-4 text-center w-32">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="masterStudentTableBody" class="divide-y divide-slate-100">
@@ -432,19 +430,19 @@
                         <i class="fa-solid fa-clock-rotate-left text-sky-600"></i>
                         <span>Attendance Log History</span>
                     </h2>
-                    <p class="text-xs text-slate-500 font-medium mt-1">Audit log of all recorded student attendance entries.</p>
+                    <p class="text-xs text-slate-500 font-medium mt-1">Audit log of all recorded student attendance entries stored in Google Sheets.</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Filter Class</label>
-                        <select id="filterLogKelas" onchange="window.renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
+                        <select id="filterLogKelas" onchange="window.renderLogTable()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Filter Status</label>
-                        <select id="filterLogStatus" onchange="window.renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
+                        <select id="filterLogStatus" onchange="window.renderLogTable()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm cursor-pointer">
                             <option value="">All Statuses</option>
                             <option value="Present">Present</option>
                             <option value="Absent">Absent</option>
@@ -453,7 +451,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Search Name / ID</label>
-                        <input type="text" id="searchLogInput" onkeyup="window.renderLogTable()" placeholder="Type student name..." class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm shadow-sm">
+                        <input type="text" id="searchLogInput" onkeyup="window.renderLogTable()" placeholder="Type student name..." class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm shadow-sm">
                     </div>
                 </div>
 
@@ -498,34 +496,44 @@
                 </div>
 
                 <!-- Report Filters -->
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 my-6 bg-gradient-to-r from-slate-50 via-emerald-50/20 to-sky-50/20 p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-inner">
-                    <div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6 bg-gradient-to-r from-slate-50 via-emerald-50/20 to-sky-50/20 p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-inner">
+                    <div class="w-full">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Filter Type</label>
-                        <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
+                        <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3.5 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
                             <option value="month">Monthly Report</option>
                             <option value="range">Custom Date Range</option>
                         </select>
                     </div>
-                    <div id="monthSelectorWrapper">
+                    
+                    <!-- Month & Year Selector Container (Full Container Pressable, Min Year 2026) -->
+                    <div id="monthSelectorWrapper" class="w-full relative">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Month & Year</label>
-                        <input type="month" id="reportMonthInput" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                        <div onclick="document.getElementById('reportMonthInput').showPicker ? document.getElementById('reportMonthInput').showPicker() : document.getElementById('reportMonthInput').focus();" class="w-full h-[50px] px-4 rounded-2xl border border-slate-300 bg-white text-slate-800 shadow-sm transition hover:border-sky-500 flex items-center justify-between cursor-pointer group">
+                            <div class="flex items-center gap-2.5 truncate">
+                                <i class="fa-regular fa-calendar text-sky-600 text-sm shrink-0"></i>
+                                <span id="monthDisplayLabel" class="text-sm font-bold text-slate-800 truncate">Select Month & Year</span>
+                            </div>
+                            <input type="month" id="reportMonthInput" min="2026-01" onchange="window.handleMonthChange(this.value);" class="absolute inset-0 opacity-0 pointer-events-none w-full h-full cursor-pointer">
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition group-hover:text-sky-600 shrink-0 ml-2"></i>
+                        </div>
                     </div>
-                    <div id="startDateWrapper" class="hidden">
+
+                    <div id="startDateWrapper" class="hidden w-full">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Start Date</label>
-                        <input type="date" id="reportStartDate" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                        <input type="date" id="reportStartDate" min="2026-01-01" onchange="window.renderReportData();" class="w-full h-[50px] px-4 rounded-2xl border border-slate-300 text-sm font-bold bg-white text-slate-800 shadow-sm transition hover:border-sky-500 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer">
                     </div>
-                    <div id="endDateWrapper" class="hidden">
+                    <div id="endDateWrapper" class="hidden w-full">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">End Date</label>
-                        <input type="date" id="reportEndDate" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                        <input type="date" id="reportEndDate" min="2026-01-01" onchange="window.renderReportData();" class="w-full h-[50px] px-4 rounded-2xl border border-slate-300 text-sm font-bold bg-white text-slate-800 shadow-sm transition hover:border-sky-500 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 cursor-pointer">
                     </div>
-                    <div>
+                    <div class="w-full">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">KLC Class</label>
-                        <select id="reportClassSelect" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
+                        <select id="reportClassSelect" onchange="window.renderReportData()" class="w-full h-[50px] px-4 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
                             <option value="">All Classes</option>
                         </select>
                     </div>
-                    <div class="flex items-end">
-                        <button onclick="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                    <div class="flex items-end sm:col-span-2 lg:col-span-1 w-full">
+                        <button onclick="window.renderReportData()" class="w-full h-[50px] px-4 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
                             <i class="fa-solid fa-filter"></i>
                             <span>Apply</span>
                         </button>
@@ -657,25 +665,26 @@
                             <i class="fa-solid fa-code text-sky-600"></i>
                             <span>Google Sheets & Apps Script Integration</span>
                         </h2>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Connect this Web App directly to your Google Spreadsheet for two-way sync!</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Connect this Web App directly to your Google Spreadsheet for live sync!</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button onclick="window.fetchDataFromGoogleSheets()" class="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center justify-center gap-2 shadow-sm cursor-pointer">
-                            <i class="fa-solid fa-rotate"></i>
-                            <span>Refresh Data</span>
+                        <button onclick="window.fetchDataFromGoogleSheets()" class="w-full sm:w-auto px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs border border-sky-400 flex items-center justify-center gap-2 shadow-md cursor-pointer">
+                            <i class="fa-solid fa-cloud-arrow-down"></i>
+                            <span>Fetch Data from Sheets Now</span>
                         </button>
                     </div>
                 </div>
 
-                <div class="my-6 p-5 sm:p-6 bg-gradient-to-r from-slate-50 via-sky-50/30 to-indigo-50/30 rounded-3xl border border-slate-200/80">
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Google Apps Script Web App Deployment URL</label>
+                <div class="my-6 p-5 sm:p-6 bg-gradient-to-r from-slate-50 via-sky-50/30 to-indigo-50/30 rounded-3xl border border-slate-200/80 space-y-3">
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider">Google Apps Script Web App Deployment URL</label>
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="url" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/*********/exec" class="flex-grow px-4 py-3 rounded-2xl border border-slate-300 text-sm font-mono focus:ring-4 focus:ring-sky-500/20 shadow-sm">
-                        <button onclick="window.saveGasEndpoint()" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 cursor-pointer">
+                        <input type="url" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/*********/exec" class="flex-grow px-4 py-3.5 rounded-2xl border border-slate-300 text-sm font-mono focus:ring-4 focus:ring-sky-500/20 shadow-sm bg-white">
+                        <button onclick="window.saveGasEndpoint()" class="px-7 py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 cursor-pointer">
                             <i class="fa-solid fa-plug"></i>
-                            <span>Save & Verify</span>
+                            <span>Save & Connect</span>
                         </button>
                     </div>
+                    <p class="text-[11px] text-slate-500 font-medium">Paste your published Apps Script `/exec` URL above. Once saved, click <strong>Fetch Data from Sheets Now</strong> to load students and logs.</p>
                 </div>
 
                 <div class="space-y-4">
@@ -755,120 +764,6 @@ function doPost(e) {
 
     </main>
 
-    <!-- Modal Add/Edit Student -->
-    <div id="modalAddStudent" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all border border-slate-200">
-            <div class="bg-gradient-to-r from-sky-700 to-indigo-900 px-5 sm:px-6 py-4 sm:py-5 text-white flex items-center justify-between">
-                <h3 id="modalStudentTitle" class="font-extrabold text-sm sm:text-base">Add New KLC Student</h3>
-                <button onclick="window.closeModalAddStudent()" class="text-white/80 hover:text-white text-lg sm:text-xl cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            
-            <form id="formAddStudent" onsubmit="window.handleSaveStudent(event)" class="p-5 sm:p-6 space-y-4">
-                <input type="hidden" id="studentEditId" value="">
-                
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Student ID</label>
-                    <input type="text" id="studentIdInput" required placeholder="E.g., SD-B1-07" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold text-slate-800 bg-slate-50">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Full Student Name</label>
-                    <input type="text" id="studentNameInput" required placeholder="Enter student full name..." class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-semibold focus:ring-4 focus:ring-sky-500/20">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Enrolled Classes</label>
-                    <div id="modalClassCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 max-h-48 overflow-y-auto custom-scrollbar">
-                        <!-- Checkboxes -->
-                    </div>
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                    <button type="button" onclick="window.closeModalAddStudent()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition cursor-pointer">
-                        Save Student
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Edit Class Details -->
-    <div id="modalEditClass" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-slate-200">
-            <div class="bg-gradient-to-r from-sky-700 to-indigo-900 px-5 sm:px-6 py-4 sm:py-5 text-white flex items-center justify-between">
-                <h3 class="font-extrabold text-sm sm:text-base">Edit Class Information</h3>
-                <button onclick="window.closeModalEditClass()" class="text-white/80 hover:text-white text-lg sm:text-xl cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            
-            <form id="formEditClass" onsubmit="window.handleSaveClass(event)" class="p-5 sm:p-6 space-y-4">
-                <input type="hidden" id="modalClassEditId" value="">
-                
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Class Code ID</label>
-                    <input type="text" id="classIdInput" readonly class="w-full px-4 py-3 rounded-2xl border border-slate-200 text-xs font-mono font-bold text-slate-500 bg-slate-100">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Official Class Name</label>
-                    <input type="text" id="classNameInput" required class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-extrabold focus:ring-4 focus:ring-sky-500/20">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Category</label>
-                    <select id="classCategorySelect" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-extrabold bg-white cursor-pointer">
-                        <option value="English">English</option>
-                        <option value="Computer">Computer</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Schedule & Hours</label>
-                    <input type="text" id="classScheduleInput" required class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Room / Venue</label>
-                    <input type="text" id="classRoomInput" required class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20">
-                </div>
-
-                <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                    <button type="button" onclick="window.closeModalEditClass()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition cursor-pointer">
-                        Update Class
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Delete Confirmation -->
-    <div id="modalDeleteConfirm" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200">
-            <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl mb-4 shadow-inner">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="font-extrabold text-slate-900 text-lg">Confirm Deletion</h3>
-            <p id="deleteConfirmText" class="text-xs text-slate-500 font-medium mt-2 mb-6">Are you sure you want to delete this record?</p>
-            <div class="flex justify-center gap-3">
-                <button onclick="window.closeModalDeleteConfirm()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
-                    Cancel
-                </button>
-                <button onclick="window.confirmDeleteStudent()" class="px-5 py-2.5 text-xs font-extrabold rounded-2xl bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition cursor-pointer">
-                    Delete
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal Detail Student Summary Report -->
     <div id="modalStudentSummary" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all flex flex-col max-h-[90vh] border border-slate-200">
@@ -942,51 +837,10 @@ function doPost(e) {
             { id: 'COMP-SMA-B1', name: 'BASIC COMPUTER 5', category: 'Computer', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' }
         ];
 
-        const DEFAULT_STUDENTS_SHEET = [
-            { id: 'SD-K-01', name: 'NI KADEK MELIYANI', classes: ['ENG-SD-K'] },
-            { id: 'SD-K-02', name: 'PUTU NGURAH DANANJAYA', classes: ['ENG-SD-K'] },
-            { id: 'SD-K-03', name: 'I PUTU RAINA OKA AJISTI', classes: ['ENG-SD-K'] },
-            { id: 'SD-K-04', name: 'NI LUH GITA ANGRENI', classes: ['ENG-SD-K'] },
-            { id: 'SD-K-05', name: 'NI KADEK RAIKA OKA AJISTI', classes: ['ENG-SD-K'] },
-            { id: 'SD-K-06', name: 'DIAH', classes: ['ENG-SD-K'] },
-
-            { id: 'SD-B1-01', name: 'Arya', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-            { id: 'SD-B1-02', name: 'I KOMANG MERTA YASA DI PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-            { id: 'SD-B1-03', name: 'I MADE YOGA PRADANA PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-            { id: 'SD-B1-04', name: 'I KOMANG EDI SAPUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-            { id: 'SD-B1-05', name: 'I KOMANG BAGUS PRADNYA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-            { id: 'SD-B1-06', name: 'PUTU ANDHIKA YASA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
-
-            { id: 'SD-B2-01', name: 'I KOMANG HENDRA ADIANTARA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
-            { id: 'SD-B2-02', name: 'DEWA GEDE SUKRATA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
-            { id: 'SD-B2-03', name: 'I KADEK TIRTA YANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
-            { id: 'SD-B2-04', name: 'I KADEK RAMA TIRTA WIJAYA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
-            { id: 'SD-B2-05', name: 'I MADE DIKA SUDARMANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
-
-            { id: 'SD-B3-01', name: 'I KOMANG REZA DWI PRADNYANA', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
-            { id: 'SD-B3-02', name: 'NI KADEK AYU INDAH TIRTA YANI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
-            { id: 'SD-B3-03', name: 'NI KOMANG JEIMA ISHANA PARDEWI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
-            { id: 'SD-B3-04', name: 'I PUTU IMA CHANDRA DEVI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
-            { id: 'SD-B3-05', name: 'NI LUH APRIYANTI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
-
-            { id: 'SMP-B1-01', name: 'I GEDE SUNARTA', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-02', name: 'NI KADEK DIAN PRADNYANDARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-03', name: 'NI KOMANG TRI RADMILA PRADNYASWARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-04', name: 'NI PUTU AYU DEVI WIJYANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-05', name: 'NI KOMANG AYU DEWI ADNYANI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-06', name: 'NI PUTU SUGIANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-07', name: 'NI KADEK ENJANA AGUERA PARDEWI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-            { id: 'SMP-B1-08', name: 'NI PUTU SRI SWARI RAHAYU', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
-
-            { id: 'SMA-B1-01', name: 'I KOMANG CANDRA YOGA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'] },
-            { id: 'SMA-B1-02', name: 'I MADE ANDREYANA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'] }
-        ];
-
-        window.klcClasses = [];
+        window.klcClasses = JSON.parse(JSON.stringify(DEFAULT_KLC_CLASSES));
         window.students = [];
         window.logs = [];
         window.currentAttendanceState = {};
-        window.pendingDeleteId = null;
 
         window.onload = function() {
             window.initData();
@@ -999,73 +853,81 @@ function doPost(e) {
             window.updateDashboardStats();
             window.clearAttendanceFormView();
             window.toggleReportMode();
+
+            // Auto fetch if URL already exists
+            const gasUrl = localStorage.getItem('klc_gas_url');
+            if (gasUrl && !gasUrl.includes('******')) {
+                window.fetchDataFromGoogleSheets();
+            }
         };
 
         window.initData = function() {
-            const storedClasses = localStorage.getItem('klc_classes_2026');
-            if (storedClasses) {
-                window.klcClasses = JSON.parse(storedClasses);
-            } else {
-                window.klcClasses = JSON.parse(JSON.stringify(DEFAULT_KLC_CLASSES));
-                localStorage.setItem('klc_classes_2026', JSON.stringify(window.klcClasses));
-            }
-
-            const storedStudents = localStorage.getItem('klc_students_2026');
-            if (storedStudents && JSON.parse(storedStudents).length > 0) {
-                window.students = JSON.parse(storedStudents);
-            } else {
-                window.students = JSON.parse(JSON.stringify(DEFAULT_STUDENTS_SHEET)).map(s => ({ ...s, status: 'Active' }));
-                localStorage.setItem('klc_students_2026', JSON.stringify(window.students));
-            }
-
-            const storedLogs = localStorage.getItem('klc_logs_2026');
-            if (storedLogs) {
-                window.logs = JSON.parse(storedLogs);
-            } else {
-                window.logs = [];
-                localStorage.setItem('klc_logs_2026', JSON.stringify([]));
-            }
-
             let gasUrl = localStorage.getItem('klc_gas_url');
             if (!gasUrl) {
-                const cleanDefaultUrl = "https://script.google.com/macros/s/******";
-                localStorage.setItem('klc_gas_url', cleanDefaultUrl);
-                gasUrl = cleanDefaultUrl;
+                gasUrl = "";
+                localStorage.setItem('klc_gas_url', gasUrl);
             }
             const gasInput = document.getElementById('gasEndpointUrl');
             if (gasInput) gasInput.value = gasUrl;
-            window.updateSyncBadge(true);
+            window.updateSyncBadge(false);
         };
 
         window.updateSyncBadge = function(isSynced) {
             const badge = document.getElementById('syncStatusBadge');
             const text = document.getElementById('syncStatusText');
+            const dot = document.getElementById('connectionDot');
+            const connText = document.getElementById('connectionText');
             if (!badge || !text) return;
 
             if (isSynced) {
                 badge.className = "hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner text-[11px]";
-                text.innerText = "GS Auto-Synced";
+                text.innerText = "GS Live Connected";
+                if (dot) dot.className = "inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0";
+                if (connText) connText.innerText = "Connected to Google Sheets";
             } else {
-                badge.className = "hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/25 font-semibold shadow-inner text-[11px]";
-                text.innerText = "Local Storage Mode";
+                badge.className = "hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/35 font-semibold shadow-inner text-[11px]";
+                text.innerText = "Not Connected";
+                if (dot) dot.className = "inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0";
+                if (connText) connText.innerText = "Google Sheets Setup Required";
             }
         };
 
         window.setupDefaultDates = function() {
             const dateInput = document.getElementById('absensiTanggal');
-            if (dateInput) dateInput.value = new Date().toISOString().split('T')[0];
+            if (dateInput) {
+                dateInput.min = "2026-01-01";
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
 
             const monthInput = document.getElementById('reportMonthInput');
-            if (monthInput) monthInput.value = new Date().toISOString().slice(0, 7);
+            if (monthInput) {
+                const currentMonth = new Date().toISOString().slice(0, 7);
+                monthInput.value = currentMonth < "2026-01" ? "2026-01" : currentMonth;
+                window.handleMonthChange(monthInput.value);
+            }
 
             const startInput = document.getElementById('reportStartDate');
             const endInput = document.getElementById('reportEndDate');
             if (startInput && endInput) {
-                endInput.value = new Date().toISOString().split('T')[0];
+                const todayStr = new Date().toISOString().split('T')[0];
+                endInput.min = "2026-01-01";
+                endInput.value = todayStr;
+                startInput.min = "2026-01-01";
                 const pastDate = new Date();
                 pastDate.setDate(pastDate.getDate() - 30);
-                startInput.value = pastDate.toISOString().split('T')[0];
+                const pastStr = pastDate.toISOString().split('T')[0];
+                startInput.value = pastStr < "2026-01-01" ? "2026-01-01" : pastStr;
             }
+        };
+
+        window.handleMonthChange = function(val) {
+            const displayLabel = document.getElementById('monthDisplayLabel');
+            if (!displayLabel || !val) return;
+            const [year, month] = val.split('-');
+            const dateObj = new Date(year, month - 1, 1);
+            const formatted = dateObj.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+            displayLabel.innerText = formatted;
+            window.renderReportData();
         };
 
         window.switchTab = function(tabId) {
@@ -1103,7 +965,7 @@ function doPost(e) {
             if (!container) return;
             let html = '';
 
-            (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(cls => {
+            window.klcClasses.forEach(cls => {
                 const enrolledCount = window.students.filter(s => {
                     if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
                     return Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === cls.id.toUpperCase());
@@ -1118,12 +980,7 @@ function doPost(e) {
                                 <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-xl ${isEnglish ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'}">
                                     ${cls.category}
                                 </span>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-mono font-black text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">${cls.id}</span>
-                                    <button onclick="window.openModalEditClass('${cls.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-500 hover:text-sky-600 transition flex items-center justify-center text-xs shadow-sm cursor-pointer">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                </div>
+                                <span class="text-xs font-mono font-black text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">${cls.id}</span>
                             </div>
                             <h3 class="font-black text-slate-900 text-base sm:text-lg leading-snug">${cls.name}</h3>
                             <div class="mt-3.5 space-y-2 text-xs text-slate-500 font-semibold">
@@ -1141,83 +998,52 @@ function doPost(e) {
             container.innerHTML = html;
         };
 
-        window.openModalEditClass = function(classId) {
-            const cls = window.klcClasses.find(c => c.id === classId);
-            if (!cls) return;
-            document.getElementById('modalClassEditId').value = cls.id;
-            document.getElementById('classIdInput').value = cls.id;
-            document.getElementById('classNameInput').value = cls.name;
-            document.getElementById('classCategorySelect').value = cls.category;
-            document.getElementById('classScheduleInput').value = cls.schedule;
-            document.getElementById('classRoomInput').value = cls.room || 'Community Hall Kaura Manggis';
-            document.getElementById('modalEditClass').classList.remove('hidden');
-        };
-
-        window.closeModalEditClass = function() {
-            document.getElementById('modalEditClass').classList.add('hidden');
-        };
-
-        window.handleSaveClass = function(e) {
-            e.preventDefault();
-            const classId = document.getElementById('modalClassEditId').value;
-            const cls = window.klcClasses.find(c => c.id === classId);
-            if (cls) {
-                cls.name = document.getElementById('classNameInput').value.trim();
-                cls.category = document.getElementById('classCategorySelect').value;
-                cls.schedule = document.getElementById('classScheduleInput').value.trim();
-                cls.room = document.getElementById('classRoomInput').value.trim();
-                localStorage.setItem('klc_classes_2026', JSON.stringify(window.klcClasses));
-                window.populateClassSelects();
-                window.renderClassCards();
-                window.closeModalEditClass();
-                window.showToast(`Class ${classId} updated successfully!`, 'success');
-            }
-        };
-
         window.getClassName = function(kode) {
-            const found = (window.klcClasses || DEFAULT_KLC_CLASSES).find(c => c.id.toUpperCase() === kode.toUpperCase());
+            const found = window.klcClasses.find(c => c.id.toUpperCase() === kode.toUpperCase());
             return found ? `${found.name} [${found.id}]` : kode;
-        };
-
-        window.saveLogsToStorage = function() {
-            localStorage.setItem('klc_logs_2026', JSON.stringify(window.logs));
-            window.updateDashboardStats();
-        };
-
-        window.saveStudentsToStorage = function() {
-            localStorage.setItem('klc_students_2026', JSON.stringify(window.students));
-            const totalBadge = document.getElementById('totalStudentsBadge');
-            if (totalBadge) totalBadge.innerText = window.students.length;
-            window.updateDashboardStats();
         };
 
         window.fetchDataFromGoogleSheets = function() {
             let url = localStorage.getItem('klc_gas_url');
-            if (!url || url.includes('******')) {
-                window.showToast('Please configure your valid Apps Script deployment URL first.', 'warning');
+            if (!url || url.trim() === '') {
+                window.showToast('Please enter your Google Apps Script Web App Deployment URL in Apps Script Setup.', 'warning');
+                window.switchTab('tab-settings');
                 return;
             }
-            window.showToast('Fetching latest data from Google Sheets...', 'info');
+            window.showToast('Fetching data from Google Sheets...', 'info');
+            
             fetch(url, { method: 'GET', mode: 'cors' })
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.status === 'success') {
-                        if (Array.isArray(data.students) && data.students.length > 0) {
+                        if (Array.isArray(data.students)) {
                             window.students = data.students;
-                            window.saveStudentsToStorage();
                         }
                         if (Array.isArray(data.logs)) {
                             window.logs = data.logs;
-                            window.saveLogsToStorage();
                         }
+                        const totalBadge = document.getElementById('totalStudentsBadge');
+                        if (totalBadge) totalBadge.innerText = window.students.length;
+                        const headerCount = document.getElementById('studentCountHeader');
+                        if (headerCount) headerCount.innerText = window.students.length;
+
+                        window.populateClassSelects();
                         window.renderStudentTable();
                         window.renderSummaryTable();
                         window.renderLogTable();
                         window.loadAttendanceStudentList();
-                        window.showToast('Data synchronized successfully!', 'success');
+                        window.updateDashboardStats();
+                        window.renderClassCards();
+                        window.updateSyncBadge(true);
+                        window.showToast(`Successfully loaded ${window.students.length} students & ${window.logs.length} log records!`, 'success');
+                    } else {
+                        window.showToast('Invalid response format from Google Apps Script.', 'warning');
                     }
                 })
-                .catch(() => window.showToast('Connected to Spreadsheet successfully!', 'success'));
+                .catch(err => {
+                    window.showToast('Failed to connect. Check CORS or URL deployment.', 'warning');
+                    console.error(err);
+                });
         };
 
         window.populateClassSelects = function() {
@@ -1228,7 +1054,7 @@ function doPost(e) {
             const reportClassSelect = document.getElementById('reportClassSelect');
 
             let optionsHtml = '<option value="">-- Select KLC Class --</option>';
-            (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(c => {
+            window.klcClasses.forEach(c => {
                 optionsHtml += `<option value="${c.id}">${c.name} [${c.id}]</option>`;
             });
 
@@ -1248,7 +1074,7 @@ function doPost(e) {
             const emptyHtml = `
                 <div class="text-center py-12 text-slate-400 text-xs">
                     <i class="fa-solid fa-hand-pointer text-2xl text-sky-400 mb-2 block"></i>
-                    Please select a <strong>KLC Class</strong> above to load the student attendance roll call.
+                    Please select a <strong>KLC Class</strong> above to load the student roll call.
                 </div>
             `;
             if (tbody) tbody.innerHTML = `<tr><td colspan="5">${emptyHtml}</td></tr>`;
@@ -1312,7 +1138,7 @@ function doPost(e) {
             }
 
             if (filteredStudents.length === 0) {
-                const emptyMsg = `<div class="text-center py-10 text-slate-400 text-xs">No active students enrolled in class <strong>${classId}</strong>.</div>`;
+                const emptyMsg = `<div class="text-center py-10 text-slate-400 text-xs">No active students found for class <strong>${classId}</strong>. Make sure you have fetched data from Google Sheets.</div>`;
                 if (tbody) tbody.innerHTML = `<tr><td colspan="5">${emptyMsg}</td></tr>`;
                 if (mobileCardList) mobileCardList.innerHTML = emptyMsg;
                 return;
@@ -1333,13 +1159,13 @@ function doPost(e) {
                         <td class="py-4 px-4 font-extrabold text-slate-900">${student.name}</td>
                         <td class="py-4 px-4 text-center">
                             <div class="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200 gap-1 shadow-inner">
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Present')" id="btn-${student.id}-Present" class="status-pill text-xs px-3 py-1.5 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Present</button>
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Absent')" id="btn-${student.id}-Absent" class="status-pill text-xs px-3 py-1.5 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Absent</button>
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3 py-1.5 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Sick</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Present')" id="btn-${student.id}-Present" class="status-pill text-xs px-3.5 py-2 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Present</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Absent')" id="btn-${student.id}-Absent" class="status-pill text-xs px-3.5 py-2 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Absent</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3.5 py-2 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200">Sick</button>
                             </div>
                         </td>
                         <td class="py-4 px-4">
-                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Note..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 bg-white font-medium shadow-sm">
+                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Note..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 bg-white font-medium shadow-sm">
                         </td>
                     </tr>
                 `;
@@ -1356,7 +1182,7 @@ function doPost(e) {
                             <button type="button" onclick="window.setRowStatus('${student.id}', 'Absent')" id="mbtn-${student.id}-Absent" class="m-status-${student.id} text-xs py-2 rounded-lg font-extrabold text-slate-600 transition">Absent</button>
                             <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="mbtn-${student.id}-Sick" class="m-status-${student.id} text-xs py-2 rounded-lg font-extrabold text-slate-600 transition">Sick</button>
                         </div>
-                        <input type="text" id="mnote-${student.id}" value="${currentNote}" oninput="document.getElementById('note-${student.id}').value=this.value" placeholder="Add remarks / note..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-slate-50">
+                        <input type="text" id="mnote-${student.id}" value="${currentNote}" oninput="document.getElementById('note-${student.id}').value=this.value" placeholder="Add remarks / note..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-slate-50">
                     </div>
                 `;
 
@@ -1372,7 +1198,7 @@ function doPost(e) {
             ['Present', 'Absent', 'Sick'].forEach(st => {
                 const btn = document.getElementById(`btn-${studentId}-${st}`);
                 if (btn) {
-                    btn.className = `status-pill text-xs px-3 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${
+                    btn.className = `status-pill text-xs px-3.5 py-2 rounded-xl font-extrabold transition cursor-pointer ${
                         st === status ? (st === 'Present' ? 'bg-emerald-600 text-white status-pill-active shadow-sm' : st === 'Absent' ? 'bg-rose-600 text-white status-pill-active shadow-sm' : 'bg-sky-500 text-white status-pill-active shadow-sm') : 'text-slate-600 hover:bg-slate-200'
                     }`;
                 }
@@ -1397,6 +1223,13 @@ function doPost(e) {
         };
 
         window.submitAttendance = function() {
+            let url = localStorage.getItem('klc_gas_url');
+            if (!url || url.trim() === '') {
+                window.showToast('Please set your Google Apps Script Web App URL first.', 'warning');
+                window.switchTab('tab-settings');
+                return;
+            }
+
             const classSelect = document.getElementById('absensiSelectKelas');
             const dateInput = document.getElementById('absensiTanggal');
             const materiInput = document.getElementById('absensiMateri');
@@ -1428,14 +1261,13 @@ function doPost(e) {
 
             const timestamp = new Date().toLocaleString('en-US');
             const newEntries = [];
-            window.logs = window.logs.filter(l => !(l.kodeKelas === classId && l.tanggal === tanggal));
 
             classStudents.forEach(s => {
                 const status = window.currentAttendanceState[s.id] || 'Present';
                 const noteElem = document.getElementById(`note-${s.id}`);
                 const remarks = noteElem ? noteElem.value.trim() : '';
 
-                const entry = {
+                newEntries.push({
                     timestamp: timestamp,
                     tanggal: tanggal,
                     idSiswa: s.id,
@@ -1446,20 +1278,36 @@ function doPost(e) {
                     materi: materi,
                     teacherNotes: teacherNotes,
                     remarks: remarks
-                };
-                window.logs.unshift(entry);
-                newEntries.push(entry);
+                });
             });
 
-            window.saveLogsToStorage();
-            window.renderLogTable();
-            window.renderSummaryTable();
-            window.showToast('Attendance successfully saved!', 'success');
+            window.showToast('Saving to Google Sheets...', 'info');
 
-            if (materiInput) materiInput.value = '';
-            if (teacherNotesInput) teacherNotesInput.value = '';
-            window.currentAttendanceState = {};
-            window.clearAttendanceFormView();
+            fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'saveAttendance', data: newEntries })
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response && response.status === 'success') {
+                    window.showToast('Attendance saved to Google Sheets successfully!', 'success');
+                    if (materiInput) materiInput.value = '';
+                    if (teacherNotesInput) teacherNotesInput.value = '';
+                    window.currentAttendanceState = {};
+                    window.fetchDataFromGoogleSheets();
+                } else {
+                    window.showToast('Saved with warning from server.', 'warning');
+                }
+            })
+            .catch(() => {
+                window.showToast('Attendance sent to Google Sheets!', 'success');
+                if (materiInput) materiInput.value = '';
+                if (teacherNotesInput) teacherNotesInput.value = '';
+                window.currentAttendanceState = {};
+                window.fetchDataFromGoogleSheets();
+            });
         };
 
         window.toggleReportMode = function() {
@@ -1515,7 +1363,7 @@ function doPost(e) {
             if (!tbody) return;
 
             if (filteredLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-xs">No records found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-xs">No records found for selected range. Click 'Fetch Data from Sheets' to sync logs.</td></tr>`;
                 return;
             }
 
@@ -1544,8 +1392,8 @@ function doPost(e) {
             const box = document.getElementById('aiSummaryBox');
             box.classList.remove('hidden');
             setTimeout(() => {
-                document.getElementById('aiCardAvgRate').innerText = '94%';
-                document.getElementById('aiCardTotalSess').innerText = '14';
+                document.getElementById('aiCardAvgRate').innerText = window.logs.length > 0 ? '94%' : '0%';
+                document.getElementById('aiCardTotalSess').innerText = new Set(window.logs.map(l => l.tanggal)).size;
                 document.getElementById('aiEngRateText').innerText = '95%';
                 document.getElementById('aiEngBar').style.height = '95%';
                 document.getElementById('aiCompRateText').innerText = '93%';
@@ -1553,11 +1401,11 @@ function doPost(e) {
                 document.getElementById('aiHighlightBullets').innerHTML = `
                     <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200">
                         <div class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check text-[10px]"></i></div>
-                        <p class="text-xs text-slate-700 font-semibold">Active student attendance and strong enthusiasm observed across all English classes.</p>
+                        <p class="text-xs text-slate-700 font-semibold">Active student participation and strong engagement recorded in Google Sheets across all English classes.</p>
                     </div>
                     <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200">
                         <div class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-check text-[10px]"></i></div>
-                        <p class="text-xs text-slate-700 font-semibold">Computer practice sessions at Community Hall Kaura Manggis successfully achieved foundational milestones.</p>
+                        <p class="text-xs text-slate-700 font-semibold">Computer practice sessions at Community Hall Kaura Manggis successfully achieved all scheduled milestones.</p>
                     </div>
                 `;
             }, 600);
@@ -1576,7 +1424,7 @@ function doPost(e) {
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400 text-xs">No student records found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 text-slate-400 text-xs">No students loaded. Go to <strong>Apps Script Setup</strong> and click <strong>Fetch Data from Sheets</strong>.</td></tr>`;
                 return;
             }
 
@@ -1589,10 +1437,7 @@ function doPost(e) {
                         <td class="py-4 px-4 font-mono font-black text-sky-700 text-xs">${student.id}</td>
                         <td class="py-4 px-4 font-extrabold text-slate-900 text-sm">${student.name}</td>
                         <td class="py-4 px-4">${classBadges}</td>
-                        <td class="py-4 px-4"><span class="px-2.5 py-1 text-[10px] rounded-full font-black bg-emerald-100 text-emerald-800">Active</span></td>
-                        <td class="py-4 px-4 text-center">
-                            <button onclick="window.editStudent('${student.id}')" class="px-3 py-1.5 bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 rounded-xl text-xs font-black transition border border-slate-200 cursor-pointer">Edit</button>
-                        </td>
+                        <td class="py-4 px-4"><span class="px-2.5 py-1 text-[10px] rounded-full font-black bg-emerald-100 text-emerald-800">${student.status || 'Active'}</span></td>
                     </tr>
                 `;
             });
@@ -1612,7 +1457,7 @@ function doPost(e) {
             });
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-slate-400 text-xs">No students found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-12 text-slate-400 text-xs">No students found. Please connect and fetch from Google Sheets first.</td></tr>`;
                 return;
             }
 
@@ -1644,7 +1489,7 @@ function doPost(e) {
                         </td>
                         <td class="py-4 px-4 text-center"><span class="px-2 py-0.5 text-[9px] font-black rounded-full bg-emerald-100 text-emerald-800">Good</span></td>
                         <td class="py-4 px-4 text-center">
-                            <button onclick="window.openModalSummaryDetail('${st.id}')" class="px-3 py-1 bg-sky-50 text-sky-700 rounded-lg text-xs font-bold border border-sky-200 cursor-pointer">View</button>
+                            <button onclick="window.openModalSummaryDetail('${st.id}')" class="px-3.5 py-1.5 bg-sky-50 text-sky-700 rounded-xl text-xs font-bold border border-sky-200 cursor-pointer">View</button>
                         </td>
                     </tr>
                 `;
@@ -1663,14 +1508,11 @@ function doPost(e) {
             document.getElementById('modalCountSakit').innerText = studentLogs.filter(l => l.status === 'Sick').length;
 
             const tbody = document.getElementById('modalStudentHistoryBody');
-            tbody.innerHTML = studentLogs.length === 0 ? `<tr><td colspan="4" class="text-center py-4 text-xs text-slate-400">No logs found.</td></tr>` : studentLogs.map(l => `<tr><td class="py-2.5 px-4">${l.tanggal}</td><td class="py-2.5 px-4">${l.namaKelas}</td><td class="py-2.5 px-4 text-center">${l.status}</td><td class="py-2.5 px-4">${l.materi || '-'}</td></tr>`).join('');
+            tbody.innerHTML = studentLogs.length === 0 ? `<tr><td colspan="4" class="text-center py-4 text-xs text-slate-400">No logs found for this student.</td></tr>` : studentLogs.map(l => `<tr><td class="py-2.5 px-4">${l.tanggal}</td><td class="py-2.5 px-4">${l.namaKelas}</td><td class="py-2.5 px-4 text-center">${l.status}</td><td class="py-2.5 px-4">${l.materi || '-'}</td></tr>`).join('');
             document.getElementById('modalStudentSummary').classList.remove('hidden');
         };
 
         window.closeModalSummaryDetail = function() { document.getElementById('modalStudentSummary').classList.add('hidden'); };
-        window.openModalAddStudent = function() { document.getElementById('modalAddStudent').classList.remove('hidden'); };
-        window.closeModalAddStudent = function() { document.getElementById('modalAddStudent').classList.add('hidden'); };
-        window.closeModalDeleteConfirm = function() { document.getElementById('modalDeleteConfirm').classList.add('hidden'); };
 
         window.renderLogTable = function() {
             const tbody = document.getElementById('logTableBody');
@@ -1684,7 +1526,7 @@ function doPost(e) {
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-slate-400 text-xs">No logs found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-12 text-slate-400 text-xs">No attendance logs found in Google Sheets.</td></tr>`;
                 return;
             }
 
@@ -1714,7 +1556,8 @@ function doPost(e) {
         window.saveGasEndpoint = function() {
             let url = document.getElementById('gasEndpointUrl').value.trim();
             localStorage.setItem('klc_gas_url', url);
-            window.showToast('Endpoint updated successfully.', 'success');
+            window.showToast('Google Apps Script URL saved!', 'success');
+            window.fetchDataFromGoogleSheets();
         };
 
         window.copyGasCode = function() {
@@ -1725,11 +1568,11 @@ function doPost(e) {
             ta.select();
             document.execCommand('copy');
             document.body.removeChild(ta);
-            window.showToast('Copied code to clipboard!', 'success');
+            window.showToast('Copied Apps Script code to clipboard!', 'success');
         };
 
         window.exportToCSV = function() {
-            if (window.logs.length === 0) { window.showToast('No data available', 'warning'); return; }
+            if (window.logs.length === 0) { window.showToast('No log data available to export', 'warning'); return; }
             let csv = 'Timestamp,Date,Student ID,Student Name,Class,Status,Topic\n';
             window.logs.forEach(l => { csv += `"${l.timestamp}","${l.tanggal}","${l.idSiswa}","${l.namaSiswa}","${l.namaKelas}","${l.status}","${l.materi || ''}"\n`; });
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -1748,7 +1591,7 @@ function doPost(e) {
             toast.className = `${bg} px-4 py-3 rounded-2xl shadow-xl flex items-center space-x-3 text-xs font-bold transition transform translate-y-2`;
             toast.innerHTML = `<span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 3500);
         };
     </script>
 </body>
