@@ -1769,7 +1769,7 @@ function doGet(e) {
     var sheetLog = ss.getSheetByName("Attendance_Log");
     if (!sheetLog) {
       sheetLog = ss.insertSheet("Attendance_Log");
-      sheetLog.appendRow(["Timestamp", "Date", "Student ID", "Student Name", "Class Code", "Class Name", "Status", "Topic/Remarks"]);
+      sheetLog.appendRow(["Timestamp", "Date", "Student ID", "Student Name", "Class Code", "Class Name", "Status", "Topic/Remarks", "Teacher Note"]);
     }
     
     var rawStudents = sheetSiswa.getDataRange().getValues();
@@ -1809,7 +1809,8 @@ function doGet(e) {
           kodeKelas: lRow[4] ? lRow[4].toString() : "",
           namaKelas: lRow[5] ? lRow[5].toString() : "",
           status: lRow[6] ? lRow[6].toString() : "Present",
-          materi: lRow[7] ? lRow[7].toString() : ""
+          materi: lRow[7] ? lRow[7].toString() : "",
+          teacherNotes: lRow[8] ? lRow[8].toString() : ""
         });
       }
     }
@@ -1837,7 +1838,7 @@ function doPost(e) {
       var sheetLog = ss.getSheetByName("Attendance_Log");
       if (!sheetLog) {
         sheetLog = ss.insertSheet("Attendance_Log");
-        sheetLog.appendRow(["Timestamp", "Date", "Student ID", "Student Name", "Class Code", "Class Name", "Status", "Topic/Remarks"]);
+        sheetLog.appendRow(["Timestamp", "Date", "Student ID", "Student Name", "Class Code", "Class Name", "Status", "Topic/Remarks", "Teacher Note"]);
       }
       
       data.data.forEach(function(item) {
@@ -1849,7 +1850,8 @@ function doPost(e) {
           item.kodeKelas,
           item.namaKelas,
           item.status,
-          item.materi
+          item.materi,
+          item.teacherNotes || ""
         ]);
       });
       return ContentService.createTextOutput(JSON.stringify({status: "success"}))
