@@ -197,9 +197,18 @@
                         <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Topic / Lesson (Optional)</label>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Topic / Lesson (Required)</label>
                         <input type="text" id="absensiMateri" placeholder="E.g., Speaking Practice Unit 3 / Excel Basics" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-medium text-slate-800 shadow-sm transition">
                     </div>
+                </div>
+
+                <!-- Teacher Session Notes Banner -->
+                <div class="mt-4 p-4 bg-sky-50/80 border border-sky-200/80 rounded-2xl text-slate-700 text-xs flex flex-col gap-2 shadow-sm">
+                    <div class="flex items-center gap-2 font-black text-sky-900 uppercase tracking-wider">
+                        <i class="fa-solid fa-chalkboard text-sky-600"></i>
+                        <span>Teacher's Session Notes & Learning Summary</span>
+                    </div>
+                    <textarea id="absensiTeacherNotes" rows="2" placeholder="Teacher can write details about what was studied today, homework assigned, or classroom notes..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500/20 bg-white font-medium shadow-inner"></textarea>
                 </div>
 
                 <!-- Info Alert Bar for Already Saved Attendance -->
@@ -796,7 +805,9 @@
             window.renderSummaryTable();
             window.renderLogTable();
             window.updateDashboardStats();
-            window.loadAttendanceStudentList();
+            
+            // By default attendance student list is reset/empty until loaded explicitly or class is picked
+            window.clearAttendanceFormView();
             window.generateAppsScriptCode();
 
             const quickInput = document.getElementById('quickInputId');
@@ -1048,7 +1059,7 @@
             const filterLogSelect = document.getElementById('filterLogKelas');
             const quickSelect = document.getElementById('quickSelectKelas');
 
-            let optionsHtml = '';
+            let optionsHtml = '<option value="">-- Select KLC Class --</option>';
             (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(c => {
                 optionsHtml += `<option value="${c.id}">${c.name} [${c.id}]</option>`;
             });
@@ -1062,6 +1073,26 @@
             if (filterLogSelect) filterLogSelect.innerHTML = allOptionHtml;
         };
 
+        window.clearAttendanceFormView = function() {
+            const selectKelas = document.getElementById('absensiSelectKelas');
+            if (selectKelas) selectKelas.value = "";
+            const tbody = document.getElementById('attendanceTableBody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-12 text-slate-400 text-xs">
+                            <i class="fa-solid fa-hand-pointer text-2xl text-sky-400 mb-2 block"></i>
+                            Please select a <strong>KLC Class</strong> above to load the student attendance roll call.
+                        </td>
+                    </tr>
+                `;
+            }
+            const countBadge = document.getElementById('countClassStudents');
+            if (countBadge) countBadge.innerText = `0 Students`;
+            const notice = document.getElementById('alreadySavedNotice');
+            if (notice) notice.classList.add('hidden');
+        };
+
         window.loadAttendanceStudentList = function() {
             const selectKelas = document.getElementById('absensiSelectKelas');
             const dateInput = document.getElementById('absensiTanggal');
@@ -1071,6 +1102,11 @@
 
             const classId = selectKelas.value.trim().toUpperCase();
             const tanggal = dateInput.value;
+
+            if (!classId) {
+                window.clearAttendanceFormView();
+                return;
+            }
 
             const filteredStudents = window.students.filter(s => {
                 if (!s) return false;
@@ -1093,6 +1129,15 @@
             if (notice) {
                 if (existingLog.length > 0) {
                     notice.classList.remove('hidden');
+                    // Populate teacher notes if available from previous log
+                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
+                    if (teacherNotesElem && existingLog[0].teacherNotes) {
+                        teacherNotesElem.value = existingLog[0].teacherNotes;
+                    }
+                    const topicElem = document.getElementById('absensiMateri');
+                    if (topicElem && existingLog[0].materi) {
+                        topicElem.value = existingLog[0].materi;
+                    }
                 } else {
                     notice.classList.add('hidden');
                 }
@@ -1112,8 +1157,9 @@
             let html = '';
             filteredStudents.forEach((student, index) => {
                 const loggedItem = existingLog.find(l => l.idSiswa === student.id);
-                const currentStatus = loggedItem ? loggedItem.status : (window.currentAttendanceState[student.id] || 'Present');
-                const currentNote = loggedItem ? loggedItem.materi : '';
+                // By default attendance state is Present for roll call, or loaded from existing log
+                const currentStatus = loggedItem ? loggedItem.status : 'Present';
+                const currentNote = loggedItem ? loggedItem.remarks : '';
 
                 html += `
                     <tr class="hover:bg-slate-50/80 transition">
@@ -1128,7 +1174,7 @@
                             </div>
                         </td>
                         <td class="py-4 px-5">
-                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Remarks / Notes..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 bg-white font-medium shadow-sm transition">
+                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Individual note..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-sky-500/20 bg-white font-medium shadow-sm transition">
                         </td>
                     </tr>
                 `;
@@ -1158,6 +1204,10 @@
 
         window.markAllStatus = function(status) {
             const classId = document.getElementById('absensiSelectKelas').value.trim().toUpperCase();
+            if (!classId) {
+                window.showToast('Please select a class first.', 'warning');
+                return;
+            }
             const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classId) && (s.status === 'Active' || s.status === 'Aktif'));
             classStudents.forEach(s => {
                 window.setRowStatus(s.id, status);
@@ -1168,16 +1218,26 @@
         window.submitAttendance = function() {
             const classSelect = document.getElementById('absensiSelectKelas');
             const dateInput = document.getElementById('absensiTanggal');
+            const materiInput = document.getElementById('absensiMateri');
+            const teacherNotesInput = document.getElementById('absensiTeacherNotes');
+
             if (!classSelect || !dateInput) return;
 
-            const classId = classSelect.value;
+            const classId = classSelect.value.trim();
+            if (!classId) {
+                window.showToast('Please select a KLC Class before saving.', 'warning');
+                return;
+            }
+
             const className = window.getClassName(classId);
             const tanggal = dateInput.value;
+            const materi = materiInput ? materiInput.value.trim() : '';
+            const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
 
-            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classId.trim().toUpperCase()) && (s.status === 'Active' || s.status === 'Aktif'));
+            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c && c.trim().toUpperCase() === classId.toUpperCase()) && (s.status === 'Active' || s.status === 'Aktif'));
 
             if (classStudents.length === 0) {
-                window.showToast('No students to submit attendance for.', 'warning');
+                window.showToast('No students found to submit attendance for.', 'warning');
                 return;
             }
 
@@ -1189,7 +1249,7 @@
             classStudents.forEach(s => {
                 const status = window.currentAttendanceState[s.id] || 'Present';
                 const noteElem = document.getElementById(`note-${s.id}`);
-                const materi = noteElem ? noteElem.value.trim() : '';
+                const remarks = noteElem ? noteElem.value.trim() : '';
 
                 const entry = {
                     timestamp: timestamp,
@@ -1199,7 +1259,9 @@
                     kodeKelas: classId,
                     namaKelas: className,
                     status: status,
-                    materi: materi
+                    materi: materi,
+                    teacherNotes: teacherNotes,
+                    remarks: remarks
                 };
 
                 window.logs.unshift(entry);
@@ -1208,6 +1270,7 @@
 
             window.saveLogsToStorage();
             window.renderLogTable();
+            window.renderSummaryTable();
 
             const gasUrl = localStorage.getItem('klc_gas_url');
             if (gasUrl) {
@@ -1222,7 +1285,12 @@
                 }).catch(err => console.error('POST Error:', err));
             }
 
-            window.showToast(`Attendance successfully saved to Google Sheets (1PJRSc...)!`, 'success');
+            window.showToast(`Attendance & Session Notes successfully saved and reset!`, 'success');
+
+            // Reset form inputs after successful submit
+            if (materiInput) materiInput.value = '';
+            if (teacherNotesInput) teacherNotesInput.value = '';
+            window.clearAttendanceFormView();
         };
 
         window.renderStudentTable = function() {
@@ -1816,9 +1884,9 @@ function doPost(e) {
                 return;
             }
 
-            let csv = 'Timestamp,Date,Student ID,Student Name,Class Code,Class Name,Status,Remarks\n';
+            let csv = 'Timestamp,Date,Student ID,Student Name,Class Code,Class Name,Status,Topic,Teacher Notes,Remarks\n';
             window.logs.forEach(l => {
-                csv += `"${l.timestamp}","${l.tanggal}","${l.idSiswa}","${l.namaSiswa}","${l.kodeKelas}","${l.namaKelas}","${l.status}","${l.materi}"\n`;
+                csv += `"${l.timestamp}","${l.tanggal}","${l.idSiswa}","${l.namaSiswa}","${l.kodeKelas}","${l.namaKelas}","${l.status}","${l.materi || ''}","${l.teacherNotes || ''}","${l.remarks || ''}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
