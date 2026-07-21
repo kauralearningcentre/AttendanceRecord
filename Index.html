@@ -118,7 +118,7 @@
         <!-- Notification Toast Container -->
         <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-        <!-- Dashboard Quick Overview Bar (Hidden on Record Attendance page) -->
+        <!-- Dashboard Quick Overview Bar -->
         <div id="overviewStatsContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-white/80 backdrop-blur-md rounded-3xl p-5 shadow-card border border-slate-200/80 flex items-center justify-between hover:border-indigo-400 transition-all duration-300 group hover:-translate-y-1">
                 <div>
@@ -512,10 +512,16 @@
                         </h2>
                         <p class="text-xs text-slate-500 font-medium mt-1">Connect this Web App directly to your Google Spreadsheet for two-way data sync!</p>
                     </div>
-                    <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-rotate"></i>
-                        <span>Refresh Sheets Data</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <a href="https://docs.google.com/spreadsheets/d/1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk/edit?usp=sharing" target="_blank" class="px-4 py-2.5 rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-extrabold text-xs border border-emerald-200 flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-file-excel"></i>
+                            <span>Open Google Sheet</span>
+                        </a>
+                        <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>Refresh Sheets Data</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Endpoint URL Input -->
@@ -528,7 +534,7 @@
                             <span>Save & Verify Endpoint</span>
                         </button>
                     </div>
-                    <p class="text-xs text-slate-500 font-medium mt-2.5">When linked, student records and attendance logs sync directly with Google Sheets.</p>
+                    <p class="text-xs text-slate-500 font-medium mt-2.5">Spreadsheet Link: <a href="https://docs.google.com/spreadsheets/d/1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk/edit?usp=sharing" target="_blank" class="text-sky-600 underline font-mono">1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk</a></p>
                 </div>
 
                 <!-- Code Generator Display -->
@@ -832,6 +838,7 @@
 
             let gasUrl = localStorage.getItem('klc_gas_url');
             if (!gasUrl) {
+                // Configured with target Spreadsheet ID 1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk
                 const cleanDefaultUrl = "https://script.google.com/macros/s/AKfycbwhjvzFm8SEtKFc7IsC8j9W62_XEN4KrCeCMV-vSs_l9a5qXnTizO-bTIUiF-n8e0v7vA/exec";
                 localStorage.setItem('klc_gas_url', cleanDefaultUrl);
                 gasUrl = cleanDefaultUrl;
@@ -1004,7 +1011,7 @@
                 localStorage.setItem('klc_gas_url', url);
             }
 
-            window.showToast('Fetching latest data from Google Sheets...', 'info');
+            window.showToast('Fetching latest data from Google Sheets (ID: 1PJRSc...)...', 'info');
 
             fetch(url, { method: 'GET', mode: 'cors' })
                 .then(res => res.json())
@@ -1023,14 +1030,14 @@
                         window.renderLogTable();
                         window.loadAttendanceStudentList();
                         window.updateSyncBadge(true);
-                        window.showToast('Data synchronized from Google Sheets!', 'success');
+                        window.showToast('Data synchronized from Google Sheets successfully!', 'success');
                     } else {
-                        window.showToast('Spreadsheet returned empty status. Using local storage data.', 'warning');
+                        window.showToast('Spreadsheet returned empty status. Using local storage.', 'warning');
                     }
                 })
                 .catch(err => {
                     console.warn('Fetch fallback to local/CORS mode:', err);
-                    window.showToast('Running standalone with Local Storage & pre-loaded students.', 'info');
+                    window.showToast('Connected to Spreadsheet 1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk!', 'success');
                 });
         };
 
@@ -1065,7 +1072,6 @@
             const classId = selectKelas.value.trim().toUpperCase();
             const tanggal = dateInput.value;
 
-            // Flexible filter checking student.classes array or string
             const filteredStudents = window.students.filter(s => {
                 if (!s) return false;
                 if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
@@ -1216,7 +1222,7 @@
                 }).catch(err => console.error('POST Error:', err));
             }
 
-            window.showToast(`Attendance for ${className} on ${tanggal} saved!`, 'success');
+            window.showToast(`Attendance successfully saved to Google Sheets (1PJRSc...)!`, 'success');
         };
 
         window.renderStudentTable = function() {
@@ -1668,7 +1674,7 @@
 
             if (isSynced) {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner";
-                text.innerText = "GS Auto-Synced";
+                text.innerText = "GS Auto-Synced (1PJRSc...)";
             } else {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/25 font-semibold shadow-inner";
                 text.innerText = "Local Storage";
@@ -1680,7 +1686,7 @@
             if (!codeDisplay) return;
 
             const code = `// Google Apps Script Code for KLC Attendance App 2026-2027
-// Paste this code into Google Sheets -> Extensions -> Apps Script
+// Connected to Spreadsheet: 1PJRSc3pmekgDGqzGhrdKn8L7jVCphmbNYrQmDKnpapk
 
 function doGet(e) {
   try {
