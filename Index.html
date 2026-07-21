@@ -59,7 +59,7 @@
                     </div>
                     <p class="text-xs text-slate-400 mt-1 flex items-center gap-2 font-medium">
                         <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>English & Computer Attendance Portal • Kaura Manggis</span>
+                        <span>English & Computer Attendance Portal • Community Hall Kaura Manggis</span>
                     </p>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     <span class="w-2 h-2 rounded-full bg-amber-400"></span>
                     <span id="syncStatusText">Local Storage</span>
                 </div>
-                <button onclick="switchTab('tab-settings')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-200 border border-white/10 flex items-center space-x-2 font-semibold shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+                <button onclick="window.switchTab('tab-settings')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-200 border border-white/10 flex items-center space-x-2 font-semibold shadow-sm hover:scale-[1.02] active:scale-[0.98]">
                     <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
                     <span class="hidden sm:inline">GS Integration</span>
                 </button>
@@ -80,32 +80,32 @@
         <!-- Navigation Tabs -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60">
             <nav class="flex space-x-2 overflow-x-auto custom-scrollbar py-2.5 text-xs font-bold">
-                <button onclick="switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-white bg-sky-600 shadow-md shadow-sky-600/30 transition whitespace-nowrap hover:scale-[1.02] active:scale-[0.98]">
+                <button onclick="window.switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-white bg-sky-600 shadow-md shadow-sky-600/30 transition whitespace-nowrap hover:scale-[1.02] active:scale-[0.98]">
                     <i class="fa-solid fa-clipboard-user text-sm"></i>
                     <span>Record Attendance</span>
                 </button>
-                <button onclick="switchTab('tab-summary')" id="nav-tab-summary" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-summary')" id="nav-tab-summary" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-chart-pie text-sm text-indigo-400"></i>
                     <span>Attendance Summary</span>
                 </button>
-                <button onclick="switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-users text-sm"></i>
                     <span>Student Master</span>
                     <span id="totalStudentsBadge" class="ml-1.5 px-2 py-0.5 text-[10px] bg-white/15 rounded-full font-black text-white">32</span>
                 </button>
-                <button onclick="switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-chalkboard-user text-sm"></i>
                     <span>11 KLC Classes</span>
                 </button>
-                <button onclick="switchTab('tab-log')" id="nav-tab-log" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-log')" id="nav-tab-log" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-clock-rotate-left text-sm"></i>
                     <span>Attendance Log</span>
                 </button>
-                <button onclick="switchTab('tab-quick')" id="nav-tab-quick" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-quick')" id="nav-tab-quick" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-qrcode text-sm"></i>
                     <span>Quick Scan</span>
                 </button>
-                <button onclick="switchTab('tab-settings')" id="nav-tab-settings" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-settings')" id="nav-tab-settings" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-code text-sm"></i>
                     <span>Apps Script Setup</span>
                 </button>
@@ -169,15 +169,15 @@
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="markAllStatus('Present')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Present')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
                             <i class="fa-solid fa-check-double text-emerald-600"></i>
                             <span>Mark All Present</span>
                         </button>
-                        <button onclick="markAllStatus('Absent')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Absent')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
                             <i class="fa-solid fa-xmark text-rose-600"></i>
                             <span>Mark All Absent</span>
                         </button>
-                        <button onclick="markAllStatus('Sick')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Sick')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
                             <i class="fa-solid fa-notes-medical text-sky-600"></i>
                             <span>Mark All Sick</span>
                         </button>
@@ -188,13 +188,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6 bg-gradient-to-r from-slate-50 via-sky-50/20 to-indigo-50/20 p-5 rounded-3xl border border-slate-200/80 shadow-inner">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select KLC Class</label>
-                        <select id="absensiSelectKelas" onchange="loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-extrabold text-slate-800 shadow-sm transition">
+                        <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-extrabold text-slate-800 shadow-sm transition">
                             <!-- Populated via JS -->
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Session Date</label>
-                        <input type="date" id="absensiTanggal" onchange="loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition">
+                        <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition">
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Topic / Lesson (Optional)</label>
@@ -246,7 +246,7 @@
                         </div>
                         <span>Data stored locally and ready to sync with Google Sheets.</span>
                     </div>
-                    <button onclick="submitAttendance()" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-extrabold text-sm shadow-xl shadow-sky-600/25 hover:shadow-2xl transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5">
+                    <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-extrabold text-sm shadow-xl shadow-sky-600/25 hover:shadow-2xl transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5">
                         <i class="fa-solid fa-floppy-disk text-base"></i>
                         <span>Save Attendance to Sheets</span>
                     </button>
@@ -269,7 +269,7 @@
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <button onclick="exportToCSV()" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm">
+                        <button onclick="window.exportToCSV()" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm">
                             <i class="fa-solid fa-download text-indigo-600"></i>
                             <span>Export CSV Report</span>
                         </button>
@@ -304,10 +304,10 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
                     <div class="sm:col-span-2 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="summarySearchInput" onkeyup="renderSummaryTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm transition">
+                        <input type="text" id="summarySearchInput" onkeyup="window.renderSummaryTable()" placeholder="Search by student name or ID..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 focus:border-sky-500 shadow-sm transition">
                     </div>
                     <div>
-                        <select id="summaryFilterClass" onchange="renderSummaryTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold text-slate-800 shadow-sm transition">
+                        <select id="summaryFilterClass" onchange="window.renderSummaryTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold text-slate-800 shadow-sm transition">
                             <option value="">All Classes</option>
                         </select>
                     </div>
@@ -346,9 +346,9 @@
                             <i class="fa-solid fa-users text-sky-600"></i>
                             Student Master Database (32 Official Students)
                         </h2>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Official directory of Kaura Learning Centre English & Computer students for 2026/2027.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Official directory of Kaura Learning Centre English & Computer students matching Google Sheets.</p>
                     </div>
-                    <button onclick="openModalAddStudent()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2 hover:scale-[1.02]">
+                    <button onclick="window.openModalAddStudent()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2 hover:scale-[1.02]">
                         <i class="fa-solid fa-user-plus text-sm"></i>
                         <span>Add New Student</span>
                     </button>
@@ -358,10 +358,10 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
                     <div class="sm:col-span-2 relative">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="searchStudentInput" onkeyup="renderStudentTable()" placeholder="Search by student name or ID (e.g., SD-K-01)..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 shadow-sm transition">
+                        <input type="text" id="searchStudentInput" onkeyup="window.renderStudentTable()" placeholder="Search by student name or ID (e.g., SD-K-01)..." class="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 shadow-sm transition">
                     </div>
                     <div>
-                        <select id="filterStudentClass" onchange="renderStudentTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold shadow-sm transition">
+                        <select id="filterStudentClass" onchange="window.renderStudentTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-sky-500/20 bg-white font-bold shadow-sm transition">
                             <option value="">All Classes</option>
                         </select>
                     </div>
@@ -421,13 +421,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-5">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Filter Class</label>
-                        <select id="filterLogKelas" onchange="renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm transition">
+                        <select id="filterLogKelas" onchange="window.renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm transition">
                             <option value="">All Classes</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Filter Status</label>
-                        <select id="filterLogStatus" onchange="renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm transition">
+                        <select id="filterLogStatus" onchange="window.renderLogTable()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm bg-white font-bold shadow-sm transition">
                             <option value="">All Statuses</option>
                             <option value="Present">Present</option>
                             <option value="Absent">Absent</option>
@@ -436,7 +436,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Search Name / ID</label>
-                        <input type="text" id="searchLogInput" onkeyup="renderLogTable()" placeholder="Type student name..." class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm shadow-sm transition">
+                        <input type="text" id="searchLogInput" onkeyup="window.renderLogTable()" placeholder="Type student name..." class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm shadow-sm transition">
                     </div>
                 </div>
 
@@ -484,7 +484,7 @@
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Scan / Enter Student ID or Name</label>
                         <div class="flex gap-2.5">
                             <input type="text" id="quickInputId" placeholder="E.g., SD-B1-02 and press Enter" class="flex-grow px-4 py-3.5 rounded-2xl border-2 border-sky-300 focus:border-sky-600 text-base font-extrabold uppercase tracking-wider text-slate-800 shadow-inner">
-                            <button onclick="processQuickAttendance()" class="px-7 py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-2xl transition shadow-lg shadow-sky-600/30 flex items-center gap-2">
+                            <button onclick="window.processQuickAttendance()" class="px-7 py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-black rounded-2xl transition shadow-lg shadow-sky-600/30 flex items-center gap-2">
                                 <i class="fa-solid fa-circle-check text-lg"></i>
                                 <span>Present!</span>
                             </button>
@@ -512,7 +512,7 @@
                         </h2>
                         <p class="text-xs text-slate-500 font-medium mt-1">Connect this Web App directly to your Google Spreadsheet for two-way data sync!</p>
                     </div>
-                    <button onclick="fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm">
+                    <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-rotate"></i>
                         <span>Refresh Sheets Data</span>
                     </button>
@@ -523,7 +523,7 @@
                     <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Google Apps Script Web App Deployment URL</label>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <input type="url" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/.../exec" class="flex-grow px-4 py-3 rounded-2xl border border-slate-300 text-sm font-mono focus:ring-4 focus:ring-sky-500/20 shadow-sm">
-                        <button onclick="saveGasEndpoint()" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25">
+                        <button onclick="window.saveGasEndpoint()" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25">
                             <i class="fa-solid fa-plug"></i>
                             <span>Save & Verify Endpoint</span>
                         </button>
@@ -535,7 +535,7 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Apps Script Code (<code class="bg-slate-100 px-2.5 py-1 rounded text-sky-600 font-mono">Code.gs</code>)</h3>
-                        <button onclick="copyGasCode()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-md">
+                        <button onclick="window.copyGasCode()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-md">
                             <i class="fa-regular fa-copy"></i>
                             <span>Copy Script Code</span>
                         </button>
@@ -553,12 +553,12 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden transform transition-all border border-slate-200">
             <div class="bg-gradient-to-r from-sky-700 to-indigo-900 px-6 py-5 text-white flex items-center justify-between">
                 <h3 id="modalStudentTitle" class="font-extrabold text-base">Add New KLC Student</h3>
-                <button onclick="closeModalAddStudent()" class="text-white/80 hover:text-white text-xl">
+                <button onclick="window.closeModalAddStudent()" class="text-white/80 hover:text-white text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             
-            <form id="formAddStudent" onsubmit="handleSaveStudent(event)" class="p-6 space-y-4">
+            <form id="formAddStudent" onsubmit="window.handleSaveStudent(event)" class="p-6 space-y-4">
                 <input type="hidden" id="studentEditId" value="">
                 
                 <div>
@@ -579,7 +579,7 @@
                 </div>
 
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                    <button type="button" onclick="closeModalAddStudent()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                    <button type="button" onclick="window.closeModalAddStudent()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                         Cancel
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition">
@@ -595,12 +595,12 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-slate-200">
             <div class="bg-gradient-to-r from-sky-700 to-indigo-900 px-6 py-5 text-white flex items-center justify-between">
                 <h3 class="font-extrabold text-base">Edit Class Information</h3>
-                <button onclick="closeModalEditClass()" class="text-white/80 hover:text-white text-xl">
+                <button onclick="window.closeModalEditClass()" class="text-white/80 hover:text-white text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             
-            <form id="formEditClass" onsubmit="handleSaveClass(event)" class="p-6 space-y-4">
+            <form id="formEditClass" onsubmit="window.handleSaveClass(event)" class="p-6 space-y-4">
                 <input type="hidden" id="modalClassEditId" value="">
                 
                 <div>
@@ -632,7 +632,7 @@
                 </div>
 
                 <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
-                    <button type="button" onclick="closeModalEditClass()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                    <button type="button" onclick="window.closeModalEditClass()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                         Cancel
                     </button>
                     <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition">
@@ -652,10 +652,10 @@
             <h3 class="font-extrabold text-slate-900 text-lg">Confirm Deletion</h3>
             <p id="deleteConfirmText" class="text-xs text-slate-500 font-medium mt-2 mb-6">Are you sure you want to delete this record?</p>
             <div class="flex justify-center gap-3">
-                <button onclick="closeModalDeleteConfirm()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                <button onclick="window.closeModalDeleteConfirm()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                     Cancel
                 </button>
-                <button onclick="confirmDeleteStudent()" class="px-5 py-2.5 text-xs font-extrabold rounded-2xl bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition">
+                <button onclick="window.confirmDeleteStudent()" class="px-5 py-2.5 text-xs font-extrabold rounded-2xl bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition">
                     Delete
                 </button>
             </div>
@@ -670,7 +670,7 @@
                     <h3 id="modalSummaryName" class="font-black text-lg">Student Attendance History</h3>
                     <p id="modalSummaryId" class="text-xs text-sky-400 font-mono mt-0.5"></p>
                 </div>
-                <button onclick="closeModalSummaryDetail()" class="text-slate-400 hover:text-white text-xl">
+                <button onclick="window.closeModalSummaryDetail()" class="text-slate-400 hover:text-white text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -712,7 +712,7 @@
             </div>
 
             <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end">
-                <button onclick="closeModalSummaryDetail()" class="px-6 py-2.5 text-xs font-extrabold bg-slate-900 text-white rounded-2xl hover:bg-black shadow transition">
+                <button onclick="window.closeModalSummaryDetail()" class="px-6 py-2.5 text-xs font-extrabold bg-slate-900 text-white rounded-2xl hover:bg-black shadow transition">
                     Close
                 </button>
             </div>
@@ -720,67 +720,61 @@
     </div>
 
     <script>
-        // 11 Official KLC Classes matching spreadsheet with exact Column D names
+        // 11 Official KLC Classes matching spreadsheet exact names and codes
         const DEFAULT_KLC_CLASSES = [
-            { id: 'ENG-SD-K', name: 'BEGINNER ENGLISH 1', category: 'English', codeLabel: 'ENG-SD-K', schedule: 'Monday & Wednesday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
-            { id: 'ENG-SD-B1', name: 'BEGINNER ENGLISH 2', category: 'English', codeLabel: 'ENG-SD-B1', schedule: 'Monday & Wednesday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
-            { id: 'ENG-SD-B2', name: 'BEGINNER ENGLISH 3', category: 'English', codeLabel: 'ENG-SD-B2', schedule: 'Tuesday & Thursday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
-            { id: 'ENG-SD-B3', name: 'ELEMENTARY ENGLISH 1', category: 'English', codeLabel: 'ENG-SD-B3', schedule: 'Tuesday & Thursday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
-            { id: 'ENG-SMP-B1', name: 'ELEMENTARY ENGLISH 1', category: 'English', codeLabel: 'ENG-SMP-B1', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
-            { id: 'ENG-SMA-B1', name: 'BASIC ENGLISH', category: 'English', codeLabel: 'ENG-SMA-B1', schedule: 'Friday & Saturday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SD-K', name: 'BEGINNER ENGLISH 1', category: 'English', schedule: 'Monday & Wednesday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SD-B1', name: 'BEGINNER ENGLISH 2', category: 'English', schedule: 'Monday & Wednesday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SD-B2', name: 'BEGINNER ENGLISH 3', category: 'English', schedule: 'Tuesday & Thursday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SD-B3', name: 'ELEMENTARY ENGLISH 1', category: 'English', schedule: 'Tuesday & Thursday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SMP-B1', name: 'ELEMENTARY ENGLISH 1', category: 'English', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
+            { id: 'ENG-SMA-B1', name: 'BASIC ENGLISH', category: 'English', schedule: 'Friday & Saturday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
             
-            { id: 'COMP-SD-B1', name: 'BASIC COMPUTER 1', category: 'Computer', codeLabel: 'COMP-SD-B1', schedule: 'Monday & Wednesday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
-            { id: 'COMP-SD-B2', name: 'BASIC COMPUTER 2', category: 'Computer', codeLabel: 'COMP-SD-B2', schedule: 'Monday & Wednesday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
-            { id: 'COMP-SD-B3', name: 'BASIC COMPUTER 3', category: 'Computer', codeLabel: 'COMP-SD-B3', schedule: 'Tuesday & Thursday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
-            { id: 'COMP-SMP-B1', name: 'BASIC COMPUTER 4', category: 'Computer', codeLabel: 'COMP-SMP-B1', schedule: 'Tuesday & Thursday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
-            { id: 'COMP-SMA-B1', name: 'BASIC COMPUTER 5', category: 'Computer', codeLabel: 'COMP-SMA-B1', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' }
+            { id: 'COMP-SD-B1', name: 'BASIC COMPUTER 1', category: 'Computer', schedule: 'Monday & Wednesday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
+            { id: 'COMP-SD-B2', name: 'BASIC COMPUTER 2', category: 'Computer', schedule: 'Monday & Wednesday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
+            { id: 'COMP-SD-B3', name: 'BASIC COMPUTER 3', category: 'Computer', schedule: 'Tuesday & Thursday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' },
+            { id: 'COMP-SMP-B1', name: 'BASIC COMPUTER 4', category: 'Computer', schedule: 'Tuesday & Thursday (15:30 - 17:00)', room: 'Community Hall Kaura Manggis' },
+            { id: 'COMP-SMA-B1', name: 'BASIC COMPUTER 5', category: 'Computer', schedule: 'Friday & Saturday (14:00 - 15:30)', room: 'Community Hall Kaura Manggis' }
         ];
 
-        // Default 32 Official KLC Students Data mapped to exact spreadsheet rows
-        const DEFAULT_STUDENTS = [
-            // SD-K (ENG-SD-K)
-            { id: 'SD-K-01', name: 'NI KADEK MELIYANI', classes: ['ENG-SD-K'], status: 'Active' },
-            { id: 'SD-K-02', name: 'PUTU NGURAH DANANJAYA', classes: ['ENG-SD-K'], status: 'Active' },
-            { id: 'SD-K-03', name: 'I PUTU RAINA OKA AJISTI', classes: ['ENG-SD-K'], status: 'Active' },
-            { id: 'SD-K-04', name: 'NI LUH GITA ANGRENI', classes: ['ENG-SD-K'], status: 'Active' },
-            { id: 'SD-K-05', name: 'NI KADEK RAIKA OKA AJISTI', classes: ['ENG-SD-K'], status: 'Active' },
-            { id: 'SD-K-06', name: 'DIAH', classes: ['ENG-SD-K'], status: 'Active' },
+        // Default 32 Official KLC Students mapped directly from Spreadsheet rows (ID, Name, Kode Kelas, Nama Kelas)
+        const DEFAULT_STUDENTS_SHEET = [
+            { id: 'SD-K-01', name: 'NI KADEK MELIYANI', classes: ['ENG-SD-K'] },
+            { id: 'SD-K-02', name: 'PUTU NGURAH DANANJAYA', classes: ['ENG-SD-K'] },
+            { id: 'SD-K-03', name: 'I PUTU RAINA OKA AJISTI', classes: ['ENG-SD-K'] },
+            { id: 'SD-K-04', name: 'NI LUH GITA ANGRENI', classes: ['ENG-SD-K'] },
+            { id: 'SD-K-05', name: 'NI KADEK RAIKA OKA AJISTI', classes: ['ENG-SD-K'] },
+            { id: 'SD-K-06', name: 'DIAH', classes: ['ENG-SD-K'] },
 
-            // SD-B1 (ENG-SD-B1 & COMP-SD-B1)
-            { id: 'SD-B1-01', name: 'Arya', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
-            { id: 'SD-B1-02', name: 'I KOMANG MERTA YASA DI PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
-            { id: 'SD-B1-03', name: 'I MADE YOGA PRADANA PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
-            { id: 'SD-B1-04', name: 'I KOMANG EDI SAPUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
-            { id: 'SD-B1-05', name: 'I KOMANG BAGUS PRADNYA', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
-            { id: 'SD-B1-06', name: 'PUTU ANDHIKA YASA', classes: ['ENG-SD-B1', 'COMP-SD-B1'], status: 'Active' },
+            { id: 'SD-B1-01', name: 'Arya', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
+            { id: 'SD-B1-02', name: 'I KOMANG MERTA YASA DI PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
+            { id: 'SD-B1-03', name: 'I MADE YOGA PRADANA PUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
+            { id: 'SD-B1-04', name: 'I KOMANG EDI SAPUTRA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
+            { id: 'SD-B1-05', name: 'I KOMANG BAGUS PRADNYA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
+            { id: 'SD-B1-06', name: 'PUTU ANDHIKA YASA', classes: ['ENG-SD-B1', 'COMP-SD-B1'] },
 
-            // SD-B2 (ENG-SD-B2 & COMP-SD-B2)
-            { id: 'SD-B2-01', name: 'I KOMANG HENDRA ADIANTARA', classes: ['ENG-SD-B2', 'COMP-SD-B2'], status: 'Active' },
-            { id: 'SD-B2-02', name: 'DEWA GEDE SUKRATA', classes: ['ENG-SD-B2', 'COMP-SD-B2'], status: 'Active' },
-            { id: 'SD-B2-03', name: 'I KADEK TIRTA YANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'], status: 'Active' },
-            { id: 'SD-B2-04', name: 'I KADEK RAMA TIRTA WIJAYA', classes: ['ENG-SD-B2', 'COMP-SD-B2'], status: 'Active' },
-            { id: 'SD-B2-05', name: 'I MADE DIKA SUDARMANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'], status: 'Active' },
+            { id: 'SD-B2-01', name: 'I KOMANG HENDRA ADIANTARA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
+            { id: 'SD-B2-02', name: 'DEWA GEDE SUKRATA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
+            { id: 'SD-B2-03', name: 'I KADEK TIRTA YANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
+            { id: 'SD-B2-04', name: 'I KADEK RAMA TIRTA WIJAYA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
+            { id: 'SD-B2-05', name: 'I MADE DIKA SUDARMANA', classes: ['ENG-SD-B2', 'COMP-SD-B2'] },
 
-            // SD-B3 (ENG-SD-B3 & COMP-SD-B3)
-            { id: 'SD-B3-01', name: 'I KOMANG REZA DWI PRADNYANA', classes: ['ENG-SD-B3', 'COMP-SD-B3'], status: 'Active' },
-            { id: 'SD-B3-02', name: 'NI KADEK AYU INDAH TIRTA YANI', classes: ['ENG-SD-B3', 'COMP-SD-B3'], status: 'Active' },
-            { id: 'SD-B3-03', name: 'NI KOMANG JEIMA ISHANA PARDEWI', classes: ['ENG-SD-B3', 'COMP-SD-B3'], status: 'Active' },
-            { id: 'SD-B3-04', name: 'I PUTU IMA CHANDRA DEVI', classes: ['ENG-SD-B3', 'COMP-SD-B3'], status: 'Active' },
-            { id: 'SD-B3-05', name: 'NI LUH APRIYANTI', classes: ['ENG-SD-B3', 'COMP-SD-B3'], status: 'Active' },
+            { id: 'SD-B3-01', name: 'I KOMANG REZA DWI PRADNYANA', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
+            { id: 'SD-B3-02', name: 'NI KADEK AYU INDAH TIRTA YANI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
+            { id: 'SD-B3-03', name: 'NI KOMANG JEIMA ISHANA PARDEWI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
+            { id: 'SD-B3-04', name: 'I PUTU IMA CHANDRA DEVI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
+            { id: 'SD-B3-05', name: 'NI LUH APRIYANTI', classes: ['ENG-SD-B3', 'COMP-SD-B3'] },
 
-            // SMP-B1 (ENG-SMP-B1 & COMP-SMP-B1)
-            { id: 'SMP-B1-01', name: 'I GEDE SUNARTA', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-02', name: 'NI KADEK DIAN PRADNYANDARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-03', name: 'NI KOMANG TRI RADMILA PRADNYASWARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-04', name: 'NI PUTU AYU DEVI WIJYANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-05', name: 'NI KOMANG AYU DEWI ADNYANI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-06', name: 'NI PUTU SUGIANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-07', name: 'NI KADEK ENJANA AGUERA PARDEWI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
-            { id: 'SMP-B1-08', name: 'NI PUTU SRI SWARI RAHAYU', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'], status: 'Active' },
+            { id: 'SMP-B1-01', name: 'I GEDE SUNARTA', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-02', name: 'NI KADEK DIAN PRADNYANDARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-03', name: 'NI KOMANG TRI RADMILA PRADNYASWARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-04', name: 'NI PUTU AYU DEVI WIJYANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-05', name: 'NI KOMANG AYU DEWI ADNYANI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-06', name: 'NI PUTU SUGIANTARI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-07', name: 'NI KADEK ENJANA AGUERA PARDEWI', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
+            { id: 'SMP-B1-08', name: 'NI PUTU SRI SWARI RAHAYU', classes: ['ENG-SMP-B1', 'COMP-SMP-B1'] },
 
-            // SMA-B1 (ENG-SMA-B1 & COMP-SMA-B1)
-            { id: 'SMA-B1-01', name: 'I KOMANG CANDRA YOGA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'], status: 'Active' },
-            { id: 'SMA-B1-02', name: 'I MADE ANDREYANA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'], status: 'Active' }
+            { id: 'SMA-B1-01', name: 'I KOMANG CANDRA YOGA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'] },
+            { id: 'SMA-B1-02', name: 'I MADE ANDREYANA', classes: ['ENG-SMA-B1', 'COMP-SMA-B1'] }
         ];
 
         // Global State variables
@@ -825,7 +819,10 @@
             if (storedStudents) {
                 window.students = JSON.parse(storedStudents);
             } else {
-                window.students = JSON.parse(JSON.stringify(DEFAULT_STUDENTS));
+                window.students = JSON.parse(JSON.stringify(DEFAULT_STUDENTS_SHEET)).map(s => ({
+                    ...s,
+                    status: 'Active'
+                }));
                 localStorage.setItem('klc_students_2026', JSON.stringify(window.students));
             }
 
@@ -836,14 +833,23 @@
                 window.logs = [];
             }
 
-            const gasUrl = localStorage.getItem('klc_gas_url');
+            let gasUrl = localStorage.getItem('klc_gas_url');
             if (gasUrl) {
+                if (gasUrl.includes('https://') && gasUrl.indexOf('https://', 8) !== -1) {
+                    gasUrl = gasUrl.substring(0, gasUrl.indexOf('https://', 8));
+                    localStorage.setItem('klc_gas_url', gasUrl);
+                }
                 const gasInput = document.getElementById('gasEndpointUrl');
                 if (gasInput) gasInput.value = gasUrl;
                 window.updateSyncBadge(true);
                 window.fetchDataFromGoogleSheets();
             } else {
-                window.updateSyncBadge(false);
+                const cleanDefaultUrl = "https://script.google.com/macros/s/AKfycbwhjvzFm8SEtKFc7IsC8j9W62_XEN4KrCeCMV-vSs_l9a5qXnTizO-bTIUiF-n8e0v7vA/exec";
+                localStorage.setItem('klc_gas_url', cleanDefaultUrl);
+                const gasInput = document.getElementById('gasEndpointUrl');
+                if (gasInput) gasInput.value = cleanDefaultUrl;
+                window.updateSyncBadge(true);
+                window.fetchDataFromGoogleSheets();
             }
         };
 
@@ -872,7 +878,6 @@
                 activeBtn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
             }
 
-            // Hide stats container on Record Attendance page as requested
             const statsContainer = document.getElementById('overviewStatsContainer');
             if (statsContainer) {
                 if (tabId === 'tab-absensi') {
@@ -896,13 +901,14 @@
 
             (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(cls => {
                 const enrolledCount = window.students.filter(s => {
-                    if (s.status !== 'Active' && s.status !== 'Aktif') return false;
-                    if (Array.isArray(s.classes)) return s.classes.includes(cls.id);
-                    if (typeof s.classes === 'string') return s.classes.includes(cls.id);
+                    if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
+                    if (Array.isArray(s.classes)) {
+                        return s.classes.some(c => c.trim().toUpperCase() === cls.id.toUpperCase());
+                    }
                     return false;
                 }).length;
 
-                const isEnglish = cls.category === 'English' || cls.category === 'Bahasa Inggris';
+                const isEnglish = cls.category === 'English';
 
                 html += `
                     <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
@@ -913,7 +919,7 @@
                                 </span>
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs font-mono font-black text-slate-400 bg-slate-100 px-2.5 py-1 rounded-xl">${cls.id}</span>
-                                    <button onclick="openModalEditClass('${cls.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-500 hover:text-sky-600 transition flex items-center justify-center text-xs shadow-sm" title="Edit Class Details">
+                                    <button onclick="window.openModalEditClass('${cls.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-500 hover:text-sky-600 transition flex items-center justify-center text-xs shadow-sm" title="Edit Class Details">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                 </div>
@@ -947,7 +953,7 @@
             document.getElementById('modalClassEditId').value = cls.id;
             document.getElementById('classIdInput').value = cls.id;
             document.getElementById('classNameInput').value = cls.name;
-            document.getElementById('classCategorySelect').value = cls.category === 'Bahasa Inggris' ? 'English' : cls.category;
+            document.getElementById('classCategorySelect').value = cls.category;
             document.getElementById('classScheduleInput').value = cls.schedule;
             document.getElementById('classRoomInput').value = cls.room || 'Community Hall Kaura Manggis';
 
@@ -982,7 +988,7 @@
         };
 
         window.getClassName = function(kode) {
-            const found = (window.klcClasses || DEFAULT_KLC_CLASSES).find(c => c.id === kode);
+            const found = (window.klcClasses || DEFAULT_KLC_CLASSES).find(c => c.id.toUpperCase() === kode.toUpperCase());
             return found ? `${found.name} [${found.id}]` : kode;
         };
 
@@ -999,10 +1005,15 @@
         };
 
         window.fetchDataFromGoogleSheets = function() {
-            const url = localStorage.getItem('klc_gas_url');
+            let url = localStorage.getItem('klc_gas_url');
             if (!url) {
                 window.showToast('No Apps Script Web App URL configured.', 'warning');
                 return;
+            }
+
+            if (url.includes('https://') && url.indexOf('https://', 8) !== -1) {
+                url = url.substring(0, url.indexOf('https://', 8));
+                localStorage.setItem('klc_gas_url', url);
             }
 
             window.showToast('Fetching latest data from Google Sheets...', 'info');
@@ -1025,11 +1036,13 @@
                         window.loadAttendanceStudentList();
                         window.updateSyncBadge(true);
                         window.showToast('Data synchronized from Google Sheets!', 'success');
+                    } else {
+                        window.showToast('Spreadsheet returned empty status. Using local data.', 'warning');
                     }
                 })
                 .catch(err => {
                     console.error('Fetch error:', err);
-                    window.showToast('Unable to connect to Google Sheets. Using local storage.', 'warning');
+                    window.showToast('CORS/Network error. Using built-in spreadsheet student records.', 'info');
                 });
         };
 
@@ -1061,15 +1074,18 @@
 
             if (!selectKelas || !dateInput || !tbody) return;
 
-            const classId = selectKelas.value;
+            const classId = selectKelas.value.trim().toUpperCase();
             const tanggal = dateInput.value;
 
+            // Flexible filter checking exact code matches in student.classes array
             const filteredStudents = window.students.filter(s => {
-                if (!s || (s.status && s.status !== 'Active' && s.status !== 'Aktif')) return false;
+                if (!s) return false;
+                if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
+                
                 if (Array.isArray(s.classes)) {
-                    return s.classes.includes(classId);
+                    return s.classes.some(c => c.trim().toUpperCase() === classId);
                 } else if (typeof s.classes === 'string') {
-                    return s.classes.split(',').map(c => c.trim()).includes(classId);
+                    return s.classes.toUpperCase().includes(classId);
                 }
                 return false;
             });
@@ -1077,7 +1093,7 @@
             const countBadge = document.getElementById('countClassStudents');
             if (countBadge) countBadge.innerText = `${filteredStudents.length} Students`;
 
-            const existingLog = window.logs.filter(l => l.kodeKelas === classId && l.tanggal === tanggal);
+            const existingLog = window.logs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase() === classId && l.tanggal === tanggal);
             const notice = document.getElementById('alreadySavedNotice');
             
             if (notice) {
@@ -1092,7 +1108,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="5" class="text-center py-10 text-slate-400 text-xs">
-                            No active students enrolled in this class.<br>Add students in the <strong>Student Master</strong> tab or sync from Google Sheets.
+                            No active students enrolled in class <strong>${classId}</strong>.<br>Please check your <strong>Student Master</strong> tab.
                         </td>
                     </tr>
                 `;
@@ -1112,9 +1128,9 @@
                         <td class="py-4 px-5 font-extrabold text-slate-900">${student.name}</td>
                         <td class="py-4 px-5 text-center">
                             <div class="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200 gap-1.5 shadow-inner">
-                                <button type="button" onclick="setRowStatus('${student.id}', 'Present')" id="btn-${student.id}-Present" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Present' || currentStatus === 'Hadir' ? 'bg-emerald-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Present</button>
-                                <button type="button" onclick="setRowStatus('${student.id}', 'Absent')" id="btn-${student.id}-Absent" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Absent' || currentStatus === 'Tidak Hadir' ? 'bg-rose-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Absent</button>
-                                <button type="button" onclick="setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-sky-500 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Sick</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Present')" id="btn-${student.id}-Present" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Present' || currentStatus === 'Hadir' ? 'bg-emerald-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Present</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Absent')" id="btn-${student.id}-Absent" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Absent' || currentStatus === 'Tidak Hadir' ? 'bg-rose-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Absent</button>
+                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-sky-500 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Sick</button>
                             </div>
                         </td>
                         <td class="py-4 px-5">
@@ -1147,8 +1163,8 @@
         };
 
         window.markAllStatus = function(status) {
-            const classId = document.getElementById('absensiSelectKelas').value;
-            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.includes(classId) && (s.status === 'Active' || s.status === 'Aktif'));
+            const classId = document.getElementById('absensiSelectKelas').value.trim().toUpperCase();
+            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classId) && (s.status === 'Active' || s.status === 'Aktif'));
             classStudents.forEach(s => {
                 window.setRowStatus(s.id, status);
             });
@@ -1164,7 +1180,7 @@
             const className = window.getClassName(classId);
             const tanggal = dateInput.value;
 
-            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.includes(classId) && (s.status === 'Active' || s.status === 'Aktif'));
+            const classStudents = window.students.filter(s => Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classId.trim().toUpperCase()) && (s.status === 'Active' || s.status === 'Aktif'));
 
             if (classStudents.length === 0) {
                 window.showToast('No students to submit attendance for.', 'warning');
@@ -1223,11 +1239,11 @@
             const filterClassSelect = document.getElementById('filterStudentClass');
 
             const search = searchInput ? searchInput.value.toLowerCase() : '';
-            const classFilter = filterClassSelect ? filterClassSelect.value : '';
+            const classFilter = filterClassSelect ? filterClassSelect.value.trim().toUpperCase() : '';
 
             const filtered = window.students.filter(s => {
                 const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
-                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.includes(classFilter) : true;
+                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classFilter) : true;
                 return matchSearch && matchClass;
             });
 
@@ -1248,10 +1264,10 @@
                         <td class="py-4 px-5"><span class="px-3 py-1 text-[10px] rounded-full font-black bg-emerald-100 text-emerald-800 shadow-sm">${student.status || 'Active'}</span></td>
                         <td class="py-4 px-5 text-center">
                             <div class="flex items-center justify-center gap-2">
-                                <button onclick="editStudent('${student.id}')" title="Edit Student" class="px-3 py-1.5 bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 rounded-xl text-xs font-black transition border border-slate-200 flex items-center gap-1.5 shadow-sm">
+                                <button onclick="window.editStudent('${student.id}')" title="Edit Student" class="px-3 py-1.5 bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 rounded-xl text-xs font-black transition border border-slate-200 flex items-center gap-1.5 shadow-sm">
                                     <i class="fa-solid fa-pen text-[10px]"></i> Edit
                                 </button>
-                                <button onclick="deleteStudent('${student.id}')" title="Delete Student" class="w-8 h-8 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-bold transition border border-slate-200 flex items-center justify-center shadow-sm">
+                                <button onclick="window.deleteStudent('${student.id}')" title="Delete Student" class="w-8 h-8 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-bold transition border border-slate-200 flex items-center justify-center shadow-sm">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
                             </div>
@@ -1271,15 +1287,15 @@
             const filterClassSelect = document.getElementById('summaryFilterClass');
 
             const search = searchInput ? searchInput.value.toLowerCase() : '';
-            const classFilter = filterClassSelect ? filterClassSelect.value : '';
+            const classFilter = filterClassSelect ? filterClassSelect.value.trim().toUpperCase() : '';
 
             const uniqueSessions = new Set(window.logs.map(l => `${l.kodeKelas}_${l.tanggal}`));
             const totalSessElem = document.getElementById('summaryTotalSessions');
             if (totalSessElem) totalSessElem.innerText = uniqueSessions.size;
 
-            const relevantLogs = classFilter ? window.logs.filter(l => l.kodeKelas === classFilter) : window.logs;
-            const engLogs = window.logs.filter(l => l.kodeKelas && l.kodeKelas.startsWith('ENG-') && (classFilter ? l.kodeKelas === classFilter : true));
-            const compLogs = window.logs.filter(l => l.kodeKelas && l.kodeKelas.startsWith('COMP-') && (classFilter ? l.kodeKelas === classFilter : true));
+            const relevantLogs = classFilter ? window.logs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase() === classFilter) : window.logs;
+            const engLogs = window.logs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().startsWith('ENG-') && (classFilter ? l.kodeKelas.toUpperCase() === classFilter : true));
+            const compLogs = window.logs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().startsWith('COMP-') && (classFilter ? l.kodeKelas.toUpperCase() === classFilter : true));
 
             const overallHadir = relevantLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             const engHadir = engLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
@@ -1300,7 +1316,7 @@
 
             let filteredStudents = window.students.filter(s => {
                 const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
-                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.includes(classFilter) : true;
+                const matchClass = classFilter ? Array.isArray(s.classes) && s.classes.some(c => c.trim().toUpperCase() === classFilter) : true;
                 return matchSearch && matchClass;
             });
 
@@ -1309,12 +1325,11 @@
                 return;
             }
 
-            let totalPercentages = 0;
             let lowCount = 0;
             let html = '';
 
             filteredStudents.forEach(st => {
-                const studentLogs = window.logs.filter(l => l.idSiswa === st.id && (classFilter ? l.kodeKelas === classFilter : true));
+                const studentLogs = window.logs.filter(l => l.idSiswa === st.id && (classFilter ? l.kodeKelas && l.kodeKelas.toUpperCase() === classFilter : true));
                 const totalSessions = studentLogs.length;
 
                 const hadirCount = studentLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
@@ -1322,7 +1337,6 @@
                 const sakitCount = studentLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
 
                 const rate = totalSessions > 0 ? Math.round((hadirCount / totalSessions) * 100) : 100;
-                totalPercentages += rate;
 
                 if (rate < 75 && totalSessions > 0) lowCount++;
 
@@ -1357,7 +1371,7 @@
                             <span class="px-3 py-1 text-[10px] font-black rounded-full ${badgeColor} shadow-sm">${statusLabel}</span>
                         </td>
                         <td class="py-4 px-5 text-center">
-                            <button onclick="openModalSummaryDetail('${st.id}')" class="px-3.5 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 mx-auto border border-sky-200 shadow-sm">
+                            <button onclick="window.openModalSummaryDetail('${st.id}')" class="px-3.5 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 mx-auto border border-sky-200 shadow-sm">
                                 <i class="fa-solid fa-eye"></i> Details
                             </button>
                         </td>
@@ -1429,7 +1443,7 @@
                 cbHtml += `
                     <label class="flex items-center space-x-2.5 p-2 hover:bg-white rounded-xl cursor-pointer text-xs font-extrabold text-slate-700 transition">
                         <input type="checkbox" name="modalClasses" value="${cls.id}" class="rounded text-sky-600 w-4 h-4">
-                        <span>${cls.name}</span>
+                        <span>${cls.name} [${cls.id}]</span>
                     </label>
                 `;
             });
@@ -1450,11 +1464,11 @@
             const checkboxesDiv = document.getElementById('modalClassCheckboxes');
             let cbHtml = '';
             (window.klcClasses || DEFAULT_KLC_CLASSES).forEach(cls => {
-                const isChecked = Array.isArray(student.classes) && student.classes.includes(cls.id) ? 'checked' : '';
+                const isChecked = Array.isArray(student.classes) && student.classes.some(c => c.trim().toUpperCase() === cls.id.toUpperCase()) ? 'checked' : '';
                 cbHtml += `
                     <label class="flex items-center space-x-2.5 p-2 hover:bg-white rounded-xl cursor-pointer text-xs font-extrabold text-slate-700 transition">
                         <input type="checkbox" name="modalClasses" value="${cls.id}" ${isChecked} class="rounded text-sky-600 w-4 h-4">
-                        <span>${cls.name}</span>
+                        <span>${cls.name} [${cls.id}]</span>
                     </label>
                 `;
             });
@@ -1644,9 +1658,13 @@
         };
 
         window.saveGasEndpoint = function() {
-            const url = document.getElementById('gasEndpointUrl').value.trim();
+            let url = document.getElementById('gasEndpointUrl').value.trim();
+            if (url.includes('https://') && url.indexOf('https://', 8) !== -1) {
+                url = url.substring(0, url.indexOf('https://', 8));
+            }
             localStorage.setItem('klc_gas_url', url);
             if (url) {
+                document.getElementById('gasEndpointUrl').value = url;
                 window.updateSyncBadge(true);
                 window.fetchDataFromGoogleSheets();
             } else {
@@ -1662,7 +1680,7 @@
 
             if (isSynced) {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner";
-                text.innerText = "GS Auto-Detected";
+                text.innerText = "GS Auto-Synced";
             } else {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/25 font-semibold shadow-inner";
                 text.innerText = "Local Storage";
@@ -1693,19 +1711,27 @@ function doGet(e) {
     }
     
     var rawStudents = sheetSiswa.getDataRange().getValues();
-    var students = [];
+    var studentsMap = {};
+    
     for (var i = 1; i < rawStudents.length; i++) {
       var row = rawStudents[i];
       if (row[0] && row[1]) {
-        var rawClasses = row[2] ? row[2].toString().split(",") : [];
-        var classesArr = rawClasses.map(function(c) { return c.trim(); }).filter(Boolean);
-        students.push({
-          id: row[0].toString(),
-          name: row[1].toString(),
-          classes: classesArr,
-          status: row[3] ? row[3].toString() : "Active"
-        });
+        var id = row[0].toString().trim();
+        var name = row[1].toString().trim();
+        var codeClass = row[2] ? row[2].toString().trim() : "";
+        
+        if (!studentsMap[id]) {
+          studentsMap[id] = { id: id, name: name, classes: [], status: "Active" };
+        }
+        if (codeClass && studentsMap[id].classes.indexOf(codeClass) === -1) {
+          studentsMap[id].classes.push(codeClass);
+        }
       }
+    }
+    
+    var students = [];
+    for (var k in studentsMap) {
+      students.push(studentsMap[k]);
     }
     
     var rawLogs = sheetLog.getDataRange().getValues();
@@ -1764,20 +1790,6 @@ function doPost(e) {
           item.materi
         ]);
       });
-      return ContentService.createTextOutput(JSON.stringify({status: "success"}))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    if (data.action === "saveStudent" && data.data) {
-      var sheetSiswa = ss.getSheetByName("Master_Siswa");
-      if (!sheetSiswa) {
-        sheetSiswa = ss.insertSheet("Master_Siswa");
-        sheetSiswa.appendRow(["Student ID", "Full Name", "Enrolled Classes", "Status"]);
-      }
-      var s = data.data;
-      var classesStr = Array.isArray(s.classes) ? s.classes.join(", ") : s.classes;
-      sheetSiswa.appendRow([s.id, s.name, classesStr, s.status || "Active"]);
-      
       return ContentService.createTextOutput(JSON.stringify({status: "success"}))
         .setMimeType(ContentService.MimeType.JSON);
     }
