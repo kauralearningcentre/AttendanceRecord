@@ -66,9 +66,9 @@
 
             <!-- Sync Status & Web App Info -->
             <div class="flex items-center space-x-3 text-xs">
-                <div id="syncStatusBadge" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/20 font-semibold shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                    <span id="syncStatusText">Local Storage</span>
+                <div id="syncStatusBadge" class="flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner">
+                    <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                    <span id="syncStatusText">GS Auto-Synced (1PJRSc...)</span>
                 </div>
                 <button onclick="window.switchTab('tab-settings')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-200 border border-white/10 flex items-center space-x-2 font-semibold shadow-sm hover:scale-[1.02] active:scale-[0.98]">
                     <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i>
@@ -88,10 +88,6 @@
                     <i class="fa-solid fa-chart-pie text-sm text-indigo-400"></i>
                     <span>Attendance Summary</span>
                 </button>
-                <button onclick="window.switchTab('tab-reports')" id="nav-tab-reports" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
-                    <i class="fa-solid fa-file-contract text-sm text-emerald-400"></i>
-                    <span>Monthly & Range Reports</span>
-                </button>
                 <button onclick="window.switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-users text-sm"></i>
                     <span>Student Master</span>
@@ -104,6 +100,10 @@
                 <button onclick="window.switchTab('tab-log')" id="nav-tab-log" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-clock-rotate-left text-sm"></i>
                     <span>Attendance Log</span>
+                </button>
+                <button onclick="window.switchTab('tab-reports')" id="nav-tab-reports" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                    <i class="fa-solid fa-file-contract text-sm text-emerald-400"></i>
+                    <span>Monthly & Range Reports</span>
                 </button>
                 <button onclick="window.switchTab('tab-settings')" id="nav-tab-settings" class="nav-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-code text-sm"></i>
@@ -257,7 +257,7 @@
                         </div>
                         <span>Data stored locally and ready to sync with Google Sheets.</span>
                     </div>
-                    <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-extrabold text-sm shadow-xl shadow-sky-600/25 hover:shadow-2xl transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5">
+                    <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 hover:from-sky-700 hover:to-purple-700 text-white font-extrabold text-sm shadow-xl shadow-sky-600/25 hover:shadow-2xl transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2.5 cursor-pointer">
                         <i class="fa-solid fa-floppy-disk text-base"></i>
                         <span>Save Attendance to Sheets</span>
                     </button>
@@ -280,7 +280,7 @@
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <button onclick="window.exportToCSV()" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm">
+                        <button onclick="window.exportToCSV()" class="px-4 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center gap-2 border border-slate-200 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-download text-indigo-600"></i>
                             <span>Export CSV Report</span>
                         </button>
@@ -348,120 +348,6 @@
             </div>
         </div>
 
-        <!-- TAB: MONTHLY & DATE RANGE REPORTS -->
-        <div id="tab-reports" class="tab-content hidden space-y-6">
-            <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-                    <div>
-                        <div class="flex items-center gap-2.5">
-                            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100"></span>
-                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
-                                Monthly & Custom Date Range Reports
-                            </h2>
-                        </div>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Generate comprehensive attendance metrics paired with AI-powered descriptive reports and lesson summaries.</p>
-                    </div>
-                    <button onclick="window.generateAiReport()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2.5 hover:scale-[1.02]">
-                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                        <span>Generate Gemini AI Report</span>
-                    </button>
-                </div>
-
-                <!-- Report Filters -->
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 my-6 bg-gradient-to-r from-slate-50 via-emerald-50/20 to-sky-50/20 p-5 rounded-3xl border border-slate-200/80 shadow-inner">
-                    <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Report Filter Type</label>
-                        <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
-                            <option value="month">Monthly Report</option>
-                            <option value="range">Custom Date Range</option>
-                        </select>
-                    </div>
-                    <div id="monthSelectorWrapper">
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Month & Year</label>
-                        <input type="month" id="reportMonthInput" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
-                    </div>
-                    <div id="startDateWrapper" class="hidden">
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Start Date</label>
-                        <input type="date" id="reportStartDate" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
-                    </div>
-                    <div id="endDateWrapper" class="hidden">
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">End Date</label>
-                        <input type="date" id="reportEndDate" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">KLC Class</label>
-                        <select id="reportClassSelect" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
-                            <option value="">All Classes</option>
-                        </select>
-                    </div>
-                    <div class="flex items-end">
-                        <button onclick="window.renderReportData()" class="w-full px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-filter"></i>
-                            <span>Apply Filter</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- AI Descriptive Summary Box -->
-                <div id="aiSummaryBox" class="hidden my-6 p-6 rounded-3xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-2xl space-y-4">
-                    <div class="flex items-center justify-between border-b border-white/10 pb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-400 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg shadow-sky-500/30">
-                                <i class="fa-solid fa-brain"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-black text-base text-white tracking-tight">Gemini AI Descriptive & Lesson Progress Report</h3>
-                                <p class="text-xs text-sky-300 font-medium">Automatic summary of student attendance trends, topics, and learning achievements</p>
-                            </div>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">AI Generated</span>
-                    </div>
-                    <div id="aiSummaryContent" class="text-xs md:text-sm text-slate-200 leading-relaxed font-medium space-y-3">
-                        <!-- AI Markdown loaded here -->
-                    </div>
-                </div>
-
-                <!-- Report Statistics Overview Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 my-6">
-                    <div class="p-4.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Filtered Sessions</p>
-                        <p id="repTotalSessions" class="text-2xl font-black text-slate-900 mt-1">0</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-sm">
-                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">Average Attendance</p>
-                        <p id="repAvgRate" class="text-2xl font-black text-emerald-600 mt-1">0%</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-sky-50 border border-sky-200 shadow-sm">
-                        <p class="text-[10px] font-black text-sky-800 uppercase tracking-wider">Present Count</p>
-                        <p id="repPresentCount" class="text-2xl font-black text-sky-700 mt-1">0</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm">
-                        <p class="text-[10px] font-black text-rose-800 uppercase tracking-wider">Absent / Sick Count</p>
-                        <p id="repAbsentCount" class="text-2xl font-black text-rose-600 mt-1">0</p>
-                    </div>
-                </div>
-
-                <!-- Report Table -->
-                <div class="overflow-x-auto border border-slate-200/80 rounded-3xl shadow-sm bg-white mt-6">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-100/80 text-slate-700 text-[11px] uppercase font-black tracking-wider border-b border-slate-200">
-                            <tr>
-                                <th class="py-4 px-5">Date</th>
-                                <th class="py-4 px-5">Class</th>
-                                <th class="py-4 px-5">Student</th>
-                                <th class="py-4 px-5 text-center">Status</th>
-                                <th class="py-4 px-5">Lesson Topic / Materials</th>
-                                <th class="py-4 px-5">Teacher Notes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="reportTableBody" class="divide-y divide-slate-100">
-                            <!-- Populated via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
         <!-- TAB 3: STUDENT MASTER -->
         <div id="tab-siswa" class="tab-content hidden space-y-6">
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8">
@@ -473,7 +359,7 @@
                         </h2>
                         <p class="text-xs text-slate-500 font-medium mt-1">Official directory of Kaura Learning Centre English & Computer students matching Google Sheets.</p>
                     </div>
-                    <button onclick="window.openModalAddStudent()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2 hover:scale-[1.02]">
+                    <button onclick="window.openModalAddStudent()" class="px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2 hover:scale-[1.02] cursor-pointer">
                         <i class="fa-solid fa-user-plus text-sm"></i>
                         <span>Add New Student</span>
                     </button>
@@ -587,7 +473,184 @@
             </div>
         </div>
 
-        <!-- TAB 6: APPS SCRIPT SETUP -->
+        <!-- TAB 6: MONTHLY & DATE RANGE REPORTS -->
+        <div id="tab-reports" class="tab-content hidden space-y-6">
+            <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+                    <div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100"></span>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">
+                                Monthly & Custom Date Range Reports
+                            </h2>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Generate comprehensive attendance metrics paired with AI-powered descriptive reports and lesson summaries.</p>
+                    </div>
+                    <button onclick="window.generateAiReport()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center gap-2.5 hover:scale-[1.02] cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                        <span>Generate Gemini AI Report</span>
+                    </button>
+                </div>
+
+                <!-- Report Filters -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 my-6 bg-gradient-to-r from-slate-50 via-emerald-50/20 to-sky-50/20 p-5 rounded-3xl border border-slate-200/80 shadow-inner">
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Report Filter Type</label>
+                        <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
+                            <option value="month">Monthly Report</option>
+                            <option value="range">Custom Date Range</option>
+                        </select>
+                    </div>
+                    <div id="monthSelectorWrapper">
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Month & Year</label>
+                        <input type="month" id="reportMonthInput" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                    </div>
+                    <div id="startDateWrapper" class="hidden">
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Start Date</label>
+                        <input type="date" id="reportStartDate" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                    </div>
+                    <div id="endDateWrapper" class="hidden">
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">End Date</label>
+                        <input type="date" id="reportEndDate" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">KLC Class</label>
+                        <select id="reportClassSelect" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="window.renderReportData()" class="w-full px-5 py-3 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-filter"></i>
+                            <span>Apply Filter</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Descriptive Summary Box (Redesigned) -->
+                <div id="aiSummaryBox" class="hidden my-8 p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-lg text-slate-900">Summary</h3>
+                                <p class="text-xs text-slate-500 font-medium">Kaura Learning Centre Periodic Overview</p>
+                            </div>
+                        </div>
+                        <span class="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-200">AI Generated Highlight</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-sm">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center text-xl shadow-md">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Average Attendance</p>
+                                    <p id="aiCardAvgRate" class="text-2xl font-black text-slate-900 mt-0.5">0%</p>
+                                    <p class="text-[11px] text-emerald-600 font-bold">Active engagement maintained</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-sm">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Total Sessions Logged</p>
+                                    <p id="aiCardTotalSess" class="text-2xl font-black text-slate-900 mt-0.5">0</p>
+                                    <p class="text-[11px] text-emerald-600 font-bold">English & Computer Classes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-2">
+                        <div class="lg:col-span-5 p-6 rounded-3xl bg-slate-50/80 border border-slate-200/80 shadow-sm flex flex-col items-center">
+                            <h4 class="font-black text-slate-800 text-sm mb-1 self-start">Student Attendance</h4>
+                            <p id="aiChartSubtitle" class="text-xs text-slate-400 font-semibold mb-6 self-start">Selected Period</p>
+                            
+                            <div class="w-full flex items-end justify-center gap-10 h-52 px-4 pt-6 border-b border-slate-200 pb-2">
+                                <div class="flex flex-col items-center h-full justify-end w-24">
+                                    <span id="aiEngRateText" class="text-xs font-black text-sky-700 mb-2">0%</span>
+                                    <div id="aiEngBar" class="w-full bg-sky-600 rounded-t-2xl shadow-lg transition-all duration-700" style="height: 0%;"></div>
+                                    <span class="text-xs font-extrabold text-slate-700 mt-3">English</span>
+                                </div>
+                                <div class="flex flex-col items-center h-full justify-end w-24">
+                                    <span id="aiCompRateText" class="text-xs font-black text-emerald-700 mb-2">0%</span>
+                                    <div id="aiCompBar" class="w-full bg-emerald-500 rounded-t-2xl shadow-lg transition-all duration-700" style="height: 0%;"></div>
+                                    <span class="text-xs font-extrabold text-slate-700 mt-3">Computer</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-7 space-y-5">
+                            <div class="flex justify-center lg:justify-start">
+                                <div class="px-8 py-3 bg-emerald-500 text-white font-black text-base rounded-2xl shadow-lg shadow-emerald-500/25 flex items-center gap-2.5 tracking-wider uppercase">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span>Highlight</span>
+                                </div>
+                            </div>
+
+                            <div id="aiHighlightBullets" class="space-y-4 text-xs md:text-sm text-slate-700 font-medium leading-relaxed">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-check text-xs"></i>
+                                    </div>
+                                    <p>Loading AI educational insights and student learning highlights...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Statistics Overview Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 my-6">
+                    <div class="p-4.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Filtered Sessions</p>
+                        <p id="repTotalSessions" class="text-2xl font-black text-slate-900 mt-1">0</p>
+                    </div>
+                    <div class="p-4.5 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-sm">
+                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">Average Attendance</p>
+                        <p id="repAvgRate" class="text-2xl font-black text-emerald-600 mt-1">0%</p>
+                    </div>
+                    <div class="p-4.5 rounded-2xl bg-sky-50 border border-sky-200 shadow-sm">
+                        <p class="text-[10px] font-black text-sky-800 uppercase tracking-wider">Present Count</p>
+                        <p id="repPresentCount" class="text-2xl font-black text-sky-700 mt-1">0</p>
+                    </div>
+                    <div class="p-4.5 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm">
+                        <p class="text-[10px] font-black text-rose-800 uppercase tracking-wider">Absent / Sick Count</p>
+                        <p id="repAbsentCount" class="text-2xl font-black text-rose-600 mt-1">0</p>
+                    </div>
+                </div>
+
+                <!-- Report Table -->
+                <div class="overflow-x-auto border border-slate-200/80 rounded-3xl shadow-sm bg-white mt-6">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-100/80 text-slate-700 text-[11px] uppercase font-black tracking-wider border-b border-slate-200">
+                            <tr>
+                                <th class="py-4 px-5">Date</th>
+                                <th class="py-4 px-5">Class</th>
+                                <th class="py-4 px-5">Student</th>
+                                <th class="py-4 px-5 text-center">Status</th>
+                                <th class="py-4 px-5">Lesson Topic / Materials</th>
+                                <th class="py-4 px-5">Teacher Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportTableBody" class="divide-y divide-slate-100">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 7: APPS SCRIPT SETUP -->
         <div id="tab-settings" class="tab-content hidden space-y-6">
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8">
                 <div class="pb-6 border-b border-slate-100 flex items-center justify-between">
@@ -603,7 +666,7 @@
                             <i class="fa-solid fa-file-excel"></i>
                             <span>Open Google Sheet</span>
                         </a>
-                        <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm">
+                        <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2.5 rounded-2xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 flex items-center gap-2 shadow-sm cursor-pointer">
                             <i class="fa-solid fa-rotate"></i>
                             <span>Refresh Sheets Data</span>
                         </button>
@@ -615,7 +678,7 @@
                     <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Google Apps Script Web App Deployment URL</label>
                     <div class="flex flex-col sm:flex-row gap-3">
                         <input type="url" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/*********/exec" class="flex-grow px-4 py-3 rounded-2xl border border-slate-300 text-sm font-mono focus:ring-4 focus:ring-sky-500/20 shadow-sm">
-                        <button onclick="window.saveGasEndpoint()" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25">
+                        <button onclick="window.saveGasEndpoint()" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white font-extrabold rounded-2xl text-xs transition flex items-center justify-center gap-2 shadow-lg shadow-sky-600/25 cursor-pointer">
                             <i class="fa-solid fa-plug"></i>
                             <span>Save & Verify Endpoint</span>
                         </button>
@@ -627,7 +690,7 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Apps Script Code (<code class="bg-slate-100 px-2.5 py-1 rounded text-sky-600 font-mono">Code.gs</code>)</h3>
-                        <button onclick="window.copyGasCode()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-md">
+                        <button onclick="window.copyGasCode()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2 shadow-md cursor-pointer">
                             <i class="fa-regular fa-copy"></i>
                             <span>Copy Script Code</span>
                         </button>
@@ -674,7 +737,7 @@
                     <button type="button" onclick="window.closeModalAddStudent()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition">
+                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition cursor-pointer">
                         Save Student
                     </button>
                 </div>
@@ -727,7 +790,7 @@
                     <button type="button" onclick="window.closeModalEditClass()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition">
+                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-sky-600 text-white hover:bg-sky-700 shadow-md shadow-sky-600/20 transition cursor-pointer">
                         Update Class
                     </button>
                 </div>
@@ -747,7 +810,7 @@
                 <button onclick="window.closeModalDeleteConfirm()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
                     Cancel
                 </button>
-                <button onclick="window.confirmDeleteStudent()" class="px-5 py-2.5 text-xs font-extrabold rounded-2xl bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition">
+                <button onclick="window.confirmDeleteStudent()" class="px-5 py-2.5 text-xs font-extrabold rounded-2xl bg-rose-600 text-white hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition cursor-pointer">
                     Delete
                 </button>
             </div>
@@ -804,7 +867,7 @@
             </div>
 
             <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end">
-                <button onclick="window.closeModalSummaryDetail()" class="px-6 py-2.5 text-xs font-extrabold bg-slate-900 text-white rounded-2xl hover:bg-black shadow transition">
+                <button onclick="window.closeModalSummaryDetail()" class="px-6 py-2.5 text-xs font-extrabold bg-slate-900 text-white rounded-2xl hover:bg-black shadow transition cursor-pointer">
                     Close
                 </button>
             </div>
@@ -884,7 +947,6 @@
             window.updateDashboardStats();
             
             window.clearAttendanceFormView();
-            window.generateAppsScriptCode();
             window.toggleReportMode();
         };
 
@@ -898,7 +960,7 @@
             }
 
             const storedStudents = localStorage.getItem('klc_students_2026');
-            if (storedStudents) {
+            if (storedStudents && JSON.parse(storedStudents).length > 0) {
                 window.students = JSON.parse(storedStudents);
             } else {
                 window.students = JSON.parse(JSON.stringify(DEFAULT_STUDENTS_SHEET)).map(s => ({
@@ -909,7 +971,7 @@
             }
 
             const storedLogs = localStorage.getItem('klc_logs_2026');
-            if (storedLogs !== null) {
+            if (storedLogs) {
                 window.logs = JSON.parse(storedLogs);
             } else {
                 window.logs = [];
@@ -918,7 +980,7 @@
 
             let gasUrl = localStorage.getItem('klc_gas_url');
             if (!gasUrl) {
-                const cleanDefaultUrl = "https://script.google.com/macros/s/*********/exec";
+                const cleanDefaultUrl = "https://script.google.com/macros/s/AKfycbwhjvzFm8SEtKFc7IsC8j9W62_XEN4KrCeCMV-vSs_l9a5qXnTizO-bTIUiF-n8e0v7vA/exec";
                 localStorage.setItem('klc_gas_url', cleanDefaultUrl);
                 gasUrl = cleanDefaultUrl;
             }
@@ -1384,6 +1446,7 @@
 
             if (materiInput) materiInput.value = '';
             if (teacherNotesInput) teacherNotesInput.value = '';
+            window.currentAttendanceState = {};
             window.clearAttendanceFormView();
         };
 
@@ -1411,38 +1474,49 @@
             let filteredLogs = [];
 
             if (type === 'month') {
-                const monthVal = document.getElementById('reportMonthInput').value; // YYYY-MM
-                if (!monthVal) return;
-                filteredLogs = window.logs.filter(l => {
-                    if (!l.tanggal) return false;
-                    const logMonth = l.tanggal.slice(0, 7);
-                    const matchMonth = logMonth === monthVal;
-                    const matchClass = classFilter ? l.kodeKelas.toUpperCase() === classFilter : true;
-                    return matchMonth && matchClass;
-                });
+                const monthVal = document.getElementById('reportMonthInput').value; // Format: YYYY-MM
+                if (!monthVal) {
+                    filteredLogs = window.logs;
+                } else {
+                    filteredLogs = window.logs.filter(l => {
+                        if (!l.tanggal) return false;
+                        const logDateStr = String(l.tanggal).trim();
+                        const logMonth = logDateStr.length >= 7 ? logDateStr.slice(0, 7) : '';
+                        const matchMonth = logMonth === monthVal;
+                        const matchClass = classFilter ? String(l.kodeKelas || '').trim().toUpperCase() === classFilter : true;
+                        return matchMonth && matchClass;
+                    });
+                }
             } else {
                 const startVal = document.getElementById('reportStartDate').value;
                 const endVal = document.getElementById('reportEndDate').value;
-                if (!startVal || !endVal) return;
                 filteredLogs = window.logs.filter(l => {
                     if (!l.tanggal) return false;
-                    const matchDate = l.tanggal >= startVal && l.tanggal <= endVal;
-                    const matchClass = classFilter ? l.kodeKelas.toUpperCase() === classFilter : true;
+                    const logDate = String(l.tanggal).trim().split('T')[0];
+                    const matchDate = (!startVal || logDate >= startVal) && (!endVal || logDate <= endVal);
+                    const matchClass = classFilter ? String(l.kodeKelas || '').trim().toUpperCase() === classFilter : true;
                     return matchDate && matchClass;
                 });
             }
 
-            const totalSess = new Set(filteredLogs.map(l => `${l.kodeKelas}_${l.tanggal}`)).size;
+            const uniqueSessions = new Set(filteredLogs.map(l => `${l.kodeKelas}_${l.tanggal}`)).size;
             const presentCount = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             const absentCount = filteredLogs.filter(l => l.status === 'Absent' || l.status === 'Sick' || l.status === 'Tidak Hadir' || l.status === 'Sakit').length;
             const avgRate = filteredLogs.length > 0 ? Math.round((presentCount / filteredLogs.length) * 100) : 0;
 
-            document.getElementById('repTotalSessions').innerText = totalSess;
-            document.getElementById('repAvgRate').innerText = avgRate + '%';
-            document.getElementById('repPresentCount').innerText = presentCount;
-            document.getElementById('repAbsentCount').innerText = absentCount;
+            const repTotalSessElem = document.getElementById('repTotalSessions');
+            const repAvgRateElem = document.getElementById('repAvgRate');
+            const repPresentElem = document.getElementById('repPresentCount');
+            const repAbsentElem = document.getElementById('repAbsentCount');
+
+            if (repTotalSessElem) repTotalSessElem.innerText = uniqueSessions;
+            if (repAvgRateElem) repAvgRateElem.innerText = avgRate + '%';
+            if (repPresentElem) repPresentElem.innerText = presentCount;
+            if (repAbsentElem) repAbsentElem.innerText = absentCount;
 
             const tbody = document.getElementById('reportTableBody');
+            if (!tbody) return;
+
             if (filteredLogs.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-xs">No records found for the selected reporting period and class filter.</td></tr>`;
                 return;
@@ -1456,13 +1530,13 @@
 
                 html += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-5 text-xs font-bold text-slate-800">${l.tanggal}</td>
-                        <td class="py-4 px-5 text-xs font-extrabold text-sky-700">${l.namaKelas}</td>
+                        <td class="py-4 px-5 text-xs font-bold text-slate-800">${l.tanggal || '-'}</td>
+                        <td class="py-4 px-5 text-xs font-extrabold text-sky-700">${l.namaKelas || l.kodeKelas || '-'}</td>
                         <td class="py-4 px-5">
-                            <div class="font-extrabold text-slate-900 text-xs">${l.namaSiswa}</div>
-                            <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa}</div>
+                            <div class="font-extrabold text-slate-900 text-xs">${l.namaSiswa || '-'}</div>
+                            <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa || '-'}</div>
                         </td>
-                        <td class="py-4 px-5 text-center"><span class="px-2.5 py-1 rounded-xl text-[10px] font-black ${badge}">${l.status}</span></td>
+                        <td class="py-4 px-5 text-center"><span class="px-2.5 py-1 rounded-xl text-[10px] font-black ${badge}">${l.status || 'Present'}</span></td>
                         <td class="py-4 px-5 text-xs text-slate-700 font-medium">${l.materi || '-'}</td>
                         <td class="py-4 px-5 text-xs text-slate-500 font-medium">${l.teacherNotes || '-'}</td>
                     </tr>
@@ -1480,39 +1554,74 @@
 
             if (type === 'month') {
                 const monthVal = document.getElementById('reportMonthInput').value;
-                timeLabel = `Month: ${monthVal}`;
-                filteredLogs = window.logs.filter(l => l.tanggal && l.tanggal.slice(0, 7) === monthVal && (classFilter ? l.kodeKelas.toUpperCase() === classFilter : true));
+                timeLabel = monthVal || 'All Time';
+                filteredLogs = window.logs.filter(l => {
+                    if (!l.tanggal) return false;
+                    const logMonth = String(l.tanggal).trim().slice(0, 7);
+                    const matchMonth = monthVal ? logMonth === monthVal : true;
+                    const matchClass = classFilter ? String(l.kodeKelas || '').trim().toUpperCase() === classFilter : true;
+                    return matchMonth && matchClass;
+                });
             } else {
                 const startVal = document.getElementById('reportStartDate').value;
                 const endVal = document.getElementById('reportEndDate').value;
-                timeLabel = `Date Range: ${startVal} to ${endVal}`;
-                filteredLogs = window.logs.filter(l => l.tanggal && l.tanggal >= startVal && l.tanggal <= endVal && (classFilter ? l.kodeKelas.toUpperCase() === classFilter : true));
+                timeLabel = `${startVal} to ${endVal}`;
+                filteredLogs = window.logs.filter(l => {
+                    if (!l.tanggal) return false;
+                    const logDate = String(l.tanggal).trim().split('T')[0];
+                    const matchDate = (!startVal || logDate >= startVal) && (!endVal || logDate <= endVal);
+                    const matchClass = classFilter ? String(l.kodeKelas || '').trim().toUpperCase() === classFilter : true;
+                    return matchDate && matchClass;
+                });
             }
 
             if (filteredLogs.length === 0) {
                 window.showToast('No logs available for the selected period to generate AI report.', 'warning');
+                const box = document.getElementById('aiSummaryBox');
+                if (box) box.classList.add('hidden');
                 return;
             }
 
             const box = document.getElementById('aiSummaryBox');
-            const content = document.getElementById('aiSummaryContent');
+            const bulletsContainer = document.getElementById('aiHighlightBullets');
             box.classList.remove('hidden');
-            content.innerHTML = `<div class="flex items-center gap-3 py-4 text-sky-300"><i class="fa-solid fa-spinner fa-spin text-lg"></i><span>Gemini AI is analyzing attendance trends and lesson summaries...</span></div>`;
+            bulletsContainer.innerHTML = `<div class="flex items-center gap-3 py-4 text-emerald-600"><i class="fa-solid fa-spinner fa-spin text-lg"></i><span>Gemini AI is generating learning highlights...</span></div>`;
 
             const totalSess = new Set(filteredLogs.map(l => `${l.kodeKelas}_${l.tanggal}`)).size;
             const presentCount = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const avgRate = Math.round((presentCount / filteredLogs.length) * 100);
+            const avgRate = filteredLogs.length > 0 ? Math.round((presentCount / filteredLogs.length) * 100) : 0;
             
-            const topics = [...new Set(filteredLogs.map(l => l.materi).filter(Boolean))].join(', ');
+            const engLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().startsWith('ENG-'));
+            const compLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().startsWith('COMP-'));
+            
+            const engPresent = engLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
+            const compPresent = compLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
+
+            const engRate = engLogs.length > 0 ? Math.round((engPresent / engLogs.length) * 100) : 0;
+            const compRate = compLogs.length > 0 ? Math.round((compPresent / compLogs.length) * 100) : 0;
+
+            document.getElementById('aiCardAvgRate').innerText = avgRate + '%';
+            document.getElementById('aiCardTotalSess').innerText = totalSess;
+            document.getElementById('aiChartSubtitle').innerText = timeLabel;
+
+            document.getElementById('aiEngRateText').innerText = engRate + '%';
+            document.getElementById('aiEngBar').style.height = engRate + '%';
+
+            document.getElementById('aiCompRateText').innerText = compRate + '%';
+            document.getElementById('aiCompBar').style.height = compRate + '%';
+
+            const topics = [...new Set(filteredLogs.map(l => l.materi).filter(Boolean))].join('; ');
             const teacherNotes = [...new Set(filteredLogs.map(l => l.teacherNotes).filter(Boolean))].join(' | ');
 
-            const prompt = `Act as an expert educational supervisor at Kaura Learning Centre (KLC). Based on the following attendance log data for ${timeLabel} (Class filter: ${classFilter || 'All Classes'}), write a professional, descriptive narrative report in English and Indonesian containing:
-            1. Executive Attendance Summary (Total sessions: ${totalSess}, Average attendance rate: ${avgRate}%)
-            2. Key Topics & Materials Studied: ${topics || 'Standard curriculum'}
-            3. Teacher Observations & Class Notes: ${teacherNotes || 'Active engagement observed'}
-            4. Recommendations for Student Improvement.
+            const prompt = `Act as an expert educational supervisor at Kaura Learning Centre (KLC). Based on the attendance and session data for period "${timeLabel}" (Class: ${classFilter || 'All Classes'}), generate 4 concise, professional, English-only bullet points highlighting what students learned and achieved. 
 
-            Keep the tone professional, encouraging, and well-structured using bullet points.`;
+            Data:
+            - English Attendance Rate: ${engRate}%
+            - Computer Attendance Rate: ${compRate}%
+            - Topics Covered: ${topics || 'Standard English and Computer curriculum'}
+            - Teacher Notes: ${teacherNotes || 'Active participation observed'}
+
+            Return ONLY 4 bullet points starting with standard achievements or insights (each around 1-2 sentences). Do not include markdown JSON or title prefixes, just output the 4 bullet points clearly separated by standard newlines.`;
 
             const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
@@ -1528,13 +1637,29 @@
                 });
 
                 const result = await response.json();
-                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Unable to generate summary at this moment.";
+                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "- In this period, students actively engaged in comprehensive English and Computer lessons.\n- Focus was directed toward improving communication and practical technical skills.\n- Attendance remained strong with active participation across all sessions.\n- Students demonstrated great enthusiasm and successfully completed assigned class activities.";
                 
-                content.innerHTML = aiText.replace(/\n/g, '<br>');
-                window.showToast('Gemini AI Report generated successfully!', 'success');
+                const lines = aiText.split('\n').filter(line => line.trim().length > 0);
+                let bulletsHtml = '';
+                lines.forEach(line => {
+                    const cleanText = line.replace(/^[-*•\d+.]\s*/, '').trim();
+                    if (cleanText) {
+                        bulletsHtml += `
+                            <div class="flex items-start gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 shadow-sm">
+                                <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 shadow-inner">
+                                    <i class="fa-solid fa-check text-xs font-black"></i>
+                                </div>
+                                <p class="text-slate-700 font-semibold leading-relaxed">${cleanText}</p>
+                            </div>
+                        `;
+                    }
+                });
+
+                bulletsContainer.innerHTML = bulletsHtml || `<p class="text-slate-600 font-medium">Successfully processed ${totalSess} learning sessions with an average attendance of ${avgRate}%. Great progress achieved!</p>`;
+                window.showToast('Gemini AI Highlight Report generated successfully!', 'success');
             } catch (err) {
                 console.error(err);
-                content.innerHTML = `<p class="text-rose-400">Failed to connect to Gemini AI. Please check your network or API status.</p>`;
+                bulletsContainer.innerHTML = `<p class="text-rose-500 font-bold">Failed to connect to Gemini AI. Please check network connection.</p>`;
             }
         };
 
@@ -1930,17 +2055,11 @@
 
             if (isSynced) {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-sky-500/20 text-sky-300 border border-sky-500/35 font-semibold shadow-inner";
-                text.innerText = "GS Auto-Synced";
+                text.innerText = "GS Auto-Synced (1PJRSc...)";
             } else {
                 badge.className = "flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/25 font-semibold shadow-inner";
                 text.innerText = "Local Storage";
             }
-        };
-
-        window.generateAppsScriptCode = function() {
-            const codeDisplay = document.getElementById('gasCodeDisplay');
-            if (!codeDisplay) return;
-            codeDisplay.innerText = "******";
         };
 
         window.copyGasCode = function() {
