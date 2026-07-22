@@ -94,7 +94,7 @@
                     <i class="fa-solid fa-rotate text-emerald-300"></i>
                     <span class="hidden sm:inline">Sync Sheets</span>
                 </button>
-                <button onclick="window.switchTab('tab-settings')" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center justify-center shadow-sm" title="Apps Script Setup">
+                <button onclick="window.switchTab('tab-settings')" class="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 cursor-pointer" title="Apps Script Setup">
                     <i class="fa-solid fa-gear"></i>
                 </button>
             </div>
@@ -103,33 +103,29 @@
         <!-- Navigation Tabs -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-klc-800/60">
             <nav class="flex space-x-2 overflow-x-auto custom-scrollbar py-2.5 text-xs font-bold">
-                <button onclick="window.switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-white bg-klc-700 shadow-md shadow-klc-900/30 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-white bg-klc-700 shadow-md shadow-klc-900/30 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-clipboard-user text-sm"></i>
                     <span>Record Attendance</span>
                 </button>
-                <button onclick="window.switchTab('tab-summary')" id="nav-tab-summary" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-summary')" id="nav-tab-summary" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-chart-pie text-sm text-emerald-300"></i>
                     <span>Attendance Summary</span>
                 </button>
-                <button onclick="window.switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-siswa')" id="nav-tab-siswa" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-users text-sm"></i>
                     <span>Student Directory</span>
                 </button>
-                <button onclick="window.switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-chalkboard-user text-sm"></i>
                     <span>KLC Classes Calendar</span>
                 </button>
-                <button onclick="window.switchTab('tab-log')" id="nav-tab-log" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-log')" id="nav-tab-log" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-clock-rotate-left text-sm"></i>
                     <span>Attendance Log</span>
                 </button>
-                <button onclick="window.switchTab('tab-reports')" id="nav-tab-reports" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
+                <button onclick="window.switchTab('tab-reports')" id="nav-tab-reports" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-chart-column text-sm text-emerald-300"></i>
                     <span>Monthly & Reports</span>
-                </button>
-                <button onclick="window.switchTab('tab-settings')" id="nav-tab-settings" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
-                    <i class="fa-solid fa-code text-sm"></i>
-                    <span>Apps Script Setup</span>
                 </button>
             </nav>
         </div>
@@ -138,7 +134,7 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-6">
 
         <!-- Notification Toast Container -->
-        <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+        <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2.5 pointer-events-none"></div>
 
         <!-- Dashboard Quick Overview Bar -->
         <div id="overviewStatsContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -189,15 +185,15 @@
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2">
-                        <button onclick="window.markAllStatus('Present')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Present')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02] cursor-pointer">
                             <i class="fa-solid fa-check text-emerald-600"></i>
                             <span>All Present</span>
                         </button>
-                        <button onclick="window.markAllStatus('Absent')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Absent')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02] cursor-pointer">
                             <i class="fa-solid fa-xmark text-rose-600"></i>
                             <span>All Absent</span>
                         </button>
-                        <button onclick="window.markAllStatus('Sick')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02]">
+                        <button onclick="window.markAllStatus('Sick')" class="px-4 py-2.5 text-xs font-bold rounded-2xl bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition shadow-sm flex items-center gap-2 hover:scale-[1.02] cursor-pointer">
                             <i class="fa-solid fa-briefcase-medical text-amber-600"></i>
                             <span>All Sick</span>
                         </button>
@@ -639,10 +635,15 @@
         <!-- TAB 7: APPS SCRIPT SETUP -->
         <section id="tab-settings" class="tab-content space-y-6">
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8 space-y-6">
-                <div>
-                    <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Integration & Google Sheets Structure</span>
-                    <h2 class="text-xl font-extrabold text-slate-900 mt-2">Google Apps Script & Spreadsheet Tabs Guide</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Recommended spreadsheet setup for managing Student Data, Attendance Logs, and KLC Classes.</p>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Integration & Google Sheets Structure</span>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Google Apps Script & Spreadsheet Tabs Guide</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Recommended spreadsheet setup for managing Student Data, Attendance Logs, and KLC Classes.</p>
+                    </div>
+                    <button onclick="window.switchTab('tab-absensi')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-extrabold transition flex items-center gap-2 cursor-pointer shadow-xs">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                    </button>
                 </div>
 
                 <!-- Endpoint URL Input -->
@@ -831,6 +832,17 @@ function doGet(e) {
     var logRows = logSheet.getDataRange().getValues();
     for (var j = 1; j < logRows.length; j++) {
       var lr = logRows[j];
+      // Column index mapping based on Google Sheet structure:
+      // A: Timestamp (lr[0])
+      // B: Date (lr[1])
+      // C: Student ID (lr[2])
+      // D: Student Name (lr[3])
+      // E: Class ID (lr[4])
+      // F: Class Name (lr[5])
+      // G: Status (lr[6])
+      // H: Topic (lr[7])
+      // I: Teacher Note (lr[8])
+      // J: Remark (lr[9])
       if (!lr[2]) continue;
       logs.push({
         timestamp: lr[0],
@@ -1130,6 +1142,18 @@ function doGet(e) {
             const gasInput = document.getElementById('gasEndpointUrl');
             if (gasInput) gasInput.value = gasUrl;
             window.updateSyncBadge(!!gasUrl);
+        };
+
+        window.formatDisplayDate = function(dateStr) {
+            if (!dateStr) return '-';
+            const s = String(dateStr).trim();
+            if (s.includes('T')) {
+                return s.split('T')[0];
+            }
+            if (s.includes(' ')) {
+                return s.split(' ')[0];
+            }
+            return s;
         };
 
         window.setupDefaultDates = function() {
@@ -1501,7 +1525,7 @@ function doGet(e) {
         window.fetchDataFromGoogleSheets = function() {
             let url = localStorage.getItem('klc_gas_url');
             if (!url) {
-                window.showToast('No Apps Script Web App URL configured.', 'warning');
+                window.showToast('Please configure your Google Apps Script URL in settings.', 'warning');
                 return;
             }
 
@@ -1632,7 +1656,12 @@ function doGet(e) {
             const countBadge = document.getElementById('countClassStudents');
             if (countBadge) countBadge.innerText = `${filteredStudents.length} Students`;
 
-            const existingLog = window.logs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase() === classId && l.tanggal === tanggal);
+            const existingLog = window.logs.filter(l => {
+                const lCode = String(l.kodeKelas || '').toUpperCase();
+                const lDate = window.formatDisplayDate(l.tanggal);
+                return lCode === classId && lDate === tanggal;
+            });
+
             const notice = document.getElementById('alreadySavedNotice');
             
             if (notice) {
@@ -1664,7 +1693,7 @@ function doGet(e) {
 
             let html = '';
             filteredStudents.forEach((student, index) => {
-                const loggedItem = existingLog.find(l => l.idSiswa === student.id);
+                const loggedItem = existingLog.find(l => String(l.idSiswa) === String(student.id));
                 const currentStatus = loggedItem ? loggedItem.status : (window.currentAttendanceState[student.id] || '');
                 const currentNote = loggedItem ? loggedItem.remarks : '';
 
@@ -1751,7 +1780,6 @@ function doGet(e) {
             const materi = topicInput ? topicInput.value.trim() : '';
             const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
 
-            // Generate precise date and time formatted timestamp (e.g. 2026-07-22 16:27:16)
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -1773,7 +1801,11 @@ function doGet(e) {
                 return;
             }
 
-            window.logs = window.logs.filter(l => !(l.kodeKelas && l.kodeKelas.toUpperCase() === classId.toUpperCase() && l.tanggal === tanggal));
+            window.logs = window.logs.filter(l => {
+                const lCode = String(l.kodeKelas || '').toUpperCase();
+                const lDate = window.formatDisplayDate(l.tanggal);
+                return !(lCode === classId.toUpperCase() && lDate === tanggal);
+            });
 
             const newRecords = [];
             filteredStudents.forEach(st => {
@@ -1819,7 +1851,6 @@ function doGet(e) {
                 window.showToast('Attendance successfully saved locally!', 'success');
             }
 
-            // Reset the form values and state
             selectKelas.value = "";
             if (topicInput) topicInput.value = "";
             if (teacherNotesInput) teacherNotesInput.value = "";
@@ -1916,7 +1947,7 @@ function doGet(e) {
 
             let html = '';
             filtered.forEach(stu => {
-                const stuLogs = window.logs.filter(l => l.idSiswa === stu.id);
+                const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
                 const total = stuLogs.length;
                 const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
                 const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
@@ -2009,7 +2040,7 @@ function doGet(e) {
 
             let filtered = window.logs.filter(l => {
                 const matchClass = classFilter ? (l.kodeKelas && l.kodeKelas.toUpperCase() === classFilter) : true;
-                const matchSearch = l.namaSiswa.toLowerCase().includes(search) || l.idSiswa.toLowerCase().includes(search);
+                const matchSearch = (l.namaSiswa && l.namaSiswa.toLowerCase().includes(search)) || (l.idSiswa && l.idSiswa.toLowerCase().includes(search));
                 return matchClass && matchSearch;
             });
 
@@ -2020,14 +2051,15 @@ function doGet(e) {
 
             let html = '';
             filtered.forEach(l => {
+                const cleanDate = window.formatDisplayDate(l.tanggal);
                 html += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-5 text-xs font-extrabold text-slate-800">${l.tanggal}</td>
+                        <td class="py-4 px-5 text-xs font-extrabold text-slate-800">${cleanDate}</td>
                         <td class="py-4 px-5">
-                            <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${l.namaSiswa}</div>
-                            <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa}</div>
+                            <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${l.namaSiswa || '-'}</div>
+                            <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa || '-'}</div>
                         </td>
-                        <td class="py-4 px-5 text-xs text-slate-700 font-extrabold">${l.namaKelas}</td>
+                        <td class="py-4 px-5 text-xs text-slate-700 font-extrabold">${l.namaKelas || l.kodeKelas || '-'}</td>
                         <td class="py-4 px-5 text-xs text-slate-600 font-semibold">${l.teacherNotes || '-'}</td>
                     </tr>
                 `;
@@ -2056,8 +2088,9 @@ function doGet(e) {
 
             const filteredLogs = window.logs.filter(l => {
                 if (!l.tanggal) return false;
-                if (startDate && l.tanggal < startDate) return false;
-                if (endDate && l.tanggal > endDate) return false;
+                const dClean = window.formatDisplayDate(l.tanggal);
+                if (startDate && dClean < startDate) return false;
+                if (endDate && dClean > endDate) return false;
                 if (classFilter && l.kodeKelas && l.kodeKelas.toUpperCase() !== classFilter) return false;
                 return true;
             });
@@ -2317,7 +2350,7 @@ function doGet(e) {
             document.getElementById('modalSummaryName').innerText = stu.name;
             document.getElementById('modalSummaryId').innerText = stu.id;
 
-            const stuLogs = window.logs.filter(l => l.idSiswa === stu.id);
+            const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
             const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
             const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
@@ -2336,10 +2369,11 @@ function doGet(e) {
                     if (l.status === 'Absent' || l.status === 'Tidak Hadir') badgeBg = 'bg-rose-100 text-rose-800';
                     if (l.status === 'Sick' || l.status === 'Sakit') badgeBg = 'bg-amber-100 text-amber-800';
 
+                    const cleanDate = window.formatDisplayDate(l.tanggal);
                     html += `
                         <tr class="hover:bg-slate-50">
-                            <td class="py-3 px-4 font-bold text-slate-800">${l.tanggal}</td>
-                            <td class="py-3 px-4 font-semibold text-slate-700">${l.namaKelas}</td>
+                            <td class="py-3 px-4 font-bold text-slate-800">${cleanDate}</td>
+                            <td class="py-3 px-4 font-semibold text-slate-700">${l.namaKelas || '-'}</td>
                             <td class="py-3 px-4 text-center"><span class="px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase ${badgeBg}">${l.status}</span></td>
                             <td class="py-3 px-4 text-slate-500">${l.remarks || '-'}</td>
                         </tr>
@@ -2422,7 +2456,7 @@ function doGet(e) {
         window.exportToCSV = function() {
             let csv = 'Student ID,Full Name,Enrolled Classes,Present,Sick,Absent,Total Sessions,Attendance Percentage\n';
             window.getUniqueStudents().forEach(stu => {
-                const logs = window.logs.filter(l => l.idSiswa === stu.id);
+                const logs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
                 let present = logs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
                 let sick = logs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
                 let absent = logs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
@@ -2448,15 +2482,15 @@ function doGet(e) {
             if (!container) return;
             const toast = document.createElement('div');
             
-            let bg = 'bg-slate-900 text-white';
-            let icon = 'fa-circle-info';
+            let bg = 'bg-slate-900/95 text-white backdrop-blur-xl border border-white/10 shadow-2xl';
+            let icon = 'fa-circle-info text-sky-400';
             
-            if (type === 'success') { bg = 'bg-emerald-600 text-white shadow-emerald-600/30'; icon = 'fa-circle-check'; }
-            if (type === 'error') { bg = 'bg-rose-600 text-white shadow-rose-600/30'; icon = 'fa-circle-xmark'; }
-            if (type === 'warning') { bg = 'bg-amber-600 text-white shadow-amber-600/30'; icon = 'fa-triangle-exclamation'; }
+            if (type === 'success') { bg = 'bg-emerald-950/95 text-emerald-100 backdrop-blur-xl border border-emerald-500/30 shadow-2xl'; icon = 'fa-circle-check text-emerald-400'; }
+            if (type === 'error') { bg = 'bg-rose-950/95 text-rose-100 backdrop-blur-xl border border-rose-500/30 shadow-2xl'; icon = 'fa-circle-xmark text-rose-400'; }
+            if (type === 'warning') { bg = 'bg-amber-950/95 text-amber-100 backdrop-blur-xl border border-amber-500/30 shadow-2xl'; icon = 'fa-triangle-exclamation text-amber-400'; }
 
-            toast.className = `${bg} px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 text-xs font-black transform transition-all duration-300 opacity-0 translate-y-3 pointer-events-auto border border-white/10`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+            toast.className = `${bg} px-5 py-4 rounded-2xl flex items-center space-x-3.5 text-xs font-semibold tracking-wide transform transition-all duration-300 opacity-0 translate-y-3 pointer-events-auto`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base shrink-0"></i><span class="leading-relaxed font-medium">${message}</span>`;
 
             container.appendChild(toast);
 
@@ -2467,7 +2501,7 @@ function doGet(e) {
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-3');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 3500);
         };
     </script>
 </body>
