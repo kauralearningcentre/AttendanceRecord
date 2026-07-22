@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaura Learning Centre (KLC) Attendance System 2026-2027</title>
-    <!-- Custom Favicon: Dark Green Circle with Whiate 'K' -->
+    <!-- Custom Favicon: Dark Green Circle with White 'K' -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2314532d'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Arial, sans-serif' font-weight='bold' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -117,7 +117,7 @@
                 </button>
                 <button onclick="window.switchTab('tab-kelas')" id="nav-tab-kelas" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-chalkboard-user text-sm"></i>
-                    <span>KLC Classes</span>
+                    <span>KLC Classes Calendar</span>
                 </button>
                 <button onclick="window.switchTab('tab-log')" id="nav-tab-log" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap">
                     <i class="fa-solid fa-clock-rotate-left text-sm"></i>
@@ -381,10 +381,13 @@
                         <h2 class="text-xl font-extrabold text-slate-900 mt-2">Student Directory</h2>
                         <p class="text-xs text-slate-500 mt-0.5">Manage student details, Class ID reference, and active/postponed statuses.</p>
                     </div>
-                    <div class="flex items-center space-x-3">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <select id="filterStudentKelas" onchange="window.renderStudentTable()" class="border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white shadow-xs cursor-pointer">
+                            <option value="">All Classes</option>
+                        </select>
                         <div class="relative">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-                            <input type="text" id="searchStudentInput" onkeyup="window.renderStudentTable()" placeholder="Search ID or Name..." class="border border-slate-300 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-klc-500 focus:outline-none shadow-xs w-64">
+                            <input type="text" id="searchStudentInput" onkeyup="window.renderStudentTable()" placeholder="Search ID or Name..." class="border border-slate-300 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-klc-500 focus:outline-none shadow-xs w-56">
                         </div>
                         <button onclick="window.openModalAddStudent()" class="bg-klc-600 hover:bg-klc-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-2 cursor-pointer shadow-sm">
                             <i class="fa-solid fa-user-plus"></i>
@@ -417,13 +420,24 @@
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8 space-y-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Curriculum & Schedule</span>
-                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">KLC Classes Calendar View</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Active courses and schedules at Community Hall Kaura Manggis.</p>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Weekly Timetable & Schedule</span>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">KLC Classes Calendar</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Community Hall Kaura Manggis weekly session calendar sorted by days.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="window.openModalAddClass()" class="bg-klc-600 hover:bg-klc-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-2 cursor-pointer shadow-sm">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Create New Class</span>
+                        </button>
+                        <button onclick="window.clearAllClasses()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-2 cursor-pointer shadow-sm">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Clear All Classes</span>
+                        </button>
                     </div>
                 </div>
 
-                <div id="classListGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+                <!-- Calendar View Container -->
+                <div id="classListGrid" class="space-y-6 pt-2">
                     <!-- Populated via JS -->
                 </div>
             </div>
@@ -626,9 +640,9 @@
         <section id="tab-settings" class="tab-content space-y-6">
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8 space-y-6">
                 <div>
-                    <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Integration</span>
-                    <h2 class="text-xl font-extrabold text-slate-900 mt-2">Google Apps Script Connection Guide</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Updated backend code matching exact Sheet 1 columns (Student_Data & Attendance_Log).</p>
+                    <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Integration & Google Sheets Structure</span>
+                    <h2 class="text-xl font-extrabold text-slate-900 mt-2">Google Apps Script & Spreadsheet Tabs Guide</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Recommended spreadsheet setup for managing Student Data, Attendance Logs, and KLC Classes.</p>
                 </div>
 
                 <!-- Endpoint URL Input -->
@@ -644,16 +658,29 @@
                 </div>
 
                 <div class="space-y-4 text-xs text-slate-700 font-medium">
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-2.5">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
                         <h3 class="font-extrabold text-slate-900 text-sm flex items-center gap-2">
                             <span class="w-6 h-6 rounded-lg bg-klc-600 text-white flex items-center justify-center text-xs font-bold">1</span> 
-                            Spreadsheet Tabs & Exact Headers (Sheet 1 Configuration)
+                            Required Spreadsheet Tabs & Column Headers
                         </h3>
-                        <p class="text-slate-600">Ensure your Google Spreadsheet has two sheets with exact names: <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-bold text-slate-800">Student_Data</code> and <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-bold text-slate-800">Attendance_Log</code>.</p>
-                        <ul class="list-disc pl-5 space-y-1 text-slate-600">
-                            <li><strong>Student_Data (Row 1):</strong> ID Siswa (A1) | Full Name (B1) | Enrolled Classes (C1) | Class Name (D1) | Class ID (E1) | Status (F1)</li>
-                            <li><strong>Attendance_Log (Row 1):</strong> Timestamp (A1) | Date (B1) | Student ID (C1) | Student Name (D1) | Class ID (E1) | Class Name (F1) | Status (G1) | Topic (H1) | Teacher Note (I1) | Remark (J1)</li>
-                        </ul>
+                        <p class="text-slate-600">Make sure your Google Spreadsheet contains these exact sheet names and Row 1 column headers:</p>
+                        
+                        <div class="space-y-3 pt-1">
+                            <div class="p-3.5 bg-white rounded-xl border border-slate-200">
+                                <p class="font-black text-klc-800 text-xs mb-1"><i class="fa-solid fa-table"></i> Tab 1: <code class="bg-slate-100 px-1.5 py-0.5 rounded">Student_Data</code></p>
+                                <p class="text-[11px] text-slate-600 font-mono">Row 1 Headers: <code class="bg-slate-100 px-1 py-0.5 rounded">ID Siswa | Full Name | Enrolled Classes | Class Name | Class ID | Status</code></p>
+                            </div>
+
+                            <div class="p-3.5 bg-white rounded-xl border border-slate-200">
+                                <p class="font-black text-klc-800 text-xs mb-1"><i class="fa-solid fa-table"></i> Tab 2: <code class="bg-slate-100 px-1.5 py-0.5 rounded">Attendance_Log</code></p>
+                                <p class="text-[11px] text-slate-600 font-mono">Row 1 Headers: <code class="bg-slate-100 px-1 py-0.5 rounded">Timestamp | Date | Student ID | Student Name | Class ID | Class Name | Status | Topic | Teacher Note | Remark</code></p>
+                            </div>
+
+                            <div class="p-3.5 bg-white rounded-xl border border-slate-200">
+                                <p class="font-black text-klc-800 text-xs mb-1"><i class="fa-solid fa-table"></i> Tab 3 (Optional): <code class="bg-slate-100 px-1.5 py-0.5 rounded">KLC_Classes</code></p>
+                                <p class="text-[11px] text-slate-600 font-mono">Row 1 Headers: <code class="bg-slate-100 px-1 py-0.5 rounded">Class ID | Class Name | Category | Schedule | Room</code></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -663,11 +690,47 @@
                     </button>
                     <pre id="gasCodeDisplay" class="bg-slate-900 text-slate-100 p-5 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed border border-slate-800 max-h-96 custom-scrollbar">
 function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var logSheet = ss.getSheetByName("Attendance_Log");
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
   
   try {
     var data = JSON.parse(e.postData.contents);
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // 1. Handle addStudent
+    if (data.action === 'addStudent') {
+      var sheet = spreadsheet.getSheetByName('Student_Data'); 
+      sheet.appendRow([data.nis, data.name, data.enrolledClasses || '', data.className || '', data.classId || '', data.status || 'Active']); 
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 2. Handle addClass (New Class Schedule)
+    if (data.action === 'addClass') {
+      var classSheet = spreadsheet.getSheetByName('KLC_Classes');
+      if (!classSheet) {
+        classSheet = spreadsheet.insertSheet('KLC_Classes');
+        classSheet.appendRow(['Class ID', 'Class Name', 'Category', 'Schedule', 'Room']);
+      }
+      classSheet.appendRow([data.classId, data.className, data.category, data.schedule, data.room]);
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 3. Handle deleteStudent
+    if (data.action === 'deleteStudent') {
+      var sheet = spreadsheet.getSheetByName('Student_Data');
+      var rows = sheet.getDataRange().getValues();
+      var targetId = String(data.nis || '').trim().toUpperCase();
+      
+      for (var i = rows.length - 1; i >= 1; i--) {
+        if (String(rows[i][0]).trim().toUpperCase() === targetId) {
+          sheet.deleteRow(i + 1);
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 4. Handle Attendance Log submission
+    var logSheet = spreadsheet.getSheetByName("Attendance_Log");
     var records = data.records || data.data;
     
     if (Array.isArray(records)) {
@@ -690,13 +753,33 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
   } catch(err) {
     return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
   }
 }
 
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var action = e ? e.parameter.action : '';
   
+  // Fetch Classes
+  var classes = [];
+  var classSheet = ss.getSheetByName("KLC_Classes");
+  if (classSheet) {
+    var cRows = classSheet.getDataRange().getValues();
+    for (var c = 1; c < cRows.length; c++) {
+      var cr = cRows[c];
+      if (!cr[0]) continue;
+      classes.push({
+        id: cr[0],
+        name: cr[1] || cr[0],
+        category: cr[2] || (String(cr[0]).toUpperCase().includes('ENG') ? 'English' : 'Computer'),
+        schedule: cr[3] || 'Scheduled Session',
+        room: cr[4] || 'Community Hall Kaura Manggis'
+      });
+    }
+  }
+
+  // Fetch Students
   var studentSheet = ss.getSheetByName("Student_Data");
   var rows = studentSheet.getDataRange().getValues();
   var students = [];
@@ -724,7 +807,7 @@ function doGet(e) {
       status: status
     });
     
-    if (classId) {
+    if (classId && !classMap[classId]) {
       classMap[classId] = {
         id: classId,
         name: className || classId,
@@ -735,11 +818,13 @@ function doGet(e) {
     }
   }
 
-  var classes = [];
-  for (var key in classMap) {
-    classes.push(classMap[key]);
+  if (classes.length === 0) {
+    for (var key in classMap) {
+      classes.push(classMap[key]);
+    }
   }
 
+  // Fetch Logs
   var logSheet = ss.getSheetByName("Attendance_Log");
   var logs = [];
   if (logSheet) {
@@ -762,14 +847,12 @@ function doGet(e) {
     }
   }
   
-  var responseObj = {
+  return ContentService.createTextOutput(JSON.stringify({
     status: "success",
     students: students,
     classes: classes,
     logs: logs
-  };
-  
-  return ContentService.createTextOutput(JSON.stringify(responseObj)).setMimeType(ContentService.MimeType.JSON);
+  })).setMimeType(ContentService.MimeType.JSON);
 }
                     </pre>
                 </div>
@@ -820,6 +903,57 @@ function doGet(e) {
         </div>
     </div>
 
+    <!-- Modal Add Class -->
+    <div id="modalAddClass" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-slate-200">
+            <div class="bg-gradient-to-r from-klc-700 to-klc-900 px-6 py-5 text-white flex items-center justify-between">
+                <h3 class="font-extrabold text-base">Create New KLC Class Schedule</h3>
+                <button onclick="window.closeModalAddClass()" class="text-white/80 hover:text-white text-xl cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="formAddClass" onsubmit="window.handleSaveNewClass(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Class Code ID</label>
+                    <input type="text" id="newClassIdInput" required placeholder="E.g., ENG-B3 or COMP-A1" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold uppercase text-slate-800 bg-slate-50">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Official Class Name</label>
+                    <input type="text" id="newClassNameInput" required placeholder="E.g., Basic English Conversation" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-extrabold focus:ring-4 focus:ring-klc-500/20">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Category</label>
+                    <select id="newClassCategorySelect" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-extrabold bg-white cursor-pointer">
+                        <option value="English">English</option>
+                        <option value="Computer">Computer</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Schedule & Days</label>
+                    <input type="text" id="newClassScheduleInput" required placeholder="E.g. Monday, Wednesday (14:00 - 15:30)" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-klc-500/20">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Room / Venue</label>
+                    <input type="text" id="newClassRoomInput" required value="Community Hall Kaura Manggis" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-klc-500/20">
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
+                    <button type="button" onclick="window.closeModalAddClass()" class="px-5 py-2.5 text-xs font-bold rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition cursor-pointer">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 text-xs font-extrabold rounded-2xl bg-klc-600 text-white hover:bg-klc-700 shadow-md shadow-klc-600/20 transition cursor-pointer">
+                        Save & Sync Class
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Edit Class Details -->
     <div id="modalEditClass" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all border border-slate-200">
@@ -852,8 +986,8 @@ function doGet(e) {
                 </div>
 
                 <div>
-                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Schedule & Hours</label>
-                    <input type="text" id="classScheduleInput" required placeholder="E.g. Monday & Wednesday (14:00 - 15:30)" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-klc-500/20">
+                    <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">Schedule & Days</label>
+                    <input type="text" id="classScheduleInput" required placeholder="E.g. Monday, Wednesday (14:00 - 15:30)" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm focus:ring-4 focus:ring-klc-500/20">
                 </div>
 
                 <div>
@@ -978,9 +1112,17 @@ function doGet(e) {
         };
 
         window.initData = function() {
-            window.klcClasses = [];
-            window.students = [];
-            window.logs = [];
+            try {
+                const savedStudents = localStorage.getItem('klc_students_2026');
+                if (savedStudents) window.students = JSON.parse(savedStudents);
+                const savedClasses = localStorage.getItem('klc_classes_2026');
+                if (savedClasses) window.klcClasses = JSON.parse(savedClasses);
+                const savedLogs = localStorage.getItem('klc_logs_2026');
+                if (savedLogs) window.logs = JSON.parse(savedLogs);
+            } catch(e) {
+                console.warn('Storage parse error', e);
+            }
+
             window.currentAttendanceState = {};
             window.pendingDeleteId = null;
 
@@ -1076,60 +1218,107 @@ function doGet(e) {
             if (validClasses.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full py-16 text-center text-slate-400 text-xs">
-                        <i class="fa-solid fa-chalkboard text-3xl mb-3 text-klc-600 block"></i>
-                        No classes found. Please sync with Google Sheets or add students with valid Class IDs.
+                        <i class="fa-solid fa-calendar-days text-3xl mb-3 text-klc-600 block"></i>
+                        No classes found in calendar. Click <strong>Create New Class</strong> above or sync with Google Sheets.
                     </div>
                 `;
                 return;
             }
 
-            let html = '';
-            validClasses.forEach(cls => {
-                const enrolledCount = window.getUniqueStudents().filter(s => {
-                    const targetClassId = String(cls.id || '').trim().toUpperCase();
-                    const studentClassId = String(s.classId || '').trim().toUpperCase();
-                    if (studentClassId === targetClassId) return true;
-                    if (Array.isArray(s.classes)) {
-                        return s.classes.some(c => c && c.trim().toUpperCase() === targetClassId);
-                    }
-                    return false;
-                }).length;
+            const daysOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Daily', 'Flexible'];
+            const grouped = {};
+            daysOrder.forEach(d => grouped[d] = []);
+            grouped['Other Schedule'] = [];
 
-                const isEnglish = String(cls.category || cls.id).toUpperCase().includes('ENG');
+            validClasses.forEach(cls => {
+                const sched = (cls.schedule || '').toLowerCase();
+                let assigned = false;
+                daysOrder.forEach(day => {
+                    if (sched.includes(day.toLowerCase())) {
+                        grouped[day].push(cls);
+                        assigned = true;
+                    }
+                });
+                if (!assigned) {
+                    grouped['Other Schedule'].push(cls);
+                }
+            });
+
+            let html = '';
+            const allGroups = [...daysOrder, 'Other Schedule'];
+
+            allGroups.forEach(dayName => {
+                const classesInDay = grouped[dayName];
+                if (!classesInDay || classesInDay.length === 0) return;
 
                 html += `
-                    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-card hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-xl ${isEnglish ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'}">
-                                    ${isEnglish ? 'English' : 'Computer'}
-                                </span>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-mono font-black text-slate-400 bg-slate-100 px-2.5 py-1 rounded-xl">${cls.id}</span>
-                                    <button onclick="window.openModalEditClass('${cls.id}')" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-klc-50 text-slate-500 hover:text-klc-700 transition flex items-center justify-center text-xs shadow-sm cursor-pointer" title="Edit Class Details">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                </div>
+                    <div class="bg-slate-50/80 rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+                        <div class="flex items-center space-x-3 pb-3 border-b border-slate-200/80">
+                            <div class="w-10 h-10 rounded-2xl bg-klc-700 text-white flex items-center justify-center font-black shadow-sm">
+                                <i class="fa-solid fa-calendar-day text-sm"></i>
                             </div>
-                            <h3 class="font-black text-slate-900 text-lg leading-snug">${cls.name}</h3>
-                            <div class="mt-4 space-y-2.5 text-xs text-slate-500 font-semibold">
-                                <p class="flex items-center gap-2.5">
-                                    <i class="fa-regular fa-clock text-slate-400 w-4 text-center"></i>
-                                    <span>${cls.schedule || 'Scheduled Session'}</span>
-                                </p>
-                                <p class="flex items-center gap-2.5">
-                                    <i class="fa-solid fa-location-dot text-slate-400 w-4 text-center"></i>
-                                    <span>${cls.room || 'Community Hall Kaura Manggis'}</span>
-                                </p>
+                            <div>
+                                <h3 class="font-black text-slate-900 text-base">${dayName} Classes</h3>
+                                <p class="text-xs text-slate-500 font-semibold">${classesInDay.length} scheduled session(s)</p>
                             </div>
                         </div>
-                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <span class="text-xs text-slate-500 font-bold">Enrolled Students:</span>
-                            <span class="text-xs font-black text-slate-900 bg-slate-100 px-3.5 py-1.5 rounded-full shadow-inner">${enrolledCount} Students</span>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                `;
+
+                classesInDay.forEach(cls => {
+                    const enrolledCount = window.getUniqueStudents().filter(s => {
+                        const targetClassId = String(cls.id || '').trim().toUpperCase();
+                        const studentClassId = String(s.classId || '').trim().toUpperCase();
+                        if (studentClassId === targetClassId) return true;
+                        if (Array.isArray(s.classes)) {
+                            return s.classes.some(c => c && c.trim().toUpperCase() === targetClassId);
+                        }
+                        return false;
+                    }).length;
+
+                    const isEnglish = String(cls.category || cls.id).toUpperCase().includes('ENG');
+
+                    html += `
+                        <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-card hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-0.5">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-lg ${isEnglish ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'}">
+                                        ${isEnglish ? 'English' : 'Computer'}
+                                    </span>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-[11px] font-mono font-black text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">${cls.id}</span>
+                                        <button onclick="window.openModalEditClass('${cls.id}')" class="w-7 h-7 rounded-xl bg-slate-100 hover:bg-klc-50 text-slate-500 hover:text-klc-700 transition flex items-center justify-center text-xs shadow-xs cursor-pointer" title="Edit Class">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h4 class="font-extrabold text-slate-900 text-sm leading-snug">${cls.name}</h4>
+                                <div class="mt-3 space-y-1.5 text-xs text-slate-500 font-medium">
+                                    <p class="flex items-center gap-2">
+                                        <i class="fa-regular fa-clock text-slate-400 w-3 text-center"></i>
+                                        <span>${cls.schedule || 'Scheduled Session'}</span>
+                                    </p>
+                                    <p class="flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-slate-400 w-3 text-center"></i>
+                                        <span>${cls.room || 'Community Hall Kaura Manggis'}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-[11px] text-slate-400 font-bold">Enrolled:</span>
+                                <span class="text-xs font-black text-slate-900 bg-slate-100 px-3 py-1 rounded-full shadow-inner">${enrolledCount} Students</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
                         </div>
                     </div>
                 `;
             });
+
             container.innerHTML = html;
         };
 
@@ -1149,6 +1338,93 @@ function doGet(e) {
 
         window.closeModalEditClass = function() {
             document.getElementById('modalEditClass').classList.add('hidden');
+        };
+
+        window.openModalAddClass = function() {
+            document.getElementById('newClassIdInput').value = '';
+            document.getElementById('newClassNameInput').value = '';
+            document.getElementById('newClassScheduleInput').value = '';
+            document.getElementById('newClassRoomInput').value = 'Community Hall Kaura Manggis';
+            document.getElementById('modalAddClass').classList.remove('hidden');
+        };
+
+        window.closeModalAddClass = function() {
+            document.getElementById('modalAddClass').classList.add('hidden');
+        };
+
+        window.clearAllClasses = function() {
+            if (confirm('Are you sure you want to clear all local classes?')) {
+                window.klcClasses = [];
+                localStorage.setItem('klc_classes_2026', JSON.stringify([]));
+                window.populateClassSelects();
+                window.renderClassCards();
+                window.showToast('All classes cleared successfully.', 'success');
+            }
+        };
+
+        window.addClassToSheet = function(classData) {
+            const webAppUrl = localStorage.getItem('klc_gas_url'); 
+            if (!webAppUrl) {
+                window.showToast('Saved locally. Google Apps Script URL not configured.', 'warning');
+                return;
+            }
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'addClass',
+                    ...classData
+                })
+            })
+            .then(() => {
+                window.showToast('New class successfully synced to Google Sheet!', 'success');
+                if (typeof window.fetchDataFromGoogleSheets === 'function') {
+                    window.fetchDataFromGoogleSheets(); 
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.showToast('Failed to sync new class to Google Sheet.', 'error');
+            });
+        };
+
+        window.handleSaveNewClass = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('newClassIdInput').value.trim().toUpperCase();
+            const name = document.getElementById('newClassNameInput').value.trim();
+            const category = document.getElementById('newClassCategorySelect').value;
+            const schedule = document.getElementById('newClassScheduleInput').value.trim();
+            const room = document.getElementById('newClassRoomInput').value.trim();
+
+            if (!id || !name) {
+                window.showToast('Please provide a valid Class ID and Name.', 'warning');
+                return;
+            }
+
+            const existingIndex = window.klcClasses.findIndex(c => c.id && c.id.toUpperCase() === id);
+            const newClassObj = { id, name, category, schedule, room };
+
+            if (existingIndex >= 0) {
+                window.klcClasses[existingIndex] = newClassObj;
+            } else {
+                window.klcClasses.push(newClassObj);
+            }
+
+            localStorage.setItem('klc_classes_2026', JSON.stringify(window.klcClasses));
+            window.populateClassSelects();
+            window.renderClassCards();
+            window.closeModalAddClass();
+            window.showToast('New class successfully created!', 'success');
+
+            window.addClassToSheet({
+                classId: id,
+                className: name,
+                category: category,
+                schedule: schedule,
+                room: room
+            });
         };
 
         window.handleSaveClass = function(e) {
@@ -1219,7 +1495,6 @@ function doGet(e) {
 
         window.saveStudentsToStorage = function() {
             localStorage.setItem('klc_students_2026', JSON.stringify(window.students));
-            const uniqueList = window.getUniqueStudents();
             window.updateDashboardStats();
         };
 
@@ -1240,7 +1515,7 @@ function doGet(e) {
                             window.students = data.students;
                             window.saveStudentsToStorage();
                         }
-                        if (Array.isArray(data.classes)) {
+                        if (Array.isArray(data.classes) && data.classes.length > 0) {
                             window.klcClasses = data.classes;
                             localStorage.setItem('klc_classes_2026', JSON.stringify(window.klcClasses));
                         }
@@ -1270,6 +1545,7 @@ function doGet(e) {
             const absensiSelect = document.getElementById('absensiSelectKelas');
             const summaryFilterSelect = document.getElementById('summaryFilterClass');
             const filterLogSelect = document.getElementById('filterLogKelas');
+            const filterStudentSelect = document.getElementById('filterStudentKelas');
             const reportClassSelect = document.getElementById('reportClassSelect');
 
             const validClasses = [];
@@ -1303,6 +1579,7 @@ function doGet(e) {
             const allOptionHtml = '<option value="">All Classes</option>' + optionsHtml;
             if (summaryFilterSelect) summaryFilterSelect.innerHTML = allOptionHtml;
             if (filterLogSelect) filterLogSelect.innerHTML = allOptionHtml;
+            if (filterStudentSelect) filterStudentSelect.innerHTML = allOptionHtml;
             if (reportClassSelect) reportClassSelect.innerHTML = allOptionHtml;
         };
 
@@ -1464,7 +1741,7 @@ function doGet(e) {
                 return;
             }
             if (!dateInput || !dateInput.value) {
-                window.showToast('Please select a session date.', 'date');
+                window.showToast('Please select a session date.', 'warning');
                 return;
             }
 
@@ -1473,7 +1750,16 @@ function doGet(e) {
             const tanggal = dateInput.value;
             const materi = topicInput ? topicInput.value.trim() : '';
             const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
-            const timestamp = new Date().toISOString();
+
+            // Generate precise date and time formatted timestamp (e.g. 2026-07-22 16:27:16)
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timestampFormatted = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
             const filteredStudents = window.getUniqueStudents().filter(s => {
                 if (Array.isArray(s.classes)) {
@@ -1487,7 +1773,6 @@ function doGet(e) {
                 return;
             }
 
-            // Remove existing logs for this class & date
             window.logs = window.logs.filter(l => !(l.kodeKelas && l.kodeKelas.toUpperCase() === classId.toUpperCase() && l.tanggal === tanggal));
 
             const newRecords = [];
@@ -1497,7 +1782,7 @@ function doGet(e) {
                 const remark = noteInput ? noteInput.value.trim() : '';
 
                 const logRecord = {
-                    timestamp: timestamp,
+                    timestamp: timestampFormatted,
                     tanggal: tanggal,
                     idSiswa: st.id,
                     namaSiswa: st.name,
@@ -1533,6 +1818,14 @@ function doGet(e) {
             } else {
                 window.showToast('Attendance successfully saved locally!', 'success');
             }
+
+            // Reset the form values and state
+            selectKelas.value = "";
+            if (topicInput) topicInput.value = "";
+            if (teacherNotesInput) teacherNotesInput.value = "";
+            window.currentAttendanceState = {};
+            window.clearAttendanceFormView();
+            window.showToast('Attendance recorded and form reset successfully!', 'success');
         };
 
         window.renderStudentTable = function() {
@@ -1541,22 +1834,24 @@ function doGet(e) {
 
             const searchInput = document.getElementById('searchStudentInput');
             const search = searchInput ? searchInput.value.toLowerCase() : '';
+            const classFilterElem = document.getElementById('filterStudentKelas');
+            const classFilter = classFilterElem ? classFilterElem.value.toUpperCase() : '';
 
             const uniqueStudents = window.getUniqueStudents();
             const filtered = uniqueStudents.filter(s => {
+                const matchClass = classFilter ? (s.classes || []).some(c => String(c).trim().toUpperCase() === classFilter) : true;
                 const matchSearch = (s.name && s.name.toLowerCase().includes(search)) || 
                                     (s.id && s.id.toLowerCase().includes(search));
-                return matchSearch;
+                return matchClass && matchSearch;
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400 text-xs">No student records found. Please sync with Google Sheets.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400 text-xs">No student records found matching filter criteria.</td></tr>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(student => {
-                // Filter out category labels (like "English", "Computer") and keep only valid class names/IDs
                 const realClasses = (student.classes || []).filter(cId => {
                     const upper = String(cId).trim().toUpperCase();
                     return upper !== 'ENGLISH' && upper !== 'COMPUTER';
@@ -1887,6 +2182,34 @@ function doGet(e) {
             document.getElementById('modalAddStudent').classList.remove('hidden');
         };
 
+        window.addNewStudentToSheet = function(studentData) {
+            const webAppUrl = localStorage.getItem('klc_gas_url'); 
+            if (!webAppUrl) {
+                window.showToast('Saved locally. Google Apps Script URL not configured.', 'warning');
+                return;
+            }
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'addStudent',
+                    ...studentData
+                })
+            })
+            .then(() => {
+                window.showToast('Student successfully synced to Google Sheet!', 'success');
+                if (typeof window.fetchDataFromGoogleSheets === 'function') {
+                    window.fetchDataFromGoogleSheets(); 
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.showToast('Failed to sync new student to Google Sheet.', 'error');
+            });
+        };
+
         window.handleSaveStudent = function(e) {
             e.preventDefault();
             const editId = document.getElementById('studentEditId').value;
@@ -1930,7 +2253,36 @@ function doGet(e) {
             window.saveStudentsToStorage();
             window.renderStudentTable();
             window.closeModalAddStudent();
-            window.showToast('Student successfully saved!', 'success');
+
+            if (!editId) {
+                const firstClassId = selectedClassIds.length > 0 ? selectedClassIds[0] : '';
+                const firstClassObj = window.klcClasses.find(c => c.id === firstClassId);
+                window.addNewStudentToSheet({
+                    nis: id,
+                    name: name,
+                    enrolledClasses: selectedClassIds.join(', '),
+                    className: firstClassObj ? firstClassObj.name : firstClassId,
+                    classId: firstClassId,
+                    status: 'Active'
+                });
+            } else {
+                window.showToast('Student successfully updated!', 'success');
+            }
+        };
+
+        window.deleteStudentFromSheet = function(studentId) {
+            const webAppUrl = localStorage.getItem('klc_gas_url');
+            if (!webAppUrl) return;
+
+            fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'deleteStudent',
+                    nis: studentId
+                })
+            }).catch(err => console.warn('Delete sheet sync warning:', err));
         };
 
         window.deleteStudent = function(studentId) {
@@ -1946,10 +2298,13 @@ function doGet(e) {
 
         window.confirmDeleteStudent = function() {
             if (window.pendingDeleteId) {
-                window.students = window.students.filter(s => s.id !== window.pendingDeleteId);
+                const idToDelete = window.pendingDeleteId;
+                window.students = window.students.filter(s => s.id !== idToDelete);
                 window.saveStudentsToStorage();
                 window.renderStudentTable();
+                window.renderSummaryTable();
                 window.closeModalDeleteConfirm();
+                window.deleteStudentFromSheet(idToDelete);
                 window.showToast('Student deleted successfully.', 'success');
             }
         };
