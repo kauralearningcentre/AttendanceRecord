@@ -181,7 +181,7 @@
                             <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Daily Session</span>
                             <h2 class="text-2xl font-black text-slate-900 tracking-tight mt-1">Record Class Attendance</h2>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Select class and date to take student attendance with remarks.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Select class and date to take student attendance with class-wide teacher notes.</p>
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2">
@@ -201,7 +201,7 @@
                 </div>
 
                 <!-- Form Filter Parameters -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-6 bg-gradient-to-r from-slate-50 via-klc-50/20 to-emerald-50/20 p-5 rounded-3xl border border-slate-200/80 shadow-inner">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6 bg-gradient-to-r from-slate-50 via-klc-50/20 to-emerald-50/20 p-5 rounded-3xl border border-slate-200/80 shadow-inner">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select KLC Class</label>
                         <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-klc-500/20 focus:border-klc-500 text-sm bg-white font-extrabold text-slate-800 shadow-sm transition cursor-pointer">
@@ -209,24 +209,32 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Session Date</label>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Session Date (YYYY-MM-DD)</label>
                         <div class="relative w-full">
                             <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-klc-500/20 focus:border-klc-500 text-sm bg-white font-bold text-slate-800 shadow-sm transition cursor-pointer">
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Topic / Lesson Subject</label>
-                        <input type="text" id="absensiMateri" placeholder="e.g. Advanced Linear Algebra Chapter 3" class="w-full px-4 py-3 rounded-2xl border border-slate-300 focus:ring-4 focus:ring-klc-500/20 focus:border-klc-500 text-sm bg-white font-medium text-slate-800 shadow-sm transition">
-                    </div>
                 </div>
 
-                <!-- Teacher Session Notes Banner -->
-                <div class="mt-4 p-4 bg-klc-50/80 border border-klc-200/80 rounded-2xl text-slate-700 text-xs flex flex-col gap-2 shadow-sm">
-                    <div class="flex items-center gap-2 font-black text-klc-900 uppercase tracking-wider">
-                        <i class="fa-solid fa-chalkboard text-klc-600"></i>
-                        <span>Teacher Notes & Learning Summary</span>
+                <!-- Teacher Session Notes & Topic Banner (Unified per Class & Date Schedule) -->
+                <div class="mt-4 p-5 bg-klc-50/90 border border-klc-200/90 rounded-3xl text-slate-700 text-xs flex flex-col gap-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 font-black text-klc-900 uppercase tracking-wider">
+                            <i class="fa-solid fa-chalkboard text-klc-600"></i>
+                            <span>Teacher Notes & Lesson Subject for this Session</span>
+                        </div>
+                        <span class="text-[10px] text-klc-700 font-bold bg-klc-200/60 px-2.5 py-0.5 rounded-full">Applied Class-Wide</span>
                     </div>
-                    <textarea id="absensiTeacherNotes" rows="2" placeholder="e.g. Students showed great engagement today" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner"></textarea>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Topic / Lesson Subject</label>
+                            <input type="text" id="absensiMateri" placeholder="e.g. Advanced Conversation Chapter 3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Teacher Summary & Notes</label>
+                            <input type="text" id="absensiTeacherNotes" placeholder="e.g. Excellent student participation today" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Info Alert Bar for Already Saved Attendance -->
@@ -237,14 +245,14 @@
                     <span><strong>Notice:</strong> Attendance for this class and date has already been saved. Resubmitting will update existing records in the system and Google Sheets.</span>
                 </div>
 
-                <!-- Student List Attendance Grid -->
+                <!-- Student List Attendance Grid (Remarks shifted to the right column) -->
                 <div class="mt-8">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2.5">
                             <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Enrolled Students</h3>
                             <span id="countClassStudents" class="px-3 py-1 text-xs font-black bg-klc-100 text-klc-800 rounded-full shadow-sm">0 Students</span>
                         </div>
-                        <span class="text-xs text-slate-400 font-medium hidden sm:inline">Set attendance status for each student</span>
+                        <span class="text-xs text-slate-400 font-medium hidden sm:inline">Set attendance status and student-specific remarks</span>
                     </div>
 
                     <div class="overflow-x-auto border border-slate-200/80 rounded-3xl shadow-sm bg-white">
@@ -255,7 +263,7 @@
                                     <th class="py-4 px-5">Student ID</th>
                                     <th class="py-4 px-5">Full Student Name</th>
                                     <th class="py-4 px-5 text-center w-80">Attendance Status</th>
-                                    <th class="py-4 px-5">Remark / Note</th>
+                                    <th class="py-4 px-6 text-right w-96">Student Remark / Note</th>
                                 </tr>
                             </thead>
                             <tbody id="attendanceTableBody" class="divide-y divide-slate-100">
@@ -446,7 +454,7 @@
                     <div>
                         <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Audit Trail</span>
                         <h2 class="text-xl font-extrabold text-slate-900 mt-2">Attendance Audit Log</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Streamlined session logs focused on dates and teacher notes.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Streamlined session logs focused on correctly formatted dates, status, teacher notes, and remarks.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2.5">
                         <select id="filterLogKelas" onchange="window.renderLogTable()" class="border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white shadow-xs cursor-pointer">
@@ -463,10 +471,12 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-100/80 text-slate-700 text-[11px] uppercase tracking-wider font-extrabold border-b border-slate-200">
-                                <th class="p-4 w-40">Date</th>
-                                <th class="p-4 w-64">Student ID & Name</th>
-                                <th class="p-4 w-48">Class</th>
+                                <th class="p-4 w-32">Date</th>
+                                <th class="p-4 w-56">Student ID & Name</th>
+                                <th class="p-4 w-44">Class</th>
+                                <th class="p-4 w-28 text-center">Status</th>
                                 <th class="p-4">Teacher Note</th>
+                                <th class="p-4 w-44">Remark</th>
                             </tr>
                         </thead>
                         <tbody id="logTableBody" class="divide-y divide-slate-100 text-xs font-medium">
@@ -482,13 +492,13 @@
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8 space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Comparative Analytics</span>
-                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Monthly & Custom Date Range Reports</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Average attendance rate comparisons and Gemini AI summaries.</p>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Comparative Analytics & Semester Reports</span>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Monthly & Semester Reports</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Average attendance rate comparisons, semester overview, and HIGHLIGHT summaries.</p>
                     </div>
                     <button onclick="window.generateAiReport()" class="bg-gradient-to-r from-klc-600 to-emerald-600 hover:from-klc-700 hover:to-emerald-700 text-white px-5 py-3 rounded-2xl text-xs font-extrabold shadow-lg shadow-klc-600/25 transition flex items-center space-x-2 cursor-pointer">
                         <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                        <span>Generate Gemini AI Report</span>
+                        <span>HIGHLIGHT</span>
                     </button>
                 </div>
 
@@ -498,12 +508,20 @@
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Report Filter Type</label>
                         <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
                             <option value="month">Monthly Report</option>
+                            <option value="semester">Semester Range (Jan - Jun)</option>
                             <option value="range">Custom Date Range</option>
                         </select>
                     </div>
                     <div id="monthSelectorWrapper">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Month & Year</label>
                         <input type="month" id="reportMonthInput" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
+                    </div>
+                    <div id="semesterSelectorWrapper" class="hidden">
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Semester</label>
+                        <select id="reportSemesterSelect" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
+                            <option value="2026-H1">Jan - Jun 2026 (Semester 1)</option>
+                            <option value="2026-H2">Jul - Dec 2026 (Semester 2)</option>
+                        </select>
                     </div>
                     <div id="startDateWrapper" class="hidden">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Start Date</label>
@@ -527,19 +545,19 @@
                     </div>
                 </div>
 
-                <!-- AI Descriptive Summary Box -->
+                <!-- AI Descriptive Summary Box (HIGHLIGHT) -->
                 <div id="aiSummaryBox" class="hidden my-8 p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-5">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-2xl bg-klc-600 text-white flex items-center justify-center text-xl shadow-lg shadow-klc-900/20">
-                                <i class="fa-solid fa-clipboard-list"></i>
+                                <i class="fa-solid fa-star"></i>
                             </div>
                             <div>
-                                <h3 class="font-black text-lg text-slate-900">Summary</h3>
-                                <p class="text-xs text-slate-500 font-medium">Kaura Learning Centre Periodic Overview</p>
+                                <h3 class="font-black text-lg text-slate-900">HIGHLIGHT</h3>
+                                <p class="text-xs text-slate-500 font-medium">Kaura Learning Centre Periodic Performance Overview</p>
                             </div>
                         </div>
-                        <span class="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">AI Generated Highlight</span>
+                        <span class="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">Executive Report</span>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -593,7 +611,7 @@
                             <div class="flex justify-center lg:justify-start">
                                 <div class="px-8 py-3 bg-klc-600 text-white font-black text-base rounded-2xl shadow-lg shadow-klc-600/25 flex items-center gap-2.5 tracking-wider uppercase">
                                     <i class="fa-solid fa-star"></i>
-                                    <span>Highlight</span>
+                                    <span>HIGHLIGHT SUMMARY</span>
                                 </div>
                             </div>
 
@@ -602,7 +620,7 @@
                                     <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
                                         <i class="fa-solid fa-check text-xs"></i>
                                     </div>
-                                    <p>Loading AI educational insights and student learning highlights...</p>
+                                    <p>Loading educational insights and learning highlights...</p>
                                 </div>
                             </div>
                         </div>
@@ -844,9 +862,29 @@ function doGet(e) {
       // I: Teacher Note (lr[8])
       // J: Remark (lr[9])
       if (!lr[2]) continue;
+      
+      // Format Google Sheets Date object or string to YYYY-MM-DD cleanly without timezone shifts
+      var rawDate = lr[1];
+      var cleanDateStr = '';
+      if (rawDate instanceof Date) {
+        var y = rawDate.getFullYear();
+        var m = String(rawDate.getMonth() + 1).padStart(2, '0');
+        var d = String(rawDate.getDate()).padStart(2, '0');
+        cleanDateStr = y + '-' + m + '-' + d;
+      } else {
+        var strVal = String(rawDate || '').trim();
+        if (strVal.includes('T')) {
+          cleanDateStr = strVal.split('T')[0];
+        } else if (strVal.includes(' ')) {
+          cleanDateStr = strVal.split(' ')[0];
+        } else {
+          cleanDateStr = strVal;
+        }
+      }
+
       logs.push({
         timestamp: lr[0],
-        tanggal: lr[1],
+        tanggal: cleanDateStr,
         idSiswa: lr[2],
         namaSiswa: lr[3],
         kodeKelas: lr[4],
@@ -1159,7 +1197,11 @@ function doGet(e) {
         window.setupDefaultDates = function() {
             const dateInput = document.getElementById('absensiTanggal');
             if (dateInput) {
-                dateInput.valueAsDate = new Date();
+                const d = new Date();
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                dateInput.value = `${year}-${month}-${day}`;
             }
             const monthInput = document.getElementById('reportMonthInput');
             if (monthInput) {
@@ -1168,10 +1210,17 @@ function doGet(e) {
             const startInput = document.getElementById('reportStartDate');
             const endInput = document.getElementById('reportEndDate');
             if (startInput && endInput) {
-                endInput.value = new Date().toISOString().split('T')[0];
+                const d = new Date();
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                endInput.value = `${year}-${month}-${day}`;
                 const pastDate = new Date();
                 pastDate.setDate(pastDate.getDate() - 30);
-                startInput.value = pastDate.toISOString().split('T')[0];
+                const pYear = pastDate.getFullYear();
+                const pMonth = String(pastDate.getMonth() + 1).padStart(2, '0');
+                const pDay = String(pastDate.getDate()).padStart(2, '0');
+                startInput.value = `${pYear}-${pMonth}-${pDay}`;
             }
         };
 
@@ -1677,6 +1726,10 @@ function doGet(e) {
                     }
                 } else {
                     notice.classList.add('hidden');
+                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
+                    if (teacherNotesElem) teacherNotesElem.value = '';
+                    const topicElem = document.getElementById('absensiMateri');
+                    if (topicElem) topicElem.value = '';
                 }
             }
 
@@ -1695,7 +1748,7 @@ function doGet(e) {
             filteredStudents.forEach((student, index) => {
                 const loggedItem = existingLog.find(l => String(l.idSiswa) === String(student.id));
                 const currentStatus = loggedItem ? loggedItem.status : (window.currentAttendanceState[student.id] || '');
-                const currentNote = loggedItem ? loggedItem.remarks : '';
+                const currentNote = loggedItem ? (loggedItem.remarks || loggedItem.remark || '') : '';
 
                 if (window.currentAttendanceState[student.id] === undefined && !loggedItem) {
                     window.currentAttendanceState[student.id] = '';
@@ -1715,8 +1768,8 @@ function doGet(e) {
                                 <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-amber-500 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Sick</button>
                             </div>
                         </td>
-                        <td class="py-4 px-5">
-                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Add remark..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-sm transition">
+                        <td class="py-4 px-6 text-right">
+                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Student remark..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-sm transition text-right">
                         </td>
                     </tr>
                 `;
@@ -2045,22 +2098,33 @@ function doGet(e) {
             });
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-slate-400 text-xs">No attendance history logs found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-slate-400 text-xs">No attendance history logs found.</td></tr>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(l => {
                 const cleanDate = window.formatDisplayDate(l.tanggal);
+                const remarkText = l.remarks || l.remark || '-';
+                const statusVal = l.status || 'Present';
+                
+                let statusBadgeBg = 'bg-emerald-100 text-emerald-800';
+                if (statusVal === 'Absent' || statusVal === 'Tidak Hadir') statusBadgeBg = 'bg-rose-100 text-rose-800';
+                if (statusVal === 'Sick' || statusVal === 'Sakit') statusBadgeBg = 'bg-amber-100 text-amber-800';
+
                 html += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-5 text-xs font-extrabold text-slate-800">${cleanDate}</td>
-                        <td class="py-4 px-5">
+                        <td class="py-4 px-4 text-xs font-extrabold text-slate-800">${cleanDate}</td>
+                        <td class="py-4 px-4">
                             <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${l.namaSiswa || '-'}</div>
                             <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa || '-'}</div>
                         </td>
-                        <td class="py-4 px-5 text-xs text-slate-700 font-extrabold">${l.namaKelas || l.kodeKelas || '-'}</td>
-                        <td class="py-4 px-5 text-xs text-slate-600 font-semibold">${l.teacherNotes || '-'}</td>
+                        <td class="py-4 px-4 text-xs text-slate-700 font-extrabold">${l.namaKelas || l.kodeKelas || '-'}</td>
+                        <td class="py-4 px-4 text-center">
+                            <span class="px-2.5 py-1 rounded-full font-black text-[10px] uppercase tracking-wider ${statusBadgeBg}">${statusVal}</span>
+                        </td>
+                        <td class="py-4 px-4 text-xs text-slate-600 font-semibold">${l.teacherNotes || '-'}</td>
+                        <td class="py-4 px-4 text-xs text-slate-700 font-medium">${remarkText}</td>
                     </tr>
                 `;
             });
@@ -2080,6 +2144,15 @@ function doGet(e) {
                     const [y, m] = monthVal.split('-');
                     const lastDay = new Date(y, m, 0).getDate();
                     endDate = `${monthVal}-${lastDay}`;
+                }
+            } else if (type === 'semester') {
+                const semVal = document.getElementById('reportSemesterSelect').value;
+                if (semVal === '2026-H1') {
+                    startDate = '2026-01-01';
+                    endDate = '2026-06-30';
+                } else if (semVal === '2026-H2') {
+                    startDate = '2026-07-01';
+                    endDate = '2026-12-31';
                 }
             } else {
                 startDate = document.getElementById('reportStartDate').value;
@@ -2109,15 +2182,20 @@ function doGet(e) {
         window.toggleReportMode = function() {
             const type = document.getElementById('reportTypeSelect').value;
             const monthWrap = document.getElementById('monthSelectorWrapper');
+            const semesterWrap = document.getElementById('semesterSelectorWrapper');
             const startWrap = document.getElementById('startDateWrapper');
             const endWrap = document.getElementById('endDateWrapper');
 
+            monthWrap.classList.add('hidden');
+            semesterWrap.classList.add('hidden');
+            startWrap.classList.add('hidden');
+            endWrap.classList.add('hidden');
+
             if (type === 'month') {
                 monthWrap.classList.remove('hidden');
-                startWrap.classList.add('hidden');
-                endWrap.classList.add('hidden');
-            } else {
-                monthWrap.classList.add('hidden');
+            } else if (type === 'semester') {
+                semesterWrap.classList.remove('hidden');
+            } else if (type === 'range') {
                 startWrap.classList.remove('hidden');
                 endWrap.classList.remove('hidden');
             }
@@ -2164,7 +2242,7 @@ function doGet(e) {
                     <p>Computer laboratory curriculum sessions report active participation with <strong>${compRate}%</strong> attendance rate.</p>
                 </div>
             `;
-            window.showToast('Gemini AI Report generated successfully!', 'success');
+            window.showToast('HIGHLIGHT generated successfully!', 'success');
         };
 
         window.openModalAddStudent = function() {
@@ -2370,12 +2448,13 @@ function doGet(e) {
                     if (l.status === 'Sick' || l.status === 'Sakit') badgeBg = 'bg-amber-100 text-amber-800';
 
                     const cleanDate = window.formatDisplayDate(l.tanggal);
+                    const remarkText = l.remarks || l.remark || '-';
                     html += `
                         <tr class="hover:bg-slate-50">
                             <td class="py-3 px-4 font-bold text-slate-800">${cleanDate}</td>
                             <td class="py-3 px-4 font-semibold text-slate-700">${l.namaKelas || '-'}</td>
                             <td class="py-3 px-4 text-center"><span class="px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase ${badgeBg}">${l.status}</span></td>
-                            <td class="py-3 px-4 text-slate-500">${l.remarks || '-'}</td>
+                            <td class="py-3 px-4 text-slate-500">${remarkText}</td>
                         </tr>
                     `;
                 });
