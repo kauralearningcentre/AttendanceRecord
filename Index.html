@@ -140,9 +140,9 @@
         <div id="overviewStatsContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-white/85 backdrop-blur-md rounded-3xl p-5 shadow-card border border-slate-200/80 flex items-center justify-between hover:border-klc-500 transition-all duration-300 group hover:-translate-y-1">
                 <div>
-                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-klc-700 transition">Total KLC Classes</p>
+                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-klc-700 transition">Total Classes</p>
                     <p id="statTotalClasses" class="text-3xl font-black text-slate-900 mt-1.5">0 <span class="text-sm font-semibold text-slate-400">Classes</span></p>
-                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-check text-klc-600"></i> Loaded from Google Sheets</p>
+                    <p id="statTotalClassesSub" class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-calendar-day text-klc-600"></i> Sessions on Selected Date</p>
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-klc-700 to-emerald-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-klc-900/20 group-hover:scale-110 transition duration-300">
                     <i class="fa-solid fa-layer-group"></i>
@@ -216,7 +216,7 @@
                     </div>
                 </div>
 
-                <!-- Teacher Session Notes & Topic Banner (Unified per Class & Date Schedule) -->
+                <!-- Teacher Session Notes & Topic Banner -->
                 <div class="mt-4 p-5 bg-klc-50/90 border border-klc-200/90 rounded-3xl text-slate-700 text-xs flex flex-col gap-3 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2 font-black text-klc-900 uppercase tracking-wider">
@@ -245,7 +245,7 @@
                     <span><strong>Notice:</strong> Attendance for this class and date has already been saved. Resubmitting will update existing records in the system and Google Sheets.</span>
                 </div>
 
-                <!-- Student List Attendance Grid (Remarks shifted to the right column) -->
+                <!-- Student List Attendance Grid -->
                 <div class="mt-8">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2.5">
@@ -291,7 +291,6 @@
 
         <!-- TAB 2: ATTENDANCE SUMMARY -->
         <section id="tab-summary" class="tab-content space-y-6">
-            <!-- Metric KPI Cards Bar -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center space-x-4">
                     <div class="w-12 h-12 bg-klc-100 text-klc-800 rounded-xl flex items-center justify-center text-lg font-bold">
@@ -646,7 +645,6 @@
                         <p id="repAbsentCount" class="text-2xl font-black text-rose-600 mt-1">0</p>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -850,20 +848,8 @@ function doGet(e) {
     var logRows = logSheet.getDataRange().getValues();
     for (var j = 1; j < logRows.length; j++) {
       var lr = logRows[j];
-      // Column index mapping based on Google Sheet structure:
-      // A: Timestamp (lr[0])
-      // B: Date (lr[1])
-      // C: Student ID (lr[2])
-      // D: Student Name (lr[3])
-      // E: Class ID (lr[4])
-      // F: Class Name (lr[5])
-      // G: Status (lr[6])
-      // H: Topic (lr[7])
-      // I: Teacher Note (lr[8])
-      // J: Remark (lr[9])
       if (!lr[2]) continue;
       
-      // Format Google Sheets Date object or string to YYYY-MM-DD cleanly without timezone shifts
       var rawDate = lr[1];
       var cleanDateStr = '';
       if (rawDate instanceof Date) {
@@ -1194,22 +1180,19 @@ function doGet(e) {
             return s;
         };
 
-        // Helper to convert day names (Mon, Wed, etc.) or date strings into standardized YYYY/MM/DD format
+        // Helper to convert day names or date strings into standardized YYYY/MM/DD format
         window.parseToYYYYMMDD = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
             
-            // If already matches YYYY-MM-DD or YYYY/MM/DD
             if (/^\d{4}[-/]\d{2}[-/]\d{2}$/.test(s)) {
                 return s.replace(/-/g, '/');
             }
 
-            // Mapping weekday abbreviations or text to the nearest upcoming/current 2026/2027 date or fallback
             const lower = s.toLowerCase();
             const now = new Date();
             const year = now.getFullYear();
             
-            // If it's a day name like Mon, Tuesday, Wed, etc., map to recent mock dates or parse standard date
             if (lower.includes('mon') || lower === 'senin') return `${year}/07/20`;
             if (lower.includes('wed') || lower === 'rabu') return `${year}/07/22`;
             if (lower.includes('fri') || lower === 'jumat') return `${year}/07/24`;
@@ -1940,6 +1923,7 @@ function doGet(e) {
             if (teacherNotesInput) teacherNotesInput.value = "";
             window.currentAttendanceState = {};
             window.clearAttendanceFormView();
+            window.updateDashboardStats();
             window.showToast('Attendance recorded and form reset successfully!', 'success');
         };
 
@@ -2136,7 +2120,6 @@ function doGet(e) {
             let html = '';
             filtered.forEach(l => {
                 const rawDateStr = window.formatDisplayDate(l.tanggal);
-                // Converted DATE to YYYY/MM/DD format as requested
                 const cleanDate = window.parseToYYYYMMDD(rawDateStr);
                 const remarkText = l.remarks || l.remark || '-';
                 const statusVal = l.status || 'Present';
@@ -2506,9 +2489,25 @@ function doGet(e) {
             const statElem = document.getElementById('statTotalLogs');
             if (statElem) statElem.innerText = window.logs.length;
 
-            const validClasses = (window.klcClasses || []).filter(c => window.isValidRealClass(c.id, c.name));
+            // Calculate total unique class sessions conducted (unique combination of date + class code in logs)
+            const conductedSessionsMap = new Set();
+            (window.logs || []).forEach(l => {
+                const dateClean = window.formatDisplayDate(l.tanggal);
+                const classCode = String(l.kodeKelas || '').trim().toUpperCase();
+                if (dateClean && classCode) {
+                    conductedSessionsMap.add(`${dateClean}_${classCode}`);
+                }
+            });
+            const totalConductedCount = conductedSessionsMap.size;
+
             const totalClassesElem = document.getElementById('statTotalClasses');
-            if (totalClassesElem) totalClassesElem.innerHTML = `${validClasses.length} <span class="text-sm font-semibold text-slate-400">Classes</span>`;
+            if (totalClassesElem) {
+                totalClassesElem.innerHTML = `${totalConductedCount} <span class="text-sm font-semibold text-slate-400">Sessions</span>`;
+            }
+            const totalClassesSub = document.getElementById('statTotalClassesSub');
+            if (totalClassesSub) {
+                totalClassesSub.innerHTML = `<i class="fa-solid fa-layer-group text-klc-600"></i> Total Class Sessions Conducted`;
+            }
 
             const rateElem = document.getElementById('statAvgAttendanceRate');
             if (rateElem) {
