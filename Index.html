@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaura Learning Centre (KLC) Attendance System 2026-2027</title>
-    <!-- Custom Favicon: Dark Green Circle with White 'K' -->
+    <!-- Custom Favicon: Dark Green Circle with Whiate 'K' -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2314532d'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Arial, sans-serif' font-weight='bold' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1042,6 +1042,20 @@ function doGet(e) {
             if (tabId === 'tab-absensi') window.loadAttendanceStudentList();
         };
 
+        window.formatClassName = function(id, name) {
+            if (!name) return id || '';
+            if (!id) return name;
+            
+            const cleanId = String(id).trim().toUpperCase();
+            const cleanName = String(name).trim();
+            
+            if (cleanName.toUpperCase().includes(cleanId)) {
+                return cleanName;
+            }
+            
+            return `${cleanName} [${cleanId}]`;
+        };
+
         window.isValidRealClass = function(id, name) {
             if (!id && !name) return false;
             const uId = String(id || '').trim().toUpperCase();
@@ -1163,7 +1177,7 @@ function doGet(e) {
         window.getClassName = function(kode) {
             if (!kode) return '';
             const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === String(kode).toUpperCase());
-            return found ? `${found.name} [${found.id}]` : kode;
+            return window.formatClassName(kode, found ? found.name : kode);
         };
 
         window.saveLogsToStorage = function() {
@@ -1277,7 +1291,8 @@ function doGet(e) {
 
             let optionsHtml = '<option value="">-- Select KLC Class --</option>';
             validClasses.forEach(c => {
-                optionsHtml += `<option value="${c.id}">${c.name} [${c.id}]</option>`;
+                const displayName = window.formatClassName(c.id, c.name);
+                optionsHtml += `<option value="${c.id}">${displayName}</option>`;
             });
 
             if (absensiSelect) {
@@ -1541,8 +1556,19 @@ function doGet(e) {
 
             let html = '';
             filtered.forEach(student => {
-                const classBadges = student.classes.length > 0 
-                    ? `<div class="flex flex-col space-y-1.5 items-start">` + student.classes.map(cId => `<span class="px-3.5 py-1.5 text-xs font-bold bg-slate-50 border border-slate-200/90 rounded-2xl text-slate-700 shadow-xs">${window.getClassName(cId)}</span>`).join('') + `</div>`
+                // Filter out category labels (like "English", "Computer") and keep only valid class names/IDs
+                const realClasses = (student.classes || []).filter(cId => {
+                    const upper = String(cId).trim().toUpperCase();
+                    return upper !== 'ENGLISH' && upper !== 'COMPUTER';
+                });
+
+                const classBadges = realClasses.length > 0 
+                    ? `<div class="flex flex-col space-y-1.5 items-start">` + 
+                      realClasses.map(cId => {
+                          const clsObj = window.klcClasses.find(c => c.id === cId);
+                          const displayName = window.formatClassName(cId, clsObj ? clsObj.name : cId);
+                          return `<span class="px-3.5 py-1.5 text-xs font-bold bg-slate-50 border border-slate-200/90 rounded-2xl text-slate-700 shadow-xs">${displayName}</span>`;
+                      }).join('') + `</div>`
                     : '<span class="text-slate-400 font-semibold">-</span>';
 
                 html += `
@@ -1618,7 +1644,16 @@ function doGet(e) {
                     }
                 });
 
-                const classBadges = stu.classes.map(cId => `<span class="px-2.5 py-1 text-[11px] font-bold bg-slate-100 rounded-lg text-slate-700 mr-1 mb-1 inline-block">${window.getClassName(cId)}</span>`).join('');
+                const realClassesSummary = (stu.classes || []).filter(cId => {
+                    const upper = String(cId).trim().toUpperCase();
+                    return upper !== 'ENGLISH' && upper !== 'COMPUTER';
+                });
+
+                const classBadges = realClassesSummary.map(cId => {
+                    const clsObj = window.klcClasses.find(c => c.id === cId);
+                    const displayName = window.formatClassName(cId, clsObj ? clsObj.name : cId);
+                    return `<span class="px-2.5 py-1 text-[11px] font-bold bg-slate-100 rounded-lg text-slate-700 mr-1 mb-1 inline-block">${displayName}</span>`;
+                }).join('');
 
                 html += `
                     <tr class="hover:bg-slate-50 transition">
@@ -1826,10 +1861,11 @@ function doGet(e) {
             let html = '';
             validClasses.forEach(c => {
                 const isChecked = selectedClasses.includes(c.id) ? 'checked' : '';
+                const displayName = window.formatClassName(c.id, c.name);
                 html += `
                     <label class="flex items-center space-x-2 text-xs font-bold text-slate-700 bg-white p-2.5 rounded-xl border border-slate-200 cursor-pointer hover:border-klc-500 transition">
                         <input type="checkbox" name="studentClassCheck" value="${c.id}" ${isChecked} class="rounded border-slate-300 text-klc-600 focus:ring-klc-500 w-4 h-4">
-                        <span class="truncate">${c.name} [${c.id}]</span>
+                        <span class="truncate">${displayName}</span>
                     </label>
                 `;
             });
@@ -2081,4 +2117,3 @@ function doGet(e) {
     </script>
 </body>
 </html>
-```eof
