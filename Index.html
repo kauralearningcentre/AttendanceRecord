@@ -35,8 +35,6 @@
     </script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js for Reports -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Google Font Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -60,6 +58,11 @@
         .status-pill-active {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-1px);
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.15);
+            border-color: #16a34a;
         }
     </style>
 </head>
@@ -90,7 +93,7 @@
                     <span id="syncDot" class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                     <span id="syncStatusText">Waiting for Google Sheets Sync</span>
                 </div>
-                <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center space-x-2 font-semibold shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+                <button onclick="window.fetchDataFromGoogleSheets()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center space-x-2 font-semibold shadow-sm hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
                     <i class="fa-solid fa-rotate text-emerald-300"></i>
                     <span class="hidden sm:inline">Sync Sheets</span>
                 </button>
@@ -181,7 +184,7 @@
                             <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Daily Session</span>
                             <h2 class="text-2xl font-black text-slate-900 tracking-tight mt-1">Record Class Attendance</h2>
                         </div>
-                        <p class="text-xs text-slate-500 font-medium mt-1">Select class and date to take student attendance with class-wide teacher notes.</p>
+                        <p class="text-xs text-slate-500 font-medium mt-1">Select class and date to take student attendance. Status buttons start unselected for teacher entry.</p>
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-2">
@@ -217,7 +220,7 @@
                 </div>
 
                 <!-- Teacher Session Notes & Topic Banner -->
-                <div class="mt-4 p-5 bg-klc-50/90 border border-klc-200/90 rounded-3xl text-slate-700 text-xs flex flex-col gap-3 shadow-sm">
+                <div class="mt-4 p-5 bg-klc-50/90 border border-klc-200/90 rounded-3xl text-slate-700 text-xs flex flex-col gap-4 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2 font-black text-klc-900 uppercase tracking-wider">
                             <i class="fa-solid fa-chalkboard text-klc-600"></i>
@@ -225,14 +228,14 @@
                         </div>
                         <span class="text-[10px] text-klc-700 font-bold bg-klc-200/60 px-2.5 py-0.5 rounded-full">Applied Class-Wide</span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Topic / Lesson Subject</label>
-                            <input type="text" id="absensiMateri" placeholder="e.g. Advanced Conversation Chapter 3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
+                    <div class="flex flex-col gap-3.5">
+                        <div class="w-full">
+                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Topic / Lesson Subject</label>
+                            <input type="text" id="absensiMateri" placeholder="e.g. Advanced Conversation Chapter 3" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Teacher Summary & Notes</label>
-                            <input type="text" id="absensiTeacherNotes" placeholder="e.g. Excellent student participation today" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
+                        <div class="w-full">
+                            <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1.5">Teacher Summary & Notes</label>
+                            <input type="text" id="absensiTeacherNotes" placeholder="e.g. Excellent student participation today" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-inner">
                         </div>
                     </div>
                 </div>
@@ -247,12 +250,15 @@
 
                 <!-- Student List Attendance Grid -->
                 <div class="mt-8">
-                    <div class="flex items-center justify-between mb-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3">
                         <div class="flex items-center gap-2.5">
                             <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Enrolled Students</h3>
                             <span id="countClassStudents" class="px-3 py-1 text-xs font-black bg-klc-100 text-klc-800 rounded-full shadow-sm">0 Students</span>
                         </div>
-                        <span class="text-xs text-slate-400 font-medium hidden sm:inline">Set attendance status and student-specific remarks</span>
+                        <div class="relative w-full sm:w-64">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
+                            <input type="text" id="attendanceSearchInput" onkeyup="window.filterAttendanceList()" placeholder="Filter student list..." class="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white shadow-xs">
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto border border-slate-200/80 rounded-3xl shadow-sm bg-white">
@@ -279,7 +285,7 @@
                         <div class="w-8 h-8 rounded-xl bg-klc-50 text-klc-600 flex items-center justify-center shadow-inner">
                             <i class="fa-solid fa-shield-halved text-sm"></i>
                         </div>
-                        <span>Data stored locally and ready to sync with Google Sheets.</span>
+                        <span>Tip: Press Enter in any remark field to save attendance instantly!</span>
                     </div>
                     <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-klc-600 hover:bg-klc-700 text-white font-extrabold text-xs shadow-lg shadow-klc-600/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2.5 cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
@@ -453,7 +459,7 @@
                     <div>
                         <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Audit Trail</span>
                         <h2 class="text-xl font-extrabold text-slate-900 mt-2">Attendance Audit Log</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Streamlined session logs focused on correctly formatted dates, status, teacher notes, and remarks.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Streamlined session logs matching your preferred date formatting, status pills, and notes.</p>
                     </div>
                     <div class="flex flex-wrap items-center gap-2.5">
                         <select id="filterLogKelas" onchange="window.renderLogTable()" class="border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold bg-white shadow-xs cursor-pointer">
@@ -470,11 +476,11 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-100/80 text-slate-700 text-[11px] uppercase tracking-wider font-extrabold border-b border-slate-200">
-                                <th class="p-4 w-32">Date</th>
-                                <th class="p-4 w-56">Student ID & Name</th>
-                                <th class="p-4 w-44">Class</th>
-                                <th class="p-4 w-28 text-center">Status</th>
-                                <th class="p-4">Teacher Note</th>
+                                <th class="p-4 w-36">Date</th>
+                                <th class="p-4 w-60">Student Name & ID</th>
+                                <th class="p-4 w-52">Class</th>
+                                <th class="p-4 w-32 text-center">Status</th>
+                                <th class="p-4">Teacher Note / Topic</th>
                                 <th class="p-4 w-44">Remark</th>
                             </tr>
                         </thead>
@@ -492,35 +498,23 @@
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                     <div>
                         <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Comparative Analytics & Semester Reports</span>
-                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Monthly & Semester Reports</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Average attendance rate comparisons, semester overview, and HIGHLIGHT summaries.</p>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Monthly & Reports</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Average attendance rate comparisons, period overview, and AI-powered HIGHLIGHT summaries.</p>
                     </div>
-                    <button onclick="window.generateAiReport()" class="bg-gradient-to-r from-klc-600 to-emerald-600 hover:from-klc-700 hover:to-emerald-700 text-white px-5 py-3 rounded-2xl text-xs font-extrabold shadow-lg shadow-klc-600/25 transition flex items-center space-x-2 cursor-pointer">
-                        <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
-                        <span>HIGHLIGHT</span>
-                    </button>
                 </div>
 
-                <!-- Report Filters -->
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 p-5 bg-gradient-to-r from-slate-50 via-klc-50/20 to-emerald-50/20 rounded-3xl border border-slate-200/80 shadow-inner">
+                <!-- Report Filters moved to the top -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 bg-gradient-to-r from-slate-50 via-klc-50/20 to-emerald-50/20 rounded-3xl border border-slate-200/80 shadow-inner">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Report Filter Type</label>
                         <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
                             <option value="month">Monthly Report</option>
-                            <option value="semester">Semester Range (Jan - Jun)</option>
                             <option value="range">Custom Date Range</option>
                         </select>
                     </div>
                     <div id="monthSelectorWrapper">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Month & Year</label>
                         <input type="month" id="reportMonthInput" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
-                    </div>
-                    <div id="semesterSelectorWrapper" class="hidden">
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Select Semester</label>
-                        <select id="reportSemesterSelect" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
-                            <option value="2026-H1">Jan - Jun 2026 (Semester 1)</option>
-                            <option value="2026-H2">Jul - Dec 2026 (Semester 2)</option>
-                        </select>
                     </div>
                     <div id="startDateWrapper" class="hidden">
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Start Date</label>
@@ -537,9 +531,9 @@
                         </select>
                     </div>
                     <div class="flex items-end">
-                        <button onclick="window.renderReportData()" class="w-full px-5 py-3 rounded-2xl bg-klc-600 hover:bg-klc-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
-                            <i class="fa-solid fa-filter"></i>
-                            <span>Apply Filter</span>
+                        <button onclick="window.generateAiReport()" class="w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-klc-600 to-emerald-600 hover:from-klc-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                            <span>Generate Gemini Highlight</span>
                         </button>
                     </div>
                 </div>
@@ -552,7 +546,7 @@
                                 <i class="fa-solid fa-star"></i>
                             </div>
                             <div>
-                                <h3 class="font-black text-lg text-slate-900">HIGHLIGHT</h3>
+                                <h3 class="font-black text-lg text-slate-900">GEMINI HIGHLIGHT SUMMARY</h3>
                                 <p class="text-xs text-slate-500 font-medium">Kaura Learning Centre Periodic Performance Overview</p>
                             </div>
                         </div>
@@ -610,7 +604,7 @@
                             <div class="flex justify-center lg:justify-start">
                                 <div class="px-8 py-3 bg-klc-600 text-white font-black text-base rounded-2xl shadow-lg shadow-klc-600/25 flex items-center gap-2.5 tracking-wider uppercase">
                                     <i class="fa-solid fa-star"></i>
-                                    <span>HIGHLIGHT SUMMARY</span>
+                                    <span>AI HIGHLIGHT BULLETS</span>
                                 </div>
                             </div>
 
@@ -619,30 +613,10 @@
                                     <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
                                         <i class="fa-solid fa-check text-xs"></i>
                                     </div>
-                                    <p>Loading educational insights and learning highlights...</p>
+                                    <p>Click 'Generate Gemini Highlight' to analyze attendance logs using Gemini AI...</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Report Statistics Overview Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-                    <div class="p-4.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Filtered Sessions</p>
-                        <p id="repTotalSessions" class="text-2xl font-black text-slate-900 mt-1">0</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-emerald-50 border border-emerald-200 shadow-sm">
-                        <p class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">Average Attendance</p>
-                        <p id="repAvgRate" class="text-2xl font-black text-emerald-600 mt-1">0%</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-sky-50 border border-sky-200 shadow-sm">
-                        <p class="text-[10px] font-black text-sky-800 uppercase tracking-wider">Present Count</p>
-                        <p id="repPresentCount" class="text-2xl font-black text-sky-700 mt-1">0</p>
-                    </div>
-                    <div class="p-4.5 rounded-2xl bg-rose-50 border border-rose-200 shadow-sm">
-                        <p class="text-[10px] font-black text-rose-800 uppercase tracking-wider">Absent / Sick Count</p>
-                        <p id="repAbsentCount" class="text-2xl font-black text-rose-600 mt-1">0</p>
                     </div>
                 </div>
             </div>
@@ -1180,22 +1154,14 @@ function doGet(e) {
             return s;
         };
 
-        // Helper to convert day names or date strings into standardized YYYY/MM/DD format
         window.parseToYYYYMMDD = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
             
-            if (/^\d{4}[-/]\d{2}[-/]\d{2}$/.test(s)) {
-                return s.replace(/-/g, '/');
+            let clean = s.replace(/\//g, '-');
+            if (/^\d{4}-\d{2}-\d{2}$/.test(clean)) {
+                return clean.replace(/-/g, '/');
             }
-
-            const lower = s.toLowerCase();
-            const now = new Date();
-            const year = now.getFullYear();
-            
-            if (lower.includes('mon') || lower === 'senin') return `${year}/07/20`;
-            if (lower.includes('wed') || lower === 'rabu') return `${year}/07/22`;
-            if (lower.includes('fri') || lower === 'jumat') return `${year}/07/24`;
 
             const parsed = new Date(s);
             if (!isNaN(parsed.getTime())) {
@@ -1359,7 +1325,10 @@ function doGet(e) {
                         const studentClassId = String(s.classId || '').trim().toUpperCase();
                         if (studentClassId === targetClassId) return true;
                         if (Array.isArray(s.classes)) {
-                            return s.classes.some(c => c && c.trim().toUpperCase() === targetClassId);
+                            return s.classes.some(item => {
+                                const iId = typeof item === 'object' ? item.id : item;
+                                return iId && String(iId).trim().toUpperCase() === targetClassId;
+                            });
                         }
                         return false;
                     }).length;
@@ -1537,10 +1506,21 @@ function doGet(e) {
             }
         };
 
-        window.getClassName = function(kode) {
-            if (!kode) return '';
-            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === String(kode).toUpperCase());
-            return window.formatClassName(kode, found ? found.name : kode);
+        window.getClassName = function(kode, rawName) {
+            if (!kode) return rawName || '';
+            const upperKode = String(kode).trim().toUpperCase();
+            if (rawName && String(rawName).trim() !== '') {
+                const cleanRaw = String(rawName).trim();
+                if (!cleanRaw.toUpperCase().includes(upperKode)) {
+                    return `${cleanRaw} [${upperKode}]`;
+                }
+                return cleanRaw;
+            }
+            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === upperKode);
+            if (found && found.name) {
+                return window.formatClassName(upperKode, found.name);
+            }
+            return upperKode;
         };
 
         window.saveLogsToStorage = function() {
@@ -1553,27 +1533,50 @@ function doGet(e) {
             (window.students || []).forEach(s => {
                 if (!s || !s.id) return;
                 const id = String(s.id).trim().toUpperCase();
+                
+                const rowClassId = String(s.classId || '').trim();
+                const rowClassName = String(s.className || '').trim();
+                
                 if (studentMap.has(id)) {
                     const existing = studentMap.get(id);
-                    if (s.classId && !existing.classes.includes(s.classId)) {
-                        existing.classes.push(s.classId);
+                    if (rowClassId && !existing.classes.some(item => {
+                        const iId = typeof item === 'object' ? item.id : item;
+                        return iId && String(iId).toUpperCase() === rowClassId.toUpperCase();
+                    })) {
+                        existing.classes.push({ id: rowClassId, name: rowClassName || rowClassId });
                     }
                     if (Array.isArray(s.classes)) {
                         s.classes.forEach(c => {
-                            if (c && !existing.classes.includes(c)) existing.classes.push(c);
+                            const cId = typeof c === 'object' ? c.id : c;
+                            const cName = typeof c === 'object' ? c.name : c;
+                            if (cId && !existing.classes.some(item => {
+                                const iId = typeof item === 'object' ? item.id : item;
+                                return iId && String(iId).toUpperCase() === String(cId).toUpperCase();
+                            })) {
+                                existing.classes.push({ id: cId, name: cName || cId });
+                            }
                         });
                     }
                 } else {
                     let classList = [];
-                    if (s.classId) classList.push(s.classId);
+                    if (rowClassId) classList.push({ id: rowClassId, name: rowClassName || rowClassId });
                     if (Array.isArray(s.classes)) {
-                        s.classes.forEach(c => { if (c && !classList.includes(c)) classList.push(c); });
+                        s.classes.forEach(c => {
+                            const cId = typeof c === 'object' ? c.id : c;
+                            const cName = typeof c === 'object' ? c.name : c;
+                            if (cId && !classList.some(item => {
+                                const iId = typeof item === 'object' ? item.id : item;
+                                return iId && String(iId).toUpperCase() === String(cId).toUpperCase();
+                            })) {
+                                classList.push({ id: cId, name: cName || cId });
+                            }
+                        });
                     }
                     studentMap.set(id, {
                         id: s.id,
                         name: s.name || s.fullName || '',
                         classes: classList,
-                        status: s.status || 'Active'
+                        status: s.status || 'Aktif'
                     });
                 }
             });
@@ -1635,34 +1638,70 @@ function doGet(e) {
             const filterStudentSelect = document.getElementById('filterStudentKelas');
             const reportClassSelect = document.getElementById('reportClassSelect');
 
-            const validClasses = [];
-            const seenClassIds = new Set();
+            const validClassesMap = new Map();
 
-            (window.klcClasses || []).forEach(c => {
-                const id = String(c.id || '').trim();
-                const name = String(c.name || '').trim();
-                if (!id) return;
-                
-                if (!window.isValidRealClass(id, name)) return;
-                
-                const upperId = id.toUpperCase();
-                if (!seenClassIds.has(upperId)) {
-                    seenClassIds.add(upperId);
-                    validClasses.push(c);
+            // 1. First parse from students data directly (since Student_Data has exact Class ID & Class Name)
+            (window.students || []).forEach(s => {
+                if (s.classId) {
+                    const cid = String(s.classId).trim().toUpperCase();
+                    const cname = String(s.className || '').trim();
+                    if (cid && window.isValidRealClass(cid, cid)) {
+                        // If class name is generic or matches computer mistakenly, correct it based on ID prefix
+                        let finalName = cname;
+                        if (!finalName || (cid.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) || (cid.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH'))) {
+                            if (cid.startsWith('ENG')) {
+                                finalName = 'English Class ' + cid;
+                            } else if (cid.startsWith('COMP')) {
+                                finalName = 'Computer Class ' + cid;
+                            } else {
+                                finalName = cid;
+                            }
+                        }
+                        if (!validClassesMap.has(cid)) {
+                            validClassesMap.set(cid, { id: cid, name: finalName });
+                        }
+                    }
+                }
+                if (Array.isArray(s.classes)) {
+                    s.classes.forEach(c => {
+                        const cid = typeof c === 'object' ? (c.id || c.classId) : c;
+                        const cname = typeof c === 'object' ? (c.name || c.className) : '';
+                        if (cid) {
+                            const upperId = String(cid).trim().toUpperCase();
+                            if (window.isValidRealClass(upperId, upperId) && !validClassesMap.has(upperId)) {
+                                let finalName = cname || upperId;
+                                if (upperId.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) finalName = 'English ' + upperId;
+                                if (upperId.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH')) finalName = 'Computer ' + upperId;
+                                validClassesMap.set(upperId, { id: upperId, name: finalName });
+                            }
+                        }
+                    });
                 }
             });
 
-            let optionsHtml = '<option value="">-- Select KLC Class --</option>';
-            validClasses.forEach(c => {
-                const displayName = window.formatClassName(c.id, c.name);
-                optionsHtml += `<option value="${c.id}">${displayName}</option>`;
+            // 2. Also check klcClasses array if available
+            (window.klcClasses || []).forEach(c => {
+                const id = String(c.id || '').trim().toUpperCase();
+                const name = String(c.name || '').trim();
+                if (!id) return;
+                if (!window.isValidRealClass(id, name)) return;
+                if (!validClassesMap.has(id)) {
+                    let finalName = name || id;
+                    if (id.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) finalName = 'English ' + id;
+                    if (id.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH')) finalName = 'Computer ' + id;
+                    validClassesMap.set(id, { id: id, name: finalName });
+                }
             });
 
-            if (absensiSelect) {
-                absensiSelect.innerHTML = optionsHtml;
-                if (!absensiSelect.value) absensiSelect.value = ""; 
-            }
+            const uniqueValidClasses = Array.from(validClassesMap.values());
+            uniqueValidClasses.sort((a, b) => a.id.localeCompare(b.id));
 
+            let optionsHtml = '<option value="">-- Select KLC Class --</option>';
+            uniqueValidClasses.forEach(c => {
+                optionsHtml += `<option value="${c.id}">${c.name} [${c.id}]</option>`;
+            });
+
+            if (absensiSelect) absensiSelect.innerHTML = optionsHtml;
             const allOptionHtml = '<option value="">All Classes</option>' + optionsHtml;
             if (summaryFilterSelect) summaryFilterSelect.innerHTML = allOptionHtml;
             if (filterLogSelect) filterLogSelect.innerHTML = allOptionHtml;
@@ -1670,25 +1709,32 @@ function doGet(e) {
             if (reportClassSelect) reportClassSelect.innerHTML = allOptionHtml;
         };
 
-        window.clearAttendanceFormView = function() {
-            const selectKelas = document.getElementById('absensiSelectKelas');
-            if (selectKelas && !selectKelas.value) {
-                const tbody = document.getElementById('attendanceTableBody');
-                if (tbody) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="5" class="text-center py-12 text-slate-400 text-xs">
-                                <i class="fa-solid fa-hand-pointer text-2xl text-klc-500 mb-2 block"></i>
-                                Please select a <strong>KLC Class</strong> above to load the student attendance roll call.
-                            </td>
-                        </tr>
-                    `;
-                }
-                const countBadge = document.getElementById('countClassStudents');
-                if (countBadge) countBadge.innerText = `0 Students`;
-                const notice = document.getElementById('alreadySavedNotice');
-                if (notice) notice.classList.add('hidden');
+        window.getClassName = function(kode, rawName) {
+            if (!kode) return rawName || '';
+            const upperKode = String(kode).trim().toUpperCase();
+            
+            // Check in valid classes map or klcClasses
+            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === upperKode);
+            if (found && found.name && !found.name.toUpperCase().includes('CLASS ENGLISH') && !found.name.toUpperCase().includes('CLASS COMPUTER')) {
+                return `${found.name} [${upperKode}]`;
             }
+
+            // Check in students data
+            for (let s of (window.students || [])) {
+                if (s.classId && String(s.classId).trim().toUpperCase() === upperKode && s.className) {
+                    let cn = String(s.className).trim();
+                    if (upperKode.startsWith('ENG') && cn.toUpperCase().includes('COMPUTER')) cn = 'English Class ' + upperKode;
+                    return `${cn} [${upperKode}]`;
+                }
+            }
+
+            if (rawName && String(rawName).trim() !== '' && !String(rawName).toUpperCase().includes('CLASS ENGLISH')) {
+                return `${String(rawName).trim()} [${upperKode}]`;
+            }
+
+            if (upperKode.startsWith('ENG')) return `English Class [${upperKode}]`;
+            if (upperKode.startsWith('COMP')) return `Computer Class [${upperKode}]`;
+            return upperKode;
         };
 
         window.loadAttendanceStudentList = function() {
@@ -1711,7 +1757,10 @@ function doGet(e) {
                 if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
                 
                 if (Array.isArray(s.classes)) {
-                    return s.classes.some(c => c && c.trim().toUpperCase() === classId);
+                    return s.classes.some(item => {
+                        const cId = typeof item === 'object' ? item.id : item;
+                        return cId && String(cId).trim().toUpperCase() === classId;
+                    });
                 }
                 return false;
             });
@@ -1765,13 +1814,13 @@ function doGet(e) {
                 const currentNote = loggedItem ? (loggedItem.remarks || loggedItem.remark || '') : '';
 
                 if (window.currentAttendanceState[student.id] === undefined && !loggedItem) {
-                    window.currentAttendanceState[student.id] = '';
+                    window.currentAttendanceState[student.id] = ''; 
                 } else if (loggedItem && window.currentAttendanceState[student.id] === undefined) {
                     window.currentAttendanceState[student.id] = loggedItem.status;
                 }
 
                 html += `
-                    <tr class="hover:bg-slate-50/85 transition">
+                    <tr class="hover:bg-slate-50/85 transition student-attendance-row" data-name="${student.name.toLowerCase()}" data-id="${student.id.toLowerCase()}">
                         <td class="py-4 px-5 text-center font-extrabold text-slate-400 text-xs">${index + 1}</td>
                         <td class="py-4 px-5 font-mono font-black text-klc-700 text-xs">${student.id}</td>
                         <td class="py-4 px-5 font-extrabold text-slate-900">${student.name}</td>
@@ -1783,13 +1832,41 @@ function doGet(e) {
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right">
-                            <input type="text" id="note-${student.id}" value="${currentNote}" placeholder="Student remark..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-sm transition text-right">
+                            <input type="text" id="note-${student.id}" value="${currentNote}" onkeydown="window.handleRemarkKeydown(event, '${student.id}')" placeholder="Student remark..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-sm transition text-right">
                         </td>
                     </tr>
                 `;
             });
 
             tbody.innerHTML = html;
+        };
+
+        window.filterAttendanceList = function() {
+            const query = document.getElementById('attendanceSearchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.student-attendance-row');
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name');
+                const id = row.getAttribute('data-id');
+                if (name.includes(query) || id.includes(query)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        };
+
+        window.handleRemarkKeydown = function(e, studentId) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const rows = Array.from(document.querySelectorAll('.student-attendance-row'));
+                const currentIndex = rows.findIndex(r => r.querySelector(`#note-${studentId}`));
+                if (currentIndex >= 0 && currentIndex < rows.length - 1) {
+                    const nextInput = rows[currentIndex + 1].querySelector('input[type="text"]');
+                    if (nextInput) nextInput.focus();
+                } else {
+                    window.submitAttendance();
+                }
+            }
         };
 
         window.setRowStatus = function(studentId, status) {
@@ -1817,7 +1894,10 @@ function doGet(e) {
             const classId = selectKelas.value.trim().toUpperCase();
             const filteredStudents = window.getUniqueStudents().filter(s => {
                 if (Array.isArray(s.classes)) {
-                    return s.classes.some(c => c && c.trim().toUpperCase() === classId);
+                    return s.classes.some(item => {
+                        const cId = typeof item === 'object' ? item.id : item;
+                        return cId && String(cId).trim().toUpperCase() === classId;
+                    });
                 }
                 return false;
             });
@@ -1858,7 +1938,10 @@ function doGet(e) {
 
             const filteredStudents = window.getUniqueStudents().filter(s => {
                 if (Array.isArray(s.classes)) {
-                    return s.classes.some(c => c && c.trim().toUpperCase() === classId.toUpperCase());
+                    return s.classes.some(item => {
+                        const cId = typeof item === 'object' ? item.id : item;
+                        return cId && String(cId).trim().toUpperCase() === classId.toUpperCase();
+                    });
                 }
                 return false;
             });
@@ -1927,6 +2010,15 @@ function doGet(e) {
             window.showToast('Attendance recorded and form reset successfully!', 'success');
         };
 
+        window.clearAttendanceFormView = function() {
+            const tbody = document.getElementById('attendanceTableBody');
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400 text-xs">Please select a KLC Class above to take attendance.</td></tr>`;
+            }
+            const countBadge = document.getElementById('countClassStudents');
+            if (countBadge) countBadge.innerText = '0 Students';
+        };
+
         window.renderStudentTable = function() {
             const tbody = document.getElementById('masterStudentTableBody');
             if (!tbody) return;
@@ -1938,7 +2030,10 @@ function doGet(e) {
 
             const uniqueStudents = window.getUniqueStudents();
             const filtered = uniqueStudents.filter(s => {
-                const matchClass = classFilter ? (s.classes || []).some(c => String(c).trim().toUpperCase() === classFilter) : true;
+                const matchClass = classFilter ? (s.classes || []).some(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    return cId && String(cId).trim().toUpperCase() === classFilter;
+                }) : true;
                 const matchSearch = (s.name && s.name.toLowerCase().includes(search)) || 
                                     (s.id && s.id.toLowerCase().includes(search));
                 return matchClass && matchSearch;
@@ -1951,16 +2046,18 @@ function doGet(e) {
 
             let html = '';
             filtered.forEach(student => {
-                const realClasses = (student.classes || []).filter(cId => {
-                    const upper = String(cId).trim().toUpperCase();
+                const realClasses = (student.classes || []).filter(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    const upper = String(cId || '').trim().toUpperCase();
                     return upper !== 'ENGLISH' && upper !== 'COMPUTER';
                 });
 
                 const classBadges = realClasses.length > 0 
                     ? `<div class="flex flex-col space-y-1.5 items-start">` + 
-                      realClasses.map(cId => {
-                          const clsObj = window.klcClasses.find(c => c.id === cId);
-                          const displayName = window.formatClassName(cId, clsObj ? clsObj.name : cId);
+                      realClasses.map(item => {
+                          const cId = typeof item === 'object' ? item.id : item;
+                          const cName = typeof item === 'object' ? item.name : '';
+                          const displayName = window.getClassName(cId, cName);
                           return `<span class="px-3.5 py-1.5 text-xs font-bold bg-slate-50 border border-slate-200/90 rounded-2xl text-slate-700 shadow-xs">${displayName}</span>`;
                       }).join('') + `</div>`
                     : '<span class="text-slate-400 font-semibold">-</span>';
@@ -1970,7 +2067,7 @@ function doGet(e) {
                         <td class="py-4 px-5 font-mono font-black text-klc-700 text-xs">${student.id}</td>
                         <td class="py-4 px-5 font-extrabold text-slate-900 text-sm">${student.name}</td>
                         <td class="py-4 px-5">${classBadges}</td>
-                        <td class="py-4 px-5"><span class="px-3.5 py-1 text-xs rounded-full font-black bg-emerald-100 text-emerald-800 shadow-sm">${student.status || 'Active'}</span></td>
+                        <td class="py-4 px-5"><span class="px-3.5 py-1 text-xs rounded-full font-black bg-emerald-100 text-emerald-800 shadow-sm">${student.status || 'Aktif'}</span></td>
                         <td class="py-4 px-5 text-center">
                             <div class="flex items-center justify-center gap-2">
                                 <button onclick="window.editStudent('${student.id}')" title="Edit Student" class="px-3.5 py-2 bg-slate-100 hover:bg-klc-50 text-slate-700 hover:text-klc-700 rounded-xl text-xs font-extrabold transition border border-slate-200 flex items-center gap-1.5 shadow-sm cursor-pointer">
@@ -1997,7 +2094,10 @@ function doGet(e) {
 
             const uniqueStudents = window.getUniqueStudents();
             const filtered = uniqueStudents.filter(s => {
-                const matchClass = classFilter ? s.classes.some(c => c.toUpperCase() === classFilter) : true;
+                const matchClass = classFilter ? s.classes.some(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    return cId && String(cId).toUpperCase() === classFilter;
+                }) : true;
                 const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
                 return matchClass && matchSearch;
             });
@@ -2038,14 +2138,16 @@ function doGet(e) {
                     }
                 });
 
-                const realClassesSummary = (stu.classes || []).filter(cId => {
-                    const upper = String(cId).trim().toUpperCase();
+                const realClassesSummary = (stu.classes || []).filter(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    const upper = String(cId || '').trim().toUpperCase();
                     return upper !== 'ENGLISH' && upper !== 'COMPUTER';
                 });
 
-                const classBadges = realClassesSummary.map(cId => {
-                    const clsObj = window.klcClasses.find(c => c.id === cId);
-                    const displayName = window.formatClassName(cId, clsObj ? clsObj.name : cId);
+                const classBadges = realClassesSummary.map(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    const cName = typeof item === 'object' ? item.name : '';
+                    const displayName = window.getClassName(cId, cName);
                     return `<span class="px-2.5 py-1 text-[11px] font-bold bg-slate-100 rounded-lg text-slate-700 mr-1 mb-1 inline-block">${displayName}</span>`;
                 }).join('');
 
@@ -2128,18 +2230,24 @@ function doGet(e) {
                 if (statusVal === 'Absent' || statusVal === 'Tidak Hadir') statusBadgeBg = 'bg-rose-100 text-rose-800';
                 if (statusVal === 'Sick' || statusVal === 'Sakit') statusBadgeBg = 'bg-amber-100 text-amber-800';
 
+                const displayStatus = statusVal.toUpperCase();
+                const teacherNoteText = l.teacherNotes || l.materi || '-';
+
                 html += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="py-4 px-4 text-xs font-extrabold text-slate-800 font-mono">${cleanDate}</td>
+                        <td class="py-4 px-4 text-xs font-black text-slate-800 font-mono tracking-tight">${cleanDate}</td>
                         <td class="py-4 px-4">
-                            <div class="font-extrabold text-slate-900 text-xs sm:text-sm">${l.namaSiswa || '-'}</div>
-                            <div class="text-[10px] font-mono text-slate-400 font-bold">${l.idSiswa || '-'}</div>
+                            <div class="font-black text-slate-900 text-xs sm:text-sm tracking-tight uppercase">${l.namaSiswa || '-'}</div>
+                            <div class="text-[10px] font-mono text-slate-400 font-bold mt-0.5">${l.idSiswa || '-'}</div>
                         </td>
-                        <td class="py-4 px-4 text-xs text-slate-700 font-extrabold">${l.namaKelas || l.kodeKelas || '-'}</td>
+                        <td class="py-4 px-4">
+                            <div class="font-extrabold text-slate-800 text-xs">${l.namaKelas || l.kodeKelas || '-'}</div>
+                            <div class="text-[10px] font-mono text-slate-400 font-bold mt-0.5">[${l.kodeKelas || '-'}]</div>
+                        </td>
                         <td class="py-4 px-4 text-center">
-                            <span class="px-2.5 py-1 rounded-full font-black text-[10px] uppercase tracking-wider ${statusBadgeBg}">${statusVal}</span>
+                            <span class="px-3 py-1 rounded-md font-black text-[10px] uppercase tracking-wider ${statusBadgeBg}">${displayStatus}</span>
                         </td>
-                        <td class="py-4 px-4 text-xs text-slate-600 font-semibold">${l.teacherNotes || '-'}</td>
+                        <td class="py-4 px-4 text-xs text-slate-600 font-medium leading-relaxed max-w-xs truncate">${teacherNoteText}</td>
                         <td class="py-4 px-4 text-xs text-slate-700 font-medium">${remarkText}</td>
                     </tr>
                 `;
@@ -2159,18 +2267,9 @@ function doGet(e) {
                     startDate = monthVal + '-01';
                     const [y, m] = monthVal.split('-');
                     const lastDay = new Date(y, m, 0).getDate();
-                    endDate = `${monthVal}-${lastDay}`;
+                    endDate = `${monthVal}-${String(lastDay).padStart(2, '0')}`;
                 }
-            } else if (type === 'semester') {
-                const semVal = document.getElementById('reportSemesterSelect').value;
-                if (semVal === '2026-H1') {
-                    startDate = '2026-01-01';
-                    endDate = '2026-06-30';
-                } else if (semVal === '2026-H2') {
-                    startDate = '2026-07-01';
-                    endDate = '2026-12-31';
-                }
-            } else {
+            } else if (type === 'range') {
                 startDate = document.getElementById('reportStartDate').value;
                 endDate = document.getElementById('reportEndDate').value;
             }
@@ -2184,51 +2283,81 @@ function doGet(e) {
                 return true;
             });
 
-            const totalSess = filteredLogs.length;
-            const presentCount = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const absentCount = totalSess - presentCount;
-            const avgRate = totalSess > 0 ? Math.round((presentCount / totalSess) * 100) : 0;
-
-            document.getElementById('repTotalSessions').innerText = totalSess;
-            document.getElementById('repAvgRate').innerText = `${avgRate}%`;
-            document.getElementById('repPresentCount').innerText = presentCount;
-            document.getElementById('repAbsentCount').innerText = absentCount;
+            return filteredLogs;
         };
 
         window.toggleReportMode = function() {
             const type = document.getElementById('reportTypeSelect').value;
             const monthWrap = document.getElementById('monthSelectorWrapper');
-            const semesterWrap = document.getElementById('semesterSelectorWrapper');
             const startWrap = document.getElementById('startDateWrapper');
             const endWrap = document.getElementById('endDateWrapper');
 
-            monthWrap.classList.add('hidden');
-            semesterWrap.classList.add('hidden');
-            startWrap.classList.add('hidden');
-            endWrap.classList.add('hidden');
+            if (monthWrap) monthWrap.classList.add('hidden');
+            if (startWrap) startWrap.classList.add('hidden');
+            if (endWrap) endWrap.classList.add('hidden');
 
             if (type === 'month') {
-                monthWrap.classList.remove('hidden');
-            } else if (type === 'semester') {
-                semesterWrap.classList.remove('hidden');
+                if (monthWrap) monthWrap.classList.remove('hidden');
             } else if (type === 'range') {
-                startWrap.classList.remove('hidden');
-                endWrap.classList.remove('hidden');
+                if (startWrap) startWrap.classList.remove('hidden');
+                if (endWrap) endWrap.classList.remove('hidden');
             }
-            window.renderReportData();
+            window.generateAiReport();
         };
 
-        window.generateAiReport = function() {
+        window.generateAiReport = async function() {
             const box = document.getElementById('aiSummaryBox');
             if (box) box.classList.remove('hidden');
 
-            const filteredLogs = window.logs;
+            const filteredLogs = window.renderReportData();
+            const uniqueStudents = window.getUniqueStudents();
+            let studentSummaries = [];
+            let totalHadirAll = 0;
+            let totalSessionsAll = 0;
+
+            uniqueStudents.forEach(stu => {
+                const stuLogs = filteredLogs.filter(l => String(l.idSiswa) === String(stu.id));
+                const total = stuLogs.length;
+                if (total > 0) {
+                    const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
+                    const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
+                    const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
+                    const rate = total > 0 ? Math.round((present / total) * 100) : 100;
+                    
+                    totalHadirAll += present;
+                    totalSessionsAll += total;
+
+                    studentSummaries.push({
+                        studentId: stu.id,
+                        name: stu.name,
+                        classes: stu.classes,
+                        totalSessions: total,
+                        present: present,
+                        absent: absent,
+                        sick: sick,
+                        attendanceRate: rate
+                    });
+                }
+            });
+
+            const conductedSessionsMap = new Set();
+            filteredLogs.forEach(l => {
+                const dClean = window.formatDisplayDate(l.tanggal);
+                const cCode = String(l.kodeKelas || '').trim().toUpperCase();
+                if (dClean && cCode) {
+                    conductedSessionsMap.add(`${dClean}_${cCode}`);
+                }
+            });
+            const totalConductedSess = conductedSessionsMap.size;
+            
             const totalSess = filteredLogs.length;
             const presentCount = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const avgRate = totalSess > 0 ? Math.round((presentCount / totalSess) * 100) : 0;
+            const avgRate = totalSessionsAll > 0 ? Math.round((totalHadirAll / totalSessionsAll) * 100) : (totalSess > 0 ? Math.round((presentCount / totalSess) * 100) : 0);
 
-            document.getElementById('aiCardAvgRate').innerText = `${avgRate}%`;
-            document.getElementById('aiCardTotalSess').innerText = totalSess;
+            const cardAvg = document.getElementById('aiCardAvgRate');
+            const cardSess = document.getElementById('aiCardTotalSess');
+            if (cardAvg) cardAvg.innerText = `${avgRate}%`;
+            if (cardSess) cardSess.innerText = totalConductedSess > 0 ? totalConductedSess : filteredLogs.length;
 
             let engLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().includes('ENG'));
             let engPresent = engLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
@@ -2238,27 +2367,96 @@ function doGet(e) {
             let compPresent = compLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             let compRate = compLogs.length > 0 ? Math.round((compPresent / compLogs.length) * 100) : 0;
 
-            document.getElementById('aiEngRateText').innerText = `${engRate}%`;
-            document.getElementById('aiEngBar').style.height = `${engRate}%`;
+            const engText = document.getElementById('aiEngRateText');
+            const engBar = document.getElementById('aiEngBar');
+            const compText = document.getElementById('aiCompRateText');
+            const compBar = document.getElementById('aiCompBar');
 
-            document.getElementById('aiCompRateText').innerText = `${compRate}%`;
-            document.getElementById('aiCompBar').style.height = `${compRate}%`;
+            if (engText) engText.innerText = `${engRate}%`;
+            if (engBar) engBar.style.height = `${Math.max(engRate, 10)}%`;
+            if (compText) compText.innerText = `${compRate}%`;
+            if (compBar) compBar.style.height = `${Math.max(compRate, 10)}%`;
 
-            document.getElementById('aiHighlightBullets').innerHTML = `
-                <div class="flex items-start gap-3">
-                    <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                        <i class="fa-solid fa-check text-xs"></i>
+            const teacherNotesSet = new Set();
+            filteredLogs.forEach(l => {
+                if (l.teacherNotes && l.teacherNotes.trim()) teacherNotesSet.add(l.teacherNotes.trim());
+                if (l.materi && l.materi.trim()) teacherNotesSet.add(l.materi.trim());
+                if (l.remarks && l.remarks.trim()) teacherNotesSet.add(l.remarks.trim());
+            });
+            const collectedNotes = Array.from(teacherNotesSet);
+
+            const bulletsContainer = document.getElementById('aiHighlightBullets');
+            if (bulletsContainer) {
+                bulletsContainer.innerHTML = `
+                    <div class="flex items-center gap-3 text-slate-500 py-4">
+                        <i class="fa-solid fa-spinner fa-spin text-klc-600 text-lg"></i>
+                        <span>Gemini is analyzing student attendance summary and log notes for the period...</span>
                     </div>
-                    <p>English classes maintain strong attendance stability averaging around <strong>${engRate}%</strong> across sessions.</p>
-                </div>
-                <div class="flex items-start gap-3">
-                    <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                        <i class="fa-solid fa-check text-xs"></i>
-                    </div>
-                    <p>Computer laboratory curriculum sessions report active participation with <strong>${compRate}%</strong> attendance rate.</p>
-                </div>
-            `;
-            window.showToast('HIGHLIGHT generated successfully!', 'success');
+                `;
+            }
+
+            try {
+                const systemPrompt = "Act as an expert educational analyst for Kaura Learning Centre (KLC). Review the provided attendance summary dataset, attendance percentages, and teacher session notes, then summarize key trends, student attendance patterns, and overall performance into 3 clear, professional bullet points starting with HTML bullet formatting.";
+                const userQuery = `Analyze these student attendance summary records, logs, and teacher notes for the selected period (Total Conducted Sessions: ${totalConductedSess > 0 ? totalConductedSess : filteredLogs.length}, Average Attendance: ${avgRate}%, English Rate: ${engRate}%, Computer Rate: ${compRate}%). Teacher Notes / Topics: ${JSON.stringify(collectedNotes)}. Student Summaries: ${JSON.stringify(studentSummaries.slice(0, 100))}`;
+                
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text && bulletsContainer) {
+                    const bullets = text.split('\n').filter(line => line.trim().length > 0);
+                    let htmlContent = '';
+                    bullets.forEach(b => {
+                        const cleanLine = b.replace(/^[\*\-\•\d\.]+\s*/, '');
+                        if (cleanLine.length > 3) {
+                            htmlContent += `
+                                <div class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-check text-xs"></i>
+                                    </div>
+                                    <p>${cleanLine}</p>
+                                </div>
+                            `;
+                        }
+                    });
+                    bulletsContainer.innerHTML = htmlContent || `<p>${text}</p>`;
+                    window.showToast('Gemini HIGHLIGHT successfully generated!', 'success');
+                } else {
+                    throw new Error('No text returned from Gemini');
+                }
+            } catch (err) {
+                console.warn('Gemini AI fallback:', err);
+                if (bulletsContainer) {
+                    bulletsContainer.innerHTML = `
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p>Student attendance rates across active classes remain stable with overall average at <strong>${avgRate}%</strong> over ${totalConductedSess > 0 ? totalConductedSess : filteredLogs.length} session(s).</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <p>English (${engRate}%) and Computer (${compRate}%) curriculum classes show consistent student engagement during the selected timeframe.</p>
+                        </div>
+                    `;
+                }
+                window.showToast('Generated summary based on student attendance metrics.', 'success');
+            }
         };
 
         window.openModalAddStudent = function() {
@@ -2305,7 +2503,8 @@ function doGet(e) {
             document.getElementById('studentNameInput').value = stu.name;
             document.getElementById('modalStudentTitle').innerText = 'Edit KLC Student';
 
-            window.renderModalClassCheckboxes(stu.classes);
+            const classIdsOnly = stu.classes.map(item => typeof item === 'object' ? item.id : item);
+            window.renderModalClassCheckboxes(classIdsOnly);
             document.getElementById('modalAddStudent').classList.remove('hidden');
         };
 
@@ -2489,7 +2688,6 @@ function doGet(e) {
             const statElem = document.getElementById('statTotalLogs');
             if (statElem) statElem.innerText = window.logs.length;
 
-            // Calculate total unique class sessions conducted (unique combination of date + class code in logs)
             const conductedSessionsMap = new Set();
             (window.logs || []).forEach(l => {
                 const dateClean = window.formatDisplayDate(l.tanggal);
@@ -2574,7 +2772,7 @@ function doGet(e) {
                 let absent = logs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
                 let total = logs.length;
                 let percentage = total > 0 ? Math.round((present / total) * 100) : 100;
-                let classLabels = stu.classes.join(', ');
+                let classLabels = stu.classes.map(item => typeof item === 'object' ? item.name : item).join(', ');
                 csv += `"${stu.id}","${stu.name}","${classLabels}",${present},${sick},${absent},${total},${percentage}%\n`;
             });
 
