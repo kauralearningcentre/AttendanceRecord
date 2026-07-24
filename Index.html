@@ -124,11 +124,11 @@
                     <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
                     <span id="syncStatusText" class="truncate">Waiting for Sync</span>
                 </div>
-                <button onclick="window.fetchDataFromGoogleSheets()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-white border border-emerald-400/30 flex items-center space-x-1.5 font-semibold shadow-sm cursor-pointer shrink-0">
+                <button onclick="window.fetchDataFromGoogleSheets()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-50    active:scale-95 transition text-white border border-emerald-400/30 flex items-center space-x-1.5 font-semibold shadow-sm cursor-pointer shrink-0">
                     <i class="fa-solid fa-rotate text-xs"></i>
                     <span>Sync</span>
                 </button>
-                <button onclick="window.switchTab('tab-settings')" class="hidden sm:flex p-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 items-center justify-center cursor-pointer" title="Apps Script Setup">
+                <button onclick="window.switchTab('tab-settings')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center justify-center cursor-pointer" title="Apps Script Setup">
                     <i class="fa-solid fa-gear text-xs"></i>
                 </button>
             </div>
@@ -734,6 +734,18 @@
                     <button onclick="window.switchTab('tab-absensi')" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-arrow-left"></i> Dashboard
                     </button>
+                </div>
+
+                <!-- AI Quick Access Card -->
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-purple-900 text-sm">Gemini AI Assistant</h3>
+                        <p class="text-xs text-purple-700 font-medium">Access your shared AI workspace.</p>
+                    </div>
+                    <a href="https://gemini.google.com/share/47e2503a9ab9?skid=5ec71e8e-2049-4933-acb6-59db30f46361" target="_blank" rel="noopener noreferrer" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Open Gemini</span>
+                    </a>
                 </div>
 
                 <!-- Endpoint URL Input -->
