@@ -1437,6 +1437,24 @@ function doGet(e) {
             return s;
         };
 
+        window.normalizeDateIso = function(dateStr) {
+            if (!dateStr) return '';
+            let s = String(dateStr).trim();
+            if (s.includes('T')) s = s.split('T')[0];
+            if (s.includes(' ')) s = s.split(' ')[0];
+            s = s.replace(/\//g, '-');
+            const parts = s.split('-');
+            if (parts.length === 3) {
+                let p0 = parts[0], p1 = parts[1], p2 = parts[2];
+                if (p0.length === 4) {
+                    return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`;
+                } else if (p2.length === 4) {
+                    return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`;
+                }
+            }
+            return s;
+        };
+
         window.parseToYYYYMMDD = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
@@ -2826,7 +2844,7 @@ function doGet(e) {
 
             const filteredLogs = window.logs.filter(l => {
                 if (!l.tanggal) return false;
-                const dClean = window.formatDisplayDate(l.tanggal);
+                const dClean = window.normalizeDateIso(l.tanggal);
                 if (startDate && dClean < startDate) return false;
                 if (endDate && dClean > endDate) return false;
                 if (classFilter && l.kodeKelas && l.kodeKelas.toUpperCase() !== classFilter) return false;
@@ -2970,6 +2988,17 @@ function doGet(e) {
             const box = document.getElementById('aiSummaryBox');
             if (box) box.classList.remove('hidden');
 
+            const bulletContainer = document.getElementById('aiHighlightBullets');
+            if (bulletContainer) {
+                bulletContainer.innerHTML = `
+                    <div class="p-6 text-center text-slate-500 font-medium space-y-2">
+                        <i class="fa-solid fa-spinner fa-spin text-2xl text-klc-600 block mx-auto"></i>
+                        <p class="text-xs font-bold text-slate-700">Gemini AI is analyzing attendance records and teacher notes...</p>
+                        <p class="text-[11px] text-slate-400">Synthesizing attendance rates, lesson topics, and performance insights.</p>
+                    </div>
+                `;
+            }
+
             const filteredLogs = window.renderReportData();
             
             const totalLogEntries = filteredLogs.length;
@@ -3006,57 +3035,140 @@ function doGet(e) {
                 filteredLogs.map(l => (l.materi || l.topic || '').trim()).filter(Boolean)
             ));
 
-            let whatChildrenLearned = [];
-            let expectedOutcomes = [];
-            let actionPlan = [];
+            const teacherNotesList = Array.from(new Set(
+                filteredLogs.map(l => (l.teacherNotes || l.teacherNote || '').trim()).filter(Boolean)
+            ));
 
-            if (topicsCovered.length > 0) {
-                const topicsLower = topicsCovered.join(' ').toLowerCase();
-                if (topicsLower.includes('convers') || topicsLower.includes('speak') || topicsLower.includes('vocab')) {
-                    whatChildrenLearned.push("<strong>English Conversation:</strong> Daily fluency practice, vocabulary expansion, and speaking confidence.");
+            try {
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const summaryContext = {
+                    totalRecords: totalLogEntries,
+                    overallAttendanceRate: `${avgRate}%`,
+                    englishSessions: engSessionsCount,
+                    englishAttendanceRate: `${engRate}%`,
+                    computerSessions: compSessionsCount,
+                    computerAttendanceRate: `${compRate}%`,
+                    topicsCovered: topicsCovered.length > 0 ? topicsCovered : ["General KLC Curriculum"],
+                    teacherNotes: teacherNotesList.length > 0 ? teacherNotesList : ["Standard session completed"]
+                };
+
+                const userPrompt = `Analyze this attendance & curriculum data for Kaura Learning Centre (KLC): ${JSON.stringify(summaryContext)}. Provide key executive insights.`;
+                const systemPrompt = `You are an educational director at Kaura Learning Centre (KLC). Analyze the provided data and return structured json with three string array properties: 'curriculumHighlights', 'attendanceAnalysis', and 'actionPlan'. Keep bullet points professional, encouraging, and clear.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userPrompt }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                curriculumHighlights: { type: "ARRAY", items: { type: "STRING" } },
+                                attendanceAnalysis: { type: "ARRAY", items: { type: "STRING" } },
+                                actionPlan: { type: "ARRAY", items: { type: "STRING" } }
+                            },
+                            required: ["curriculumHighlights", "attendanceAnalysis", "actionPlan"]
+                        }
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+
+                const result = await response.json();
+                const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (!jsonText) throw new Error("Empty Gemini response");
+
+                const parsed = JSON.parse(jsonText);
+
+                if (bulletContainer) {
+                    bulletContainer.innerHTML = `
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600">
+                                ${(parsed.curriculumHighlights || []).map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <span class="font-bold text-emerald-900 block mb-1">Attendance & Engagement:</span>
+                            <ul class="list-disc list-inside space-y-1 text-emerald-800">
+                                ${(parsed.attendanceAnalysis || []).map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-sky-50 rounded-xl border border-sky-200">
+                            <span class="font-bold text-sky-900 block mb-1">Next Steps & Action Plan:</span>
+                            <ul class="list-disc list-inside space-y-1 text-sky-800">
+                                ${(parsed.actionPlan || []).map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
                 }
-                if (topicsLower.includes('computer') || topicsLower.includes('typing') || topicsLower.includes('office')) {
-                    whatChildrenLearned.push("<strong>Computer Skills:</strong> Basic software navigation, digital literacy, and touch-typing exercises.");
+
+                window.showToast('Gemini Executive Summary generated!', 'success');
+                return;
+
+            } catch (err) {
+                console.warn("Gemini API call fallback to rule-based analysis:", err);
+                let whatChildrenLearned = [];
+                let expectedOutcomes = [];
+                let actionPlan = [];
+
+                if (topicsCovered.length > 0) {
+                    const topicsLower = topicsCovered.join(' ').toLowerCase();
+                    if (topicsLower.includes('convers') || topicsLower.includes('speak') || topicsLower.includes('vocab')) {
+                        whatChildrenLearned.push("<strong>English Conversation:</strong> Daily fluency practice, vocabulary expansion, and speaking confidence.");
+                    }
+                    if (topicsLower.includes('computer') || topicsLower.includes('typing') || topicsLower.includes('office')) {
+                        whatChildrenLearned.push("<strong>Computer Skills:</strong> Basic software navigation, digital literacy, and touch-typing exercises.");
+                    }
+                    if (whatChildrenLearned.length === 0) {
+                        whatChildrenLearned.push(`<strong>Core Modules:</strong> Active learning in <em>${topicsCovered.slice(0, 2).join(', ')}</em>.`);
+                    }
+                } else {
+                    whatChildrenLearned.push("<strong>Structured KLC Curriculum:</strong> Theoretical & practical lessons across English & Computer modules.");
                 }
-                if (whatChildrenLearned.length === 0) {
-                    whatChildrenLearned.push(`<strong>Core Modules:</strong> Active learning in <em>${topicsCovered.slice(0, 2).join(', ')}</em>.`);
+
+                if (avgRate >= 85) {
+                    expectedOutcomes.push("High overall engagement and consistent session attendance across active classes.");
+                } else if (avgRate >= 70) {
+                    expectedOutcomes.push("Moderate attendance level. Regular monitoring recommended.");
+                } else {
+                    expectedOutcomes.push("Attendance requires follow-up. Recommended reaching out to absent students.");
                 }
-            } else {
-                whatChildrenLearned.push("<strong>Structured KLC Curriculum:</strong> Theoretical & practical lessons across English & Computer modules.");
-            }
 
-            if (avgRate >= 85) {
-                expectedOutcomes.push("High overall engagement and consistent session attendance across active classes.");
-            } else if (avgRate >= 70) {
-                expectedOutcomes.push("Moderate attendance level. Regular monitoring recommended.");
-            } else {
-                expectedOutcomes.push("Attendance requires follow-up. Recommended reaching out to absent students.");
-            }
+                actionPlan.push("Continue interactive classroom exercises and digital learning module distribution.");
 
-            actionPlan.push("Continue interactive classroom exercises and digital learning module distribution.");
-
-            const bulletContainer = document.getElementById('aiHighlightBullets');
-            if (bulletContainer) {
-                bulletContainer.innerHTML = `
-                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span>
-                        <ul class="list-disc list-inside space-y-1 text-slate-600">
-                            ${whatChildrenLearned.map(item => `<li>${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
-                        <span class="font-bold text-emerald-900 block mb-1">Attendance & Engagement:</span>
-                        <ul class="list-disc list-inside space-y-1 text-emerald-800">
-                            ${expectedOutcomes.map(item => `<li>${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div class="p-3 bg-sky-50 rounded-xl border border-sky-200">
-                        <span class="font-bold text-sky-900 block mb-1">Next Steps & Action Plan:</span>
-                        <ul class="list-disc list-inside space-y-1 text-sky-800">
-                            ${actionPlan.map(item => `<li>${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
+                if (bulletContainer) {
+                    bulletContainer.innerHTML = `
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                            <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600">
+                                ${whatChildrenLearned.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <span class="font-bold text-emerald-900 block mb-1">Attendance & Engagement:</span>
+                            <ul class="list-disc list-inside space-y-1 text-emerald-800">
+                                ${expectedOutcomes.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-3 bg-sky-50 rounded-xl border border-sky-200">
+                            <span class="font-bold text-sky-900 block mb-1">Next Steps & Action Plan:</span>
+                            <ul class="list-disc list-inside space-y-1 text-sky-800">
+                                ${actionPlan.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                window.showToast('Generated analysis report (Offline mode)', 'info');
             }
         };
 
