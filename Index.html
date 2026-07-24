@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- HTML2Canvas Library for Image Downloading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .tab-content { display: none; }
@@ -49,15 +51,11 @@
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .tab-content.active { animation: fadeIn 0.3s ease-out forwards; }
+        .tab-content.active { animation: fadeIn 0.25s ease-out forwards; }
         .glass-header {
             background: rgba(20, 83, 45, 0.95);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-        }
-        .status-pill-active {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transform: translateY(-1px);
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
@@ -128,7 +126,7 @@
                 </button>
                 <button onclick="window.switchTab('tab-reports')" id="nav-tab-reports" class="nav-btn tab-btn flex items-center space-x-2 px-4 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-chart-column text-sm text-emerald-300"></i>
-                    <span>Monthly & Reports</span>
+                    <span>Report</span>
                 </button>
             </nav>
         </div>
@@ -136,16 +134,16 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-6">
 
-        <!-- Notification Toast Container -->
+        <!-- Toast Notification Container -->
         <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col space-y-2.5 pointer-events-none"></div>
 
         <!-- Dashboard Quick Overview Bar -->
         <div id="overviewStatsContainer" class="hidden grid grid-cols-1 md:grid-cols-3 gap-5">
             <div class="bg-white/85 backdrop-blur-md rounded-3xl p-5 shadow-card border border-slate-200/80 flex items-center justify-between hover:border-klc-500 transition-all duration-300 group hover:-translate-y-1">
                 <div>
-                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-klc-700 transition">Total Classes</p>
-                    <p id="statTotalClasses" class="text-3xl font-black text-slate-900 mt-1.5">0 <span class="text-sm font-semibold text-slate-400">Classes</span></p>
-                    <p id="statTotalClassesSub" class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-calendar-day text-klc-600"></i> Sessions on Selected Date</p>
+                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-klc-700 transition">Total Class Sessions</p>
+                    <p id="statTotalClasses" class="text-3xl font-black text-slate-900 mt-1.5">0 <span class="text-sm font-semibold text-slate-400">Sessions</span></p>
+                    <p id="statTotalClassesSub" class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-klc-600"></i> Conducted Sessions</p>
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-klc-700 to-emerald-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-klc-900/20 group-hover:scale-110 transition duration-300">
                     <i class="fa-solid fa-layer-group"></i>
@@ -156,7 +154,7 @@
                 <div>
                     <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-emerald-700 transition">Average Attendance</p>
                     <p id="statAvgAttendanceRate" class="text-3xl font-black text-emerald-600 mt-1.5">0%</p>
-                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-500"></i> Across All Classes</p>
+                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-chart-line text-emerald-500"></i> Across All Active Classes</p>
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition duration-300">
                     <i class="fa-solid fa-chart-pie"></i>
@@ -165,12 +163,12 @@
 
             <div class="bg-white/85 backdrop-blur-md rounded-3xl p-5 shadow-card border border-slate-200/80 flex items-center justify-between hover:border-sky-500 transition-all duration-300 group hover:-translate-y-1">
                 <div>
-                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-sky-700 transition">Total Log Entries</p>
-                    <p id="statTotalLogs" class="text-3xl font-black text-slate-900 mt-1.5">0</p>
-                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-clock-rotate-left text-sky-500"></i> Records Logged</p>
+                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 group-hover:text-sky-700 transition">Active Students</p>
+                    <p id="statTotalStudents" class="text-3xl font-black text-slate-900 mt-1.5">0 <span class="text-sm font-semibold text-slate-400">Enrolled</span></p>
+                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1.5"><i class="fa-solid fa-user-graduate text-sky-500"></i> Active Directory</p>
                 </div>
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-sky-500/20 group-hover:scale-110 transition duration-300">
-                    <i class="fa-solid fa-list-check"></i>
+                    <i class="fa-solid fa-users"></i>
                 </div>
             </div>
         </div>
@@ -285,7 +283,7 @@
                         <div class="w-8 h-8 rounded-xl bg-klc-50 text-klc-600 flex items-center justify-center shadow-inner">
                             <i class="fa-solid fa-shield-halved text-sm"></i>
                         </div>
-                        <span>Tip: Press Enter in any remark field to save attendance instantly!</span>
+                        <span>Tip: Click save to sync with Google Sheets & local database!</span>
                     </div>
                     <button onclick="window.submitAttendance()" class="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-klc-600 hover:bg-klc-700 text-white font-extrabold text-xs shadow-lg shadow-klc-600/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center space-x-2.5 cursor-pointer">
                         <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
@@ -492,18 +490,18 @@
             </div>
         </section>
 
-        <!-- TAB 6: MONTHLY & REPORTS -->
+        <!-- TAB 6: REPORT -->
         <section id="tab-reports" class="tab-content space-y-6">
             <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-card border border-slate-200/80 p-6 md:p-8 space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Comparative Analytics & Semester Reports</span>
-                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Monthly & Reports</h2>
-                        <p class="text-xs text-slate-500 mt-0.5">Average attendance rate comparisons, period overview, and AI-powered HIGHLIGHT summaries.</p>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full">Comparative Analytics & Session Audits</span>
+                        <h2 class="text-xl font-extrabold text-slate-900 mt-2">Report</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Per-class instruction metrics, period hours summary, and qualitative AI Gemini Highlights.</p>
                     </div>
                 </div>
 
-                <!-- Report Filters moved to the top -->
+                <!-- Report Filters -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-5 bg-gradient-to-r from-slate-50 via-klc-50/20 to-emerald-50/20 rounded-3xl border border-slate-200/80 shadow-inner">
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Report Filter Type</label>
@@ -525,16 +523,48 @@
                         <input type="date" id="reportEndDate" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white shadow-sm cursor-pointer">
                     </div>
                     <div>
-                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">KLC Class</label>
+                        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">KLC Class Filter</label>
                         <select id="reportClassSelect" onchange="window.renderReportData()" class="w-full px-4 py-3 rounded-2xl border border-slate-300 text-sm font-bold bg-white cursor-pointer shadow-sm">
                             <option value="">All Classes</option>
                         </select>
                     </div>
-                    <div class="flex items-end">
-                        <button onclick="window.generateAiReport()" class="w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-klc-600 to-emerald-600 hover:from-klc-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer">
+                    <div class="flex items-end sm:col-span-3 lg:col-span-1">
+                        <button onclick="window.generateAiReport()" class="w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-klc-600 to-emerald-600 hover:from-klc-700 hover:to-emerald-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]">
                             <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
                             <span>Generate Gemini Highlight</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- 1. PER-CLASS MONTHLY REPORT TABLE -->
+                <div id="perClassReportContainer" class="space-y-3 pt-2">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-table-list text-klc-600"></i>
+                            <span>Per-Class Monthly Report Overview</span>
+                        </h3>
+                        <span id="perClassReportCountBadge" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-klc-100 text-klc-800">
+                            0 Active Classes
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto border border-slate-200/80 rounded-2xl shadow-xs bg-white">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100/90 text-slate-700 text-[11px] uppercase tracking-wider font-extrabold border-b border-slate-200">
+                                    <th class="p-4">KLC Class Name & Code</th>
+                                    <th class="p-4 text-center w-40">Sessions Conducted</th>
+                                    <th class="p-4 text-center w-36">Total Hours</th>
+                                    <th class="p-4 text-center w-52">Average Attendance Rate (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="perClassReportTableBody" class="divide-y divide-slate-100 text-xs font-medium">
+                                <!-- Dynamic per-class rows -->
+                            </tbody>
+                            <tfoot id="perClassReportTableFooter" class="bg-slate-50 border-t-2 border-slate-200 font-extrabold text-slate-900 text-xs">
+                                <!-- Totals row -->
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
 
@@ -542,79 +572,73 @@
                 <div id="aiSummaryBox" class="hidden my-8 p-6 md:p-8 rounded-3xl bg-white border border-slate-200 shadow-xl space-y-6">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-5">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-2xl bg-klc-600 text-white flex items-center justify-center text-xl shadow-lg shadow-klc-900/20">
+                            <div class="w-10 h-10 rounded-2xl bg-klc-600 text-white flex items-center justify-center text-lg shadow-md shadow-klc-900/20">
                                 <i class="fa-solid fa-star"></i>
                             </div>
                             <div>
-                                <h3 class="font-black text-lg text-slate-900">GEMINI HIGHLIGHT SUMMARY</h3>
-                                <p class="text-xs text-slate-500 font-medium">Kaura Learning Centre Periodic Performance Overview</p>
+                                <h3 class="font-black text-base text-slate-900">GEMINI HIGHLIGHT SUMMARY</h3>
+                                <p class="text-xs text-slate-500 font-medium">Qualitative Insights & Student Learning Progress Report</p>
                             </div>
                         </div>
-                        <span class="px-3.5 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">Executive Report</span>
+                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">Executive Report</span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-sm">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center text-xl shadow-md">
-                                    <i class="fa-solid fa-users"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Average Attendance</p>
-                                    <p id="aiCardAvgRate" class="text-2xl font-black text-slate-900 mt-0.5">0%</p>
-                                    <p class="text-[11px] text-emerald-600 font-bold">Active engagement maintained</p>
-                                </div>
+                    <!-- Visual Chart & Concise Insights Split -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch pt-2">
+                        <!-- Left Column: Curriculum Breakdown Visual Chart -->
+                        <div class="lg:col-span-5 p-5 rounded-3xl bg-slate-50/80 border border-slate-200/80 shadow-xs flex flex-col justify-between h-full">
+                            <div>
+                                <h4 class="font-black text-slate-800 text-xs uppercase tracking-wider mb-0.5">Curriculum Breakdown</h4>
+                                <p id="aiChartSubtitle" class="text-[11px] text-slate-400 font-semibold mb-3">Selected Period Distribution</p>
                             </div>
-                        </div>
-
-                        <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-sm">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-2xl bg-klc-600 text-white flex items-center justify-center text-xl shadow-md">
-                                    <i class="fa-solid fa-book-open"></i>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Total Sessions Logged</p>
-                                    <p id="aiCardTotalSess" class="text-2xl font-black text-slate-900 mt-0.5">0</p>
-                                    <p class="text-[11px] text-emerald-600 font-bold">English & Computer Classes</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-2">
-                        <div class="lg:col-span-5 p-6 rounded-3xl bg-slate-50/80 border border-slate-200/80 shadow-sm flex flex-col items-center">
-                            <h4 class="font-black text-slate-800 text-sm mb-1 self-start">Student Attendance</h4>
-                            <p id="aiChartSubtitle" class="text-xs text-slate-400 font-semibold mb-6 self-start">Selected Period</p>
                             
-                            <div class="w-full flex items-end justify-center gap-10 h-52 px-4 pt-6 border-b border-slate-200 pb-2">
-                                <div class="flex flex-col items-center h-full justify-end w-24">
-                                    <span id="aiEngRateText" class="text-xs font-black text-sky-700 mb-2">0%</span>
-                                    <div id="aiEngBar" class="w-full bg-sky-600 rounded-t-2xl shadow-lg transition-all duration-700" style="height: 0%;"></div>
-                                    <span class="text-xs font-extrabold text-slate-700 mt-3">English</span>
+                            <!-- Visual Chart Container -->
+                            <div class="w-full bg-white p-4 rounded-2xl border border-slate-200 shadow-inner relative flex flex-col justify-between flex-grow min-h-[260px]">
+                                <!-- Background Y-Axis Lines -->
+                                <div class="absolute inset-x-4 top-4 bottom-10 flex flex-col justify-between pointer-events-none opacity-40">
+                                    <div class="border-b border-dashed border-slate-300 w-full flex justify-end"><span class="text-[9px] font-bold text-slate-400 -mt-2.5 bg-white px-1">100%</span></div>
+                                    <div class="border-b border-dashed border-slate-300 w-full flex justify-end"><span class="text-[9px] font-bold text-slate-400 -mt-2.5 bg-white px-1">75%</span></div>
+                                    <div class="border-b border-dashed border-slate-300 w-full flex justify-end"><span class="text-[9px] font-bold text-slate-400 -mt-2.5 bg-white px-1">50%</span></div>
+                                    <div class="border-b border-dashed border-slate-300 w-full flex justify-end"><span class="text-[9px] font-bold text-slate-400 -mt-2.5 bg-white px-1">25%</span></div>
+                                    <div class="border-b border-slate-200 w-full"></div>
                                 </div>
-                                <div class="flex flex-col items-center h-full justify-end w-24">
-                                    <span id="aiCompRateText" class="text-xs font-black text-klc-700 mb-2">0%</span>
-                                    <div id="aiCompBar" class="w-full bg-klc-600 rounded-t-2xl shadow-lg transition-all duration-700" style="height: 0%;"></div>
-                                    <span class="text-xs font-extrabold text-slate-700 mt-3">Computer</span>
+
+                                <div class="relative z-10 w-full flex items-end justify-around h-full pt-4 pb-1">
+                                    <!-- English Bar Column -->
+                                    <div class="flex flex-col items-center h-full justify-end w-24 group">
+                                        <div id="aiEngRateBadge" class="text-xs font-black text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-lg mb-2 shadow-xs group-hover:scale-105 transition">0%</div>
+                                        <div class="w-full bg-slate-100/80 rounded-2xl flex-grow flex items-end p-1.5 border border-slate-200 min-h-[130px]">
+                                            <div id="aiEngBar" class="w-full bg-gradient-to-t from-sky-600 via-sky-500 to-cyan-400 rounded-xl shadow-md transition-all duration-700 min-h-[12px]" style="height: 0%;"></div>
+                                        </div>
+                                        <span class="text-xs font-black text-slate-800 mt-2 uppercase tracking-wider">English</span>
+                                        <span id="aiEngSessSub" class="text-[10px] text-slate-400 font-bold">0 Sessions</span>
+                                    </div>
+
+                                    <!-- Computer Bar Column -->
+                                    <div class="flex flex-col items-center h-full justify-end w-24 group">
+                                        <div id="aiCompRateBadge" class="text-xs font-black text-klc-700 bg-klc-50 border border-klc-200 px-2 py-0.5 rounded-lg mb-2 shadow-xs group-hover:scale-105 transition">0%</div>
+                                        <div class="w-full bg-slate-100/80 rounded-2xl flex-grow flex items-end p-1.5 border border-slate-200 min-h-[130px]">
+                                            <div id="aiCompBar" class="w-full bg-gradient-to-t from-klc-700 via-emerald-600 to-green-400 rounded-xl shadow-md transition-all duration-700 min-h-[12px]" style="height: 0%;"></div>
+                                        </div>
+                                        <span class="text-xs font-black text-slate-800 mt-2 uppercase tracking-wider">Computer</span>
+                                        <span id="aiCompSessSub" class="text-[10px] text-slate-400 font-bold">0 Sessions</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="lg:col-span-7 space-y-5">
-                            <div class="flex justify-center lg:justify-start">
-                                <div class="px-8 py-3 bg-klc-600 text-white font-black text-base rounded-2xl shadow-lg shadow-klc-600/25 flex items-center gap-2.5 tracking-wider uppercase">
-                                    <i class="fa-solid fa-star"></i>
-                                    <span>AI HIGHLIGHT BULLETS</span>
+                        <!-- Right Column: Essential Student Progress Insights -->
+                        <div class="lg:col-span-7 space-y-4 flex flex-col justify-between h-full">
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                                <div class="px-3.5 py-1.5 bg-klc-800 text-white font-extrabold text-xs rounded-xl shadow-sm flex items-center gap-2 uppercase tracking-wider">
+                                    <i class="fa-solid fa-graduation-cap text-emerald-300"></i>
+                                    <span>STUDENT PROGRESS REPORT</span>
                                 </div>
+                                <span class="text-[10px] text-slate-400 font-bold">Synthesized Teacher Insights</span>
                             </div>
 
-                            <div id="aiHighlightBullets" class="space-y-4 text-xs md:text-sm text-slate-700 font-medium leading-relaxed">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                                        <i class="fa-solid fa-check text-xs"></i>
-                                    </div>
-                                    <p>Click 'Generate Gemini Highlight' to analyze attendance logs using Gemini AI...</p>
-                                </div>
+                            <div id="aiHighlightBullets" class="space-y-3.5 text-xs text-slate-700 font-medium leading-relaxed flex-grow">
+                                <!-- Populated dynamically by JS in English -->
                             </div>
                         </div>
                     </div>
@@ -680,6 +704,10 @@
                         <i class="fa-solid fa-copy"></i> <span>Copy Code</span>
                     </button>
                     <pre id="gasCodeDisplay" class="bg-slate-900 text-slate-100 p-5 rounded-2xl text-xs font-mono overflow-x-auto leading-relaxed border border-slate-800 max-h-96 custom-scrollbar">
+function doGet(e) {
+  return handleGet();
+}
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.tryLock(10000);
@@ -688,134 +716,173 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     
-    // 1. Handle addStudent
-    if (data.action === 'addStudent') {
-      var sheet = spreadsheet.getSheetByName('Student_Data'); 
-      sheet.appendRow([data.nis, data.name, data.enrolledClasses || '', data.className || '', data.classId || '', data.status || 'Active']); 
-      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // 2. Handle addClass (New Class Schedule)
-    if (data.action === 'addClass') {
-      var classSheet = spreadsheet.getSheetByName('KLC_Classes');
-      if (!classSheet) {
-        classSheet = spreadsheet.insertSheet('KLC_Classes');
-        classSheet.appendRow(['Class ID', 'Class Name', 'Category', 'Schedule', 'Room']);
-      }
-      classSheet.appendRow([data.classId, data.className, data.category, data.schedule, data.room]);
-      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // 3. Handle deleteStudent
-    if (data.action === 'deleteStudent') {
-      var sheet = spreadsheet.getSheetByName('Student_Data');
-      var rows = sheet.getDataRange().getValues();
-      var targetId = String(data.nis || '').trim().toUpperCase();
-      
-      for (var i = rows.length - 1; i >= 1; i--) {
-        if (String(rows[i][0]).trim().toUpperCase() === targetId) {
-          sheet.deleteRow(i + 1);
+    function getOrCreateSheet(name, headers) {
+      var sh = spreadsheet.getSheetByName(name);
+      if (!sh) {
+        sh = spreadsheet.insertSheet(name);
+        if (headers && headers.length > 0) {
+          sh.appendRow(headers);
         }
       }
-      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+      return sh;
     }
-    
-    // 4. Handle Attendance Log submission
-    var logSheet = spreadsheet.getSheetByName("Attendance_Log");
-    var records = data.records || data.data;
-    
-    if (Array.isArray(records)) {
-      records.forEach(function(r) {
-        logSheet.appendRow([
-          r.timestamp,
-          r.tanggal || r.date,
-          r.idSiswa || r.studentId,
-          r.namaSiswa || r.studentName,
-          r.kodeKelas || r.classId,
-          r.namaKelas || r.className,
+
+    if (data.action === 'addStudent') {
+      var sh = getOrCreateSheet("Student_Data", ["ID Siswa", "Full Name", "Enrolled Classes", "Class Name", "Class ID", "Status"]);
+      var rows = sh.getDataRange().getValues();
+      var foundIndex = -1;
+      for (var i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]).trim().toUpperCase() === String(data.nis).trim().toUpperCase()) {
+          foundIndex = i + 1;
+          break;
+        }
+      }
+      if (foundIndex > 0) {
+        sh.getRange(foundIndex, 1, 1, 6).setValues([[data.nis, data.name, data.enrolledClasses || '', data.className || '', data.classId || '', data.status || 'Active']]);
+      } else {
+        sh.appendRow([data.nis, data.name, data.enrolledClasses || '', data.className || '', data.classId || '', data.status || 'Active']);
+      }
+      return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (data.action === 'addClass') {
+      var sh = getOrCreateSheet("KLC_Classes", ["Class ID", "Class Name", "Category", "Schedule", "Room"]);
+      var rows = sh.getDataRange().getValues();
+      var foundIndex = -1;
+      for (var i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]).trim().toUpperCase() === String(data.classId).trim().toUpperCase()) {
+          foundIndex = i + 1;
+          break;
+        }
+      }
+      if (foundIndex > 0) {
+        sh.getRange(foundIndex, 1, 1, 5).setValues([[data.classId, data.className, data.category || '', data.schedule || '', data.room || '']]);
+      } else {
+        sh.appendRow([data.classId, data.className, data.category || '', data.schedule || '', data.room || '']);
+      }
+      return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (data.action === 'deleteStudent') {
+      var sh = spreadsheet.getSheetByName("Student_Data");
+      if (sh) {
+        var rows = sh.getDataRange().getValues();
+        for (var i = rows.length - 1; i >= 1; i--) {
+          if (String(rows[i][0]).trim().toUpperCase() === String(data.nis).trim().toUpperCase()) {
+            sh.deleteRow(i + 1);
+          }
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Default: Save Attendance Records
+    if (data.records && Array.isArray(data.records) && data.records.length > 0) {
+      var sh = getOrCreateSheet("Attendance_Log", ["Timestamp", "Date", "Student ID", "Student Name", "Class ID", "Class Name", "Status", "Topic", "Teacher Note", "Remark"]);
+      var firstRec = data.records[0];
+      var targetClass = String(firstRec.kodeKelas || '').trim().toUpperCase();
+      var targetDate = String(firstRec.tanggal || '').trim();
+
+      // Deduplicate: remove existing records for same class and date before saving
+      var logRows = sh.getDataRange().getValues();
+      var tz = spreadsheet.getSpreadsheetTimeZone();
+      for (var j = logRows.length - 1; j >= 1; j--) {
+        var rowDate = logRows[j][1];
+        var cleanRowDate = rowDate instanceof Date ? Utilities.formatDate(rowDate, tz, "yyyy-MM-dd") : String(rowDate || '').split('T')[0].trim();
+        var rowClass = String(logRows[j][4] || '').trim().toUpperCase();
+        if (cleanRowDate === targetDate && rowClass === targetClass) {
+          sh.deleteRow(j + 1);
+        }
+      }
+
+      data.records.forEach(function(r) {
+        sh.appendRow([
+          r.timestamp || new Date(),
+          r.tanggal,
+          r.idSiswa,
+          r.namaSiswa,
+          r.kodeKelas,
+          r.namaKelas,
           r.status,
-          r.materi || r.topic,
-          r.teacherNotes || r.teacherNote,
-          r.remarks || r.remark
+          r.materi || '',
+          r.teacherNotes || '',
+          r.remarks || ''
         ]);
       });
+      return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
     }
-    
-    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+
   } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
   }
 }
 
-function doGet(e) {
+function handleGet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  // Fetch Classes
-  var classes = [];
-  var classSheet = ss.getSheetByName("KLC_Classes");
-  if (classSheet) {
-    var cRows = classSheet.getDataRange().getValues();
-    for (var c = 1; c < cRows.length; c++) {
-      var cr = cRows[c];
-      if (!cr[0]) continue;
-      classes.push({
-        id: cr[0],
-        name: cr[1] || cr[0],
-        category: cr[2] || (String(cr[0]).toUpperCase().includes('ENG') ? 'English' : 'Computer'),
-        schedule: cr[3] || 'Scheduled Session',
-        room: cr[4] || 'Community Hall Kaura Manggis'
+  var tz = ss.getSpreadsheetTimeZone();
+
+  // 1. Fetch Students
+  var studentSheet = ss.getSheetByName("Student_Data");
+  var students = [];
+  if (studentSheet) {
+    var rows = studentSheet.getDataRange().getValues();
+    for (var i = 1; i < rows.length; i++) {
+      var r = rows[i];
+      if (!r[0]) continue;
+      students.push({
+        id: String(r[0]).trim(),
+        name: r[1],
+        fullName: r[1],
+        enrolledClasses: r[2],
+        className: r[3],
+        classId: r[4],
+        status: r[5] || 'Active'
       });
     }
   }
 
-  // Fetch Students
-  var studentSheet = ss.getSheetByName("Student_Data");
-  var rows = studentSheet.getDataRange().getValues();
-  var students = [];
+  // 2. Fetch Classes
+  var classSheet = ss.getSheetByName("KLC_Classes");
+  var classes = [];
   var classMap = {};
-  
-  for (var i = 1; i < rows.length; i++) {
-    var row = rows[i];
-    var idSiswa = row[0];
-    if (!idSiswa) continue;
-    
-    var fullName = row[1];
-    var enrolledClasses = row[2];
-    var className = row[3];
-    var classId = row[4];
-    var status = row[5] || 'Active';
-    
-    students.push({
-      id: idSiswa,
-      name: fullName,
-      fullName: fullName,
-      enrolledClasses: enrolledClasses,
-      className: className,
-      classId: classId,
-      classes: enrolledClasses ? enrolledClasses.split(',').map(function(c) { return c.trim(); }) : (classId ? [classId] : []),
-      status: status
-    });
-    
-    if (classId && !classMap[classId]) {
-      classMap[classId] = {
-        id: classId,
-        name: className || classId,
-        category: classId.toUpperCase().includes('ENG') ? 'English' : 'Computer',
-        schedule: 'Scheduled Session',
-        room: 'Community Hall Kaura Manggis'
+  if (classSheet) {
+    var cRows = classSheet.getDataRange().getValues();
+    for (var k = 1; k < cRows.length; k++) {
+      var cr = cRows[k];
+      if (!cr[0]) continue;
+      var cid = String(cr[0]).trim().toUpperCase();
+      classMap[cid] = {
+        id: cid,
+        name: cr[1],
+        category: cr[2],
+        schedule: cr[3],
+        room: cr[4]
       };
     }
   }
 
-  if (classes.length === 0) {
-    for (var key in classMap) {
-      classes.push(classMap[key]);
+  students.forEach(function(s) {
+    if (s.classId) {
+      var cid = String(s.classId).trim().toUpperCase();
+      if (!classMap[cid]) {
+        classMap[cid] = {
+          id: cid,
+          name: s.className || cid,
+          category: cid.indexOf("ENG") !== -1 ? "English" : "Computer",
+          schedule: "Scheduled Session",
+          room: "Community Hall Kaura Manggis"
+        };
+      }
     }
+  });
+
+  for (var key in classMap) {
+    classes.push(classMap[key]);
   }
 
-  // Fetch Logs
+  // 3. Fetch Logs
   var logSheet = ss.getSheetByName("Attendance_Log");
   var logs = [];
   if (logSheet) {
@@ -827,25 +894,16 @@ function doGet(e) {
       var rawDate = lr[1];
       var cleanDateStr = '';
       if (rawDate instanceof Date) {
-        var y = rawDate.getFullYear();
-        var m = String(rawDate.getMonth() + 1).padStart(2, '0');
-        var d = String(rawDate.getDate()).padStart(2, '0');
-        cleanDateStr = y + '-' + m + '-' + d;
+        cleanDateStr = Utilities.formatDate(rawDate, tz, "yyyy-MM-dd");
       } else {
         var strVal = String(rawDate || '').trim();
-        if (strVal.includes('T')) {
-          cleanDateStr = strVal.split('T')[0];
-        } else if (strVal.includes(' ')) {
-          cleanDateStr = strVal.split(' ')[0];
-        } else {
-          cleanDateStr = strVal;
-        }
+        cleanDateStr = strVal.split('T')[0].split(' ')[0];
       }
 
       logs.push({
         timestamp: lr[0],
         tanggal: cleanDateStr,
-        idSiswa: lr[2],
+        idSiswa: String(lr[2]).trim(),
         namaSiswa: lr[3],
         kodeKelas: lr[4],
         namaKelas: lr[5],
@@ -1039,18 +1097,25 @@ function doGet(e) {
     <!-- Modal Detail Student Summary Report -->
     <div id="modalStudentSummary" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden transform transition-all flex flex-col max-h-[90vh] border border-slate-200">
-            <div class="bg-slate-900 px-6 py-5 text-white flex items-center justify-between">
-                <div>
-                    <h3 id="modalSummaryName" class="font-black text-lg">Student Attendance History</h3>
-                    <p id="modalSummaryId" class="text-xs text-klc-400 font-mono mt-0.5"></p>
+            
+            <!-- Downloadable Card Target Area -->
+            <div id="studentReportCardArea" class="bg-white p-6 space-y-5 overflow-y-auto custom-scrollbar">
+                <!-- Branding Header inside Card -->
+                <div class="bg-klc-900 p-5 rounded-2xl text-white flex items-center justify-between border border-klc-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/10 ring-1 ring-white/30 flex items-center justify-center font-black text-lg">K</div>
+                        <div>
+                            <h3 id="modalSummaryName" class="font-black text-base leading-tight">Student Attendance History</h3>
+                            <p id="modalSummaryId" class="text-xs text-emerald-300 font-mono mt-0.5"></p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase font-bold text-slate-300 block">Report Card</span>
+                        <span class="text-xs font-black text-emerald-400">KLC 2026/2027</span>
+                    </div>
                 </div>
-                <button onclick="window.closeModalSummaryDetail()" class="text-slate-400 hover:text-white text-xl cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
 
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-6">
-                <div class="grid grid-cols-3 gap-3 text-center p-4 bg-slate-50 rounded-2xl border border-slate-200/80 shadow-inner">
+                <div class="grid grid-cols-3 gap-3 text-center p-4 bg-slate-50 rounded-2xl border border-slate-200">
                     <div>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Present</p>
                         <p id="modalCountHadir" class="text-xl font-black text-emerald-600 mt-1">0</p>
@@ -1067,13 +1132,13 @@ function doGet(e) {
 
                 <div>
                     <h4 class="text-xs font-black text-slate-700 uppercase tracking-wider mb-2.5">Session Log History</h4>
-                    <div class="border border-slate-200 rounded-2xl overflow-hidden text-xs shadow-sm bg-white">
-                        <table class="w-full text-left">
+                    <div class="border border-slate-200 rounded-2xl overflow-hidden text-xs bg-white">
+                        <table class="w-full text-left border-collapse">
                             <thead class="bg-slate-100 font-extrabold text-slate-700 border-b border-slate-200">
                                 <tr>
-                                    <th class="py-3 px-4">Date</th>
-                                    <th class="py-3 px-4">Class</th>
-                                    <th class="py-3 px-4 text-center">Status</th>
+                                    <th class="py-3 px-4 w-28 whitespace-nowrap">Date</th>
+                                    <th class="py-3 px-4 whitespace-nowrap">Class</th>
+                                    <th class="py-3 px-4 text-center w-24 whitespace-nowrap">Status</th>
                                     <th class="py-3 px-4">Remarks</th>
                                 </tr>
                             </thead>
@@ -1085,7 +1150,12 @@ function doGet(e) {
                 </div>
             </div>
 
-            <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex justify-end">
+            <!-- Modal Action Footer -->
+            <div class="bg-slate-50 px-6 py-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                <button onclick="window.downloadStudentCardImage()" class="px-5 py-2.5 text-xs font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-md transition flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-file-image"></i>
+                    <span>Download Card (PNG)</span>
+                </button>
                 <button onclick="window.closeModalSummaryDetail()" class="px-6 py-2.5 text-xs font-extrabold bg-slate-900 text-white rounded-2xl hover:bg-black shadow transition cursor-pointer">
                     Close
                 </button>
@@ -1145,24 +1215,18 @@ function doGet(e) {
         window.formatDisplayDate = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
-            if (s.includes('T')) {
-                return s.split('T')[0];
-            }
-            if (s.includes(' ')) {
-                return s.split(' ')[0];
-            }
+            if (s.includes('T')) return s.split('T')[0];
+            if (s.includes(' ')) return s.split(' ')[0];
             return s;
         };
 
         window.parseToYYYYMMDD = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
-            
             let clean = s.replace(/\//g, '-');
             if (/^\d{4}-\d{2}-\d{2}$/.test(clean)) {
                 return clean.replace(/-/g, '/');
             }
-
             const parsed = new Date(s);
             if (!isNaN(parsed.getTime())) {
                 const y = parsed.getFullYear();
@@ -1170,7 +1234,6 @@ function doGet(e) {
                 const d = String(parsed.getDate()).padStart(2, '0');
                 return `${y}/${m}/${d}`;
             }
-
             return s;
         };
 
@@ -1240,14 +1303,9 @@ function doGet(e) {
         window.formatClassName = function(id, name) {
             if (!name) return id || '';
             if (!id) return name;
-            
             const cleanId = String(id).trim().toUpperCase();
             const cleanName = String(name).trim();
-            
-            if (cleanName.toUpperCase().includes(cleanId)) {
-                return cleanName;
-            }
-            
+            if (cleanName.toUpperCase().includes(cleanId)) return cleanName;
             return `${cleanName} [${cleanId}]`;
         };
 
@@ -1260,6 +1318,32 @@ function doGet(e) {
             if (uName.includes('CLASS ENGLISH') || uName.includes('CLASS COMPUTER')) return false;
             if (uName.startsWith('CLASS ')) return false;
             return true;
+        };
+
+        window.getClassName = function(kode, rawName) {
+            if (!kode) return rawName || '';
+            const upperKode = String(kode).trim().toUpperCase();
+            
+            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === upperKode);
+            if (found && found.name && !found.name.toUpperCase().includes('CLASS ENGLISH') && !found.name.toUpperCase().includes('CLASS COMPUTER')) {
+                return `${found.name} [${upperKode}]`;
+            }
+
+            for (let s of (window.students || [])) {
+                if (s.classId && String(s.classId).trim().toUpperCase() === upperKode && s.className) {
+                    let cn = String(s.className).trim();
+                    if (upperKode.startsWith('ENG') && cn.toUpperCase().includes('COMPUTER')) cn = 'English Class ' + upperKode;
+                    return `${cn} [${upperKode}]`;
+                }
+            }
+
+            if (rawName && String(rawName).trim() !== '' && !String(rawName).toUpperCase().includes('CLASS ENGLISH')) {
+                return `${String(rawName).trim()} [${upperKode}]`;
+            }
+
+            if (upperKode.startsWith('ENG')) return `English Class [${upperKode}]`;
+            if (upperKode.startsWith('COMP')) return `Computer Class [${upperKode}]`;
+            return upperKode;
         };
 
         window.renderClassCards = function() {
@@ -1292,9 +1376,7 @@ function doGet(e) {
                         assigned = true;
                     }
                 });
-                if (!assigned) {
-                    grouped['Other Schedule'].push(cls);
-                }
+                if (!assigned) grouped['Other Schedule'].push(cls);
             });
 
             let html = '';
@@ -1429,10 +1511,7 @@ function doGet(e) {
                 method: 'POST',
                 mode: 'no-cors', 
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'addClass',
-                    ...classData
-                })
+                body: JSON.stringify({ action: 'addClass', ...classData })
             })
             .then(() => {
                 window.showToast('New class successfully synced to Google Sheet!', 'success');
@@ -1474,13 +1553,7 @@ function doGet(e) {
             window.closeModalAddClass();
             window.showToast('New class successfully created!', 'success');
 
-            window.addClassToSheet({
-                classId: id,
-                className: name,
-                category: category,
-                schedule: schedule,
-                room: room
-            });
+            window.addClassToSheet({ classId: id, className: name, category, schedule, room });
         };
 
         window.handleSaveClass = function(e) {
@@ -1506,23 +1579,6 @@ function doGet(e) {
             }
         };
 
-        window.getClassName = function(kode, rawName) {
-            if (!kode) return rawName || '';
-            const upperKode = String(kode).trim().toUpperCase();
-            if (rawName && String(rawName).trim() !== '') {
-                const cleanRaw = String(rawName).trim();
-                if (!cleanRaw.toUpperCase().includes(upperKode)) {
-                    return `${cleanRaw} [${upperKode}]`;
-                }
-                return cleanRaw;
-            }
-            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === upperKode);
-            if (found && found.name) {
-                return window.formatClassName(upperKode, found.name);
-            }
-            return upperKode;
-        };
-
         window.saveLogsToStorage = function() {
             localStorage.setItem('klc_logs_2026', JSON.stringify(window.logs));
             window.updateDashboardStats();
@@ -1533,7 +1589,6 @@ function doGet(e) {
             (window.students || []).forEach(s => {
                 if (!s || !s.id) return;
                 const id = String(s.id).trim().toUpperCase();
-                
                 const rowClassId = String(s.classId || '').trim();
                 const rowClassName = String(s.className || '').trim();
                 
@@ -1597,7 +1652,7 @@ function doGet(e) {
 
             window.showToast('Fetching latest data from Google Sheets...', 'info');
 
-            fetch(url, { method: 'GET', mode: 'cors' })
+            fetch(url, { method: 'GET', redirect: 'follow' })
                 .then(res => res.json())
                 .then(data => {
                     if (data && data.status === 'success') {
@@ -1640,26 +1695,18 @@ function doGet(e) {
 
             const validClassesMap = new Map();
 
-            // 1. First parse from students data directly (since Student_Data has exact Class ID & Class Name)
             (window.students || []).forEach(s => {
                 if (s.classId) {
                     const cid = String(s.classId).trim().toUpperCase();
                     const cname = String(s.className || '').trim();
                     if (cid && window.isValidRealClass(cid, cid)) {
-                        // If class name is generic or matches computer mistakenly, correct it based on ID prefix
                         let finalName = cname;
                         if (!finalName || (cid.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) || (cid.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH'))) {
-                            if (cid.startsWith('ENG')) {
-                                finalName = 'English Class ' + cid;
-                            } else if (cid.startsWith('COMP')) {
-                                finalName = 'Computer Class ' + cid;
-                            } else {
-                                finalName = cid;
-                            }
+                            if (cid.startsWith('ENG')) finalName = 'English Class ' + cid;
+                            else if (cid.startsWith('COMP')) finalName = 'Computer Class ' + cid;
+                            else finalName = cid;
                         }
-                        if (!validClassesMap.has(cid)) {
-                            validClassesMap.set(cid, { id: cid, name: finalName });
-                        }
+                        if (!validClassesMap.has(cid)) validClassesMap.set(cid, { id: cid, name: finalName });
                     }
                 }
                 if (Array.isArray(s.classes)) {
@@ -1679,7 +1726,6 @@ function doGet(e) {
                 }
             });
 
-            // 2. Also check klcClasses array if available
             (window.klcClasses || []).forEach(c => {
                 const id = String(c.id || '').trim().toUpperCase();
                 const name = String(c.name || '').trim();
@@ -1707,34 +1753,6 @@ function doGet(e) {
             if (filterLogSelect) filterLogSelect.innerHTML = allOptionHtml;
             if (filterStudentSelect) filterStudentSelect.innerHTML = allOptionHtml;
             if (reportClassSelect) reportClassSelect.innerHTML = allOptionHtml;
-        };
-
-        window.getClassName = function(kode, rawName) {
-            if (!kode) return rawName || '';
-            const upperKode = String(kode).trim().toUpperCase();
-            
-            // Check in valid classes map or klcClasses
-            const found = (window.klcClasses || []).find(c => c.id && c.id.toUpperCase() === upperKode);
-            if (found && found.name && !found.name.toUpperCase().includes('CLASS ENGLISH') && !found.name.toUpperCase().includes('CLASS COMPUTER')) {
-                return `${found.name} [${upperKode}]`;
-            }
-
-            // Check in students data
-            for (let s of (window.students || [])) {
-                if (s.classId && String(s.classId).trim().toUpperCase() === upperKode && s.className) {
-                    let cn = String(s.className).trim();
-                    if (upperKode.startsWith('ENG') && cn.toUpperCase().includes('COMPUTER')) cn = 'English Class ' + upperKode;
-                    return `${cn} [${upperKode}]`;
-                }
-            }
-
-            if (rawName && String(rawName).trim() !== '' && !String(rawName).toUpperCase().includes('CLASS ENGLISH')) {
-                return `${String(rawName).trim()} [${upperKode}]`;
-            }
-
-            if (upperKode.startsWith('ENG')) return `English Class [${upperKode}]`;
-            if (upperKode.startsWith('COMP')) return `Computer Class [${upperKode}]`;
-            return upperKode;
         };
 
         window.loadAttendanceStudentList = function() {
@@ -1797,42 +1815,38 @@ function doGet(e) {
             }
 
             if (filteredStudents.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="text-center py-10 text-slate-400 text-xs">
-                            No active students found matching class ID <strong>${classId}</strong>.<br>Please check your <strong>Student Directory</strong> tab or Google Sheet <code>Student_Data</code>.
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-400 text-xs">No active students enrolled in this class.</td></tr>`;
                 return;
             }
 
-            let html = '';
-            filteredStudents.forEach((student, index) => {
-                const loggedItem = existingLog.find(l => String(l.idSiswa) === String(student.id));
-                const currentStatus = loggedItem ? loggedItem.status : (window.currentAttendanceState[student.id] || '');
-                const currentNote = loggedItem ? (loggedItem.remarks || loggedItem.remark || '') : '';
+            window.currentAttendanceState = {};
 
-                if (window.currentAttendanceState[student.id] === undefined && !loggedItem) {
-                    window.currentAttendanceState[student.id] = ''; 
-                } else if (loggedItem && window.currentAttendanceState[student.id] === undefined) {
-                    window.currentAttendanceState[student.id] = loggedItem.status;
-                }
+            let html = '';
+            filteredStudents.forEach((stu, idx) => {
+                const prevLog = existingLog.find(l => String(l.idSiswa) === String(stu.id));
+                const currentStatus = prevLog ? (prevLog.status || 'Present') : null;
+                const prevRemark = prevLog ? (prevLog.remarks || '') : '';
+
+                window.currentAttendanceState[stu.id] = {
+                    name: stu.name,
+                    status: currentStatus,
+                    remark: prevRemark
+                };
 
                 html += `
-                    <tr class="hover:bg-slate-50/85 transition student-attendance-row" data-name="${student.name.toLowerCase()}" data-id="${student.id.toLowerCase()}">
-                        <td class="py-4 px-5 text-center font-extrabold text-slate-400 text-xs">${index + 1}</td>
-                        <td class="py-4 px-5 font-mono font-black text-klc-700 text-xs">${student.id}</td>
-                        <td class="py-4 px-5 font-extrabold text-slate-900">${student.name}</td>
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="py-4 px-5 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="py-4 px-5 font-mono font-black text-klc-700 text-xs">${stu.id}</td>
+                        <td class="py-4 px-5 font-extrabold text-slate-900 text-sm">${stu.name}</td>
                         <td class="py-4 px-5 text-center">
-                            <div class="inline-flex p-1 rounded-2xl bg-slate-100 border border-slate-200 gap-1.5 shadow-inner">
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Present')" id="btn-${student.id}-Present" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${currentStatus === 'Present' || currentStatus === 'Hadir' ? 'bg-emerald-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Present</button>
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Absent')" id="btn-${student.id}-Absent" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${currentStatus === 'Absent' || currentStatus === 'Tidak Hadir' ? 'bg-rose-600 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Absent</button>
-                                <button type="button" onclick="window.setRowStatus('${student.id}', 'Sick')" id="btn-${student.id}-Sick" class="status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-amber-500 text-white status-pill-active shadow-sm' : 'text-slate-600 hover:bg-slate-200'}">Sick</button>
+                            <div class="inline-flex bg-slate-100 p-1 rounded-2xl border border-slate-200/80 gap-1">
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Present')" id="btn-${stu.id}-Present" class="status-btn px-3 py-1.5 rounded-xl text-xs font-bold transition ${currentStatus === 'Present' || currentStatus === 'Hadir' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}">Present</button>
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Absent')" id="btn-${stu.id}-Absent" class="status-btn px-3 py-1.5 rounded-xl text-xs font-bold transition ${currentStatus === 'Absent' || currentStatus === 'Tidak Hadir' ? 'bg-rose-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}">Absent</button>
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Sick')" id="btn-${stu.id}-Sick" class="status-btn px-3 py-1.5 rounded-xl text-xs font-bold transition ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-amber-500 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}">Sick</button>
                             </div>
                         </td>
                         <td class="py-4 px-6 text-right">
-                            <input type="text" id="note-${student.id}" value="${currentNote}" onkeydown="window.handleRemarkKeydown(event, '${student.id}')" placeholder="Student remark..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-klc-500/20 bg-white font-medium shadow-sm transition text-right">
+                            <input type="text" id="remark-${stu.id}" value="${prevRemark}" placeholder="Add note..." onchange="window.updateStudentRemark('${stu.id}', this.value)" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-medium focus:ring-2 focus:ring-klc-500/20 bg-white">
                         </td>
                     </tr>
                 `;
@@ -1841,68 +1855,40 @@ function doGet(e) {
             tbody.innerHTML = html;
         };
 
-        window.filterAttendanceList = function() {
-            const query = document.getElementById('attendanceSearchInput').value.toLowerCase();
-            const rows = document.querySelectorAll('.student-attendance-row');
-            rows.forEach(row => {
-                const name = row.getAttribute('data-name');
-                const id = row.getAttribute('data-id');
-                if (name.includes(query) || id.includes(query)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        };
-
-        window.handleRemarkKeydown = function(e, studentId) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const rows = Array.from(document.querySelectorAll('.student-attendance-row'));
-                const currentIndex = rows.findIndex(r => r.querySelector(`#note-${studentId}`));
-                if (currentIndex >= 0 && currentIndex < rows.length - 1) {
-                    const nextInput = rows[currentIndex + 1].querySelector('input[type="text"]');
-                    if (nextInput) nextInput.focus();
-                } else {
-                    window.submitAttendance();
-                }
-            }
-        };
-
-        window.setRowStatus = function(studentId, status) {
-            window.currentAttendanceState[studentId] = status;
-            ['Present', 'Absent', 'Sick'].forEach(s => {
-                const btn = document.getElementById(`btn-${studentId}-${s}`);
-                if (!btn) return;
-                if (s === status) {
-                    let activeBg = 'bg-emerald-600';
-                    if (s === 'Absent') activeBg = 'bg-rose-600';
-                    if (s === 'Sick') activeBg = 'bg-amber-500';
-                    btn.className = `status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer ${activeBg} text-white status-pill-active shadow-sm`;
-                } else {
-                    btn.className = `status-pill text-xs px-3.5 py-1.5 rounded-xl font-extrabold transition cursor-pointer text-slate-600 hover:bg-slate-200`;
-                }
-            });
-        };
-
         window.markAllStatus = function(status) {
-            const selectKelas = document.getElementById('absensiSelectKelas');
-            if (!selectKelas || !selectKelas.value) {
-                window.showToast('Please select a class first.', 'warning');
-                return;
-            }
-            const classId = selectKelas.value.trim().toUpperCase();
-            const filteredStudents = window.getUniqueStudents().filter(s => {
-                if (Array.isArray(s.classes)) {
-                    return s.classes.some(item => {
-                        const cId = typeof item === 'object' ? item.id : item;
-                        return cId && String(cId).trim().toUpperCase() === classId;
-                    });
-                }
-                return false;
+            Object.keys(window.currentAttendanceState).forEach(sId => {
+                window.updateStudentStatus(sId, status);
             });
-            filteredStudents.forEach(st => {
-                window.setRowStatus(st.id, status);
+        };
+
+        window.updateStudentStatus = function(studentId, status) {
+            if (!window.currentAttendanceState[studentId]) return;
+            window.currentAttendanceState[studentId].status = status;
+
+            ['Present', 'Absent', 'Sick'].forEach(st => {
+                const btn = document.getElementById(`btn-${studentId}-${st}`);
+                if (btn) {
+                    if (st === status) {
+                        btn.className = `status-btn px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-md ${st === 'Present' ? 'bg-emerald-600 text-white' : st === 'Absent' ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'}`;
+                    } else {
+                        btn.className = 'status-btn px-3 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:text-slate-900';
+                    }
+                }
+            });
+        };
+
+        window.updateStudentRemark = function(studentId, remarkVal) {
+            if (window.currentAttendanceState[studentId]) {
+                window.currentAttendanceState[studentId].remark = remarkVal;
+            }
+        };
+
+        window.filterAttendanceList = function() {
+            const query = (document.getElementById('attendanceSearchInput').value || '').toLowerCase();
+            const rows = document.querySelectorAll('#attendanceTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
             });
         };
 
@@ -1912,69 +1898,57 @@ function doGet(e) {
             const topicInput = document.getElementById('absensiMateri');
             const teacherNotesInput = document.getElementById('absensiTeacherNotes');
 
-            if (!selectKelas || !selectKelas.value) {
-                window.showToast('Please select a KLC Class.', 'warning');
+            if (!selectKelas || !dateInput) return;
+
+            const classId = selectKelas.value.trim().toUpperCase();
+            const tanggal = dateInput.value;
+            const topic = topicInput ? topicInput.value.trim() : '';
+            const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
+
+            if (!classId) {
+                window.showToast('Please select a KLC class before saving attendance.', 'warning');
                 return;
             }
-            if (!dateInput || !dateInput.value) {
+            if (!tanggal) {
                 window.showToast('Please select a session date.', 'warning');
                 return;
             }
 
-            const classId = selectKelas.value.trim();
-            const className = window.getClassName(classId);
-            const tanggal = dateInput.value;
-            const materi = topicInput ? topicInput.value.trim() : '';
-            const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
-
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timestampFormatted = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-            const filteredStudents = window.getUniqueStudents().filter(s => {
-                if (Array.isArray(s.classes)) {
-                    return s.classes.some(item => {
-                        const cId = typeof item === 'object' ? item.id : item;
-                        return cId && String(cId).trim().toUpperCase() === classId.toUpperCase();
-                    });
-                }
-                return false;
-            });
-
-            if (filteredStudents.length === 0) {
-                window.showToast('No students found for this class.', 'warning');
+            const studentIds = Object.keys(window.currentAttendanceState);
+            if (studentIds.length === 0) {
+                window.showToast('No students loaded for attendance recording.', 'warning');
                 return;
             }
 
+            const classObj = window.klcClasses.find(c => c.id === classId);
+            const className = classObj ? classObj.name : classId;
+
+            // Clear existing logs for same class and date to prevent duplicates
             window.logs = window.logs.filter(l => {
                 const lCode = String(l.kodeKelas || '').toUpperCase();
                 const lDate = window.formatDisplayDate(l.tanggal);
-                return !(lCode === classId.toUpperCase() && lDate === tanggal);
+                return !(lCode === classId && lDate === tanggal);
             });
 
             const newRecords = [];
-            filteredStudents.forEach(st => {
-                const status = window.currentAttendanceState[st.id] || 'Present';
-                const noteInput = document.getElementById(`note-${st.id}`);
-                const remark = noteInput ? noteInput.value.trim() : '';
+            studentIds.forEach(sId => {
+                const item = window.currentAttendanceState[sId];
+                const remarkInput = document.getElementById(`remark-${sId}`);
+                const remarkVal = remarkInput ? remarkInput.value.trim() : (item.remark || '');
 
                 const logRecord = {
-                    timestamp: timestampFormatted,
+                    timestamp: new Date().toISOString(),
                     tanggal: tanggal,
-                    idSiswa: st.id,
-                    namaSiswa: st.name,
+                    idSiswa: sId,
+                    namaSiswa: item.name,
                     kodeKelas: classId,
                     namaKelas: className,
-                    status: status,
-                    materi: materi,
+                    status: item.status || 'Present',
+                    materi: topic,
                     teacherNotes: teacherNotes,
-                    remarks: remark
+                    remarks: remarkVal
                 };
+
                 newRecords.push(logRecord);
                 window.logs.push(logRecord);
             });
@@ -2283,7 +2257,117 @@ function doGet(e) {
                 return true;
             });
 
+            window.renderPerClassReportTable(filteredLogs);
             return filteredLogs;
+        };
+
+        window.renderPerClassReportTable = function(filteredLogs) {
+            const tbody = document.getElementById('perClassReportTableBody');
+            const tfoot = document.getElementById('perClassReportTableFooter');
+            const countBadge = document.getElementById('perClassReportCountBadge');
+            if (!tbody || !tfoot) return;
+
+            const classMap = new Map();
+
+            filteredLogs.forEach(l => {
+                const classCode = String(l.kodeKelas || 'GENERAL').trim().toUpperCase();
+                const className = l.namaKelas || classCode;
+                const dateClean = window.formatDisplayDate(l.tanggal);
+
+                if (!classMap.has(classCode)) {
+                    classMap.set(classCode, {
+                        code: classCode,
+                        name: className,
+                        uniqueDates: new Set(),
+                        totalLogs: 0,
+                        presentLogs: 0
+                    });
+                }
+
+                const entry = classMap.get(classCode);
+                if (dateClean && dateClean !== '-') {
+                    entry.uniqueDates.add(dateClean);
+                }
+                entry.totalLogs += 1;
+                if (l.status === 'Present' || l.status === 'Hadir') {
+                    entry.presentLogs += 1;
+                }
+            });
+
+            const perClassList = Array.from(classMap.values());
+
+            if (countBadge) {
+                countBadge.innerText = `${perClassList.length} Active Classes`;
+            }
+
+            if (perClassList.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-10 text-slate-400 text-xs font-semibold">
+                            No active session logs found for the selected month or date range.
+                        </td>
+                    </tr>
+                `;
+                tfoot.innerHTML = '';
+                return;
+            }
+
+            let totalSessionsConductedSum = 0;
+            let totalHoursSum = 0;
+            let totalLogsOverall = 0;
+            let totalPresentOverall = 0;
+
+            let rowsHtml = '';
+            perClassList.forEach(item => {
+                const sessionsConducted = item.uniqueDates.size > 0 ? item.uniqueDates.size : (item.totalLogs > 0 ? 1 : 0);
+                const totalHours = sessionsConducted * 1;
+                const rate = item.totalLogs > 0 ? Math.round((item.presentLogs / item.totalLogs) * 100) : 0;
+
+                totalSessionsConductedSum += sessionsConducted;
+                totalHoursSum += totalHours;
+                totalLogsOverall += item.totalLogs;
+                totalPresentOverall += item.presentLogs;
+
+                const displayName = window.getClassName(item.code, item.name);
+
+                let rateColor = 'text-emerald-600 bg-emerald-50';
+                if (rate < 75) rateColor = 'text-rose-600 bg-rose-50';
+
+                rowsHtml += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-4 font-bold text-slate-900">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-klc-600"></span>
+                                <span>${displayName}</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-center font-extrabold text-slate-800">${sessionsConducted} Sessions</td>
+                        <td class="p-4 text-center font-extrabold text-indigo-700">${totalHours} Hours</td>
+                        <td class="p-4 text-center">
+                            <span class="px-3 py-1 rounded-full text-xs font-black ${rateColor} border border-slate-200/80">
+                                ${rate}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = rowsHtml;
+
+            const overallAvgRate = totalLogsOverall > 0 ? Math.round((totalPresentOverall / totalLogsOverall) * 100) : 0;
+
+            tfoot.innerHTML = `
+                <tr class="bg-slate-100/90 border-t-2 border-slate-300">
+                    <td class="p-4 text-slate-900 font-black uppercase text-[11px] tracking-wider">Total / Overall Average</td>
+                    <td class="p-4 text-center font-black text-slate-900">${totalSessionsConductedSum} Sessions</td>
+                    <td class="p-4 text-center font-black text-indigo-800">${totalHoursSum} Hours</td>
+                    <td class="p-4 text-center">
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-klc-800 text-white shadow-sm">
+                            ${overallAvgRate}%
+                        </span>
+                    </td>
+                </tr>
+            `;
         };
 
         window.toggleReportMode = function() {
@@ -2302,6 +2386,7 @@ function doGet(e) {
                 if (startWrap) startWrap.classList.remove('hidden');
                 if (endWrap) endWrap.classList.remove('hidden');
             }
+            window.renderReportData();
             window.generateAiReport();
         };
 
@@ -2310,153 +2395,148 @@ function doGet(e) {
             if (box) box.classList.remove('hidden');
 
             const filteredLogs = window.renderReportData();
-            const uniqueStudents = window.getUniqueStudents();
-            let studentSummaries = [];
-            let totalHadirAll = 0;
-            let totalSessionsAll = 0;
-
-            uniqueStudents.forEach(stu => {
-                const stuLogs = filteredLogs.filter(l => String(l.idSiswa) === String(stu.id));
-                const total = stuLogs.length;
-                if (total > 0) {
-                    const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-                    const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
-                    const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
-                    const rate = total > 0 ? Math.round((present / total) * 100) : 100;
-                    
-                    totalHadirAll += present;
-                    totalSessionsAll += total;
-
-                    studentSummaries.push({
-                        studentId: stu.id,
-                        name: stu.name,
-                        classes: stu.classes,
-                        totalSessions: total,
-                        present: present,
-                        absent: absent,
-                        sick: sick,
-                        attendanceRate: rate
-                    });
-                }
-            });
-
-            const conductedSessionsMap = new Set();
+            
+            const conductedSessionsMap = new Map();
             filteredLogs.forEach(l => {
                 const dClean = window.formatDisplayDate(l.tanggal);
                 const cCode = String(l.kodeKelas || '').trim().toUpperCase();
                 if (dClean && cCode) {
-                    conductedSessionsMap.add(`${dClean}_${cCode}`);
+                    const key = `${dClean}_${cCode}`;
+                    if (!conductedSessionsMap.has(key)) {
+                        conductedSessionsMap.set(key, { date: dClean, classCode: cCode });
+                    }
                 }
             });
-            const totalConductedSess = conductedSessionsMap.size;
-            
-            const totalSess = filteredLogs.length;
-            const presentCount = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const avgRate = totalSessionsAll > 0 ? Math.round((totalHadirAll / totalSessionsAll) * 100) : (totalSess > 0 ? Math.round((presentCount / totalSess) * 100) : 0);
 
-            const cardAvg = document.getElementById('aiCardAvgRate');
-            const cardSess = document.getElementById('aiCardTotalSess');
-            if (cardAvg) cardAvg.innerText = `${avgRate}%`;
-            if (cardSess) cardSess.innerText = totalConductedSess > 0 ? totalConductedSess : filteredLogs.length;
+            const totalLogEntries = filteredLogs.length;
+            const presentEntries = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
+            const avgRate = totalLogEntries > 0 ? Math.round((presentEntries / totalLogEntries) * 100) : 0;
 
             let engLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().includes('ENG'));
             let engPresent = engLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             let engRate = engLogs.length > 0 ? Math.round((engPresent / engLogs.length) * 100) : 0;
+            let engSessionsCount = new Set(engLogs.map(l => `${window.formatDisplayDate(l.tanggal)}_${l.kodeKelas}`)).size;
 
             let compLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().includes('COMP'));
             let compPresent = compLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             let compRate = compLogs.length > 0 ? Math.round((compPresent / compLogs.length) * 100) : 0;
+            let compSessionsCount = new Set(compLogs.map(l => `${window.formatDisplayDate(l.tanggal)}_${l.kodeKelas}`)).size;
 
-            const engText = document.getElementById('aiEngRateText');
+            const engBadge = document.getElementById('aiEngRateBadge');
             const engBar = document.getElementById('aiEngBar');
-            const compText = document.getElementById('aiCompRateText');
+            const engSub = document.getElementById('aiEngSessSub');
+
+            const compBadge = document.getElementById('aiCompRateBadge');
             const compBar = document.getElementById('aiCompBar');
+            const compSub = document.getElementById('aiCompSessSub');
 
-            if (engText) engText.innerText = `${engRate}%`;
-            if (engBar) engBar.style.height = `${Math.max(engRate, 10)}%`;
-            if (compText) compText.innerText = `${compRate}%`;
-            if (compBar) compBar.style.height = `${Math.max(compRate, 10)}%`;
+            if (engBadge) engBadge.innerText = `${engRate}%`;
+            if (engBar) engBar.style.height = `${Math.max(engRate, 6)}%`;
+            if (engSub) engSub.innerText = `${engSessionsCount} Session(s)`;
 
-            const teacherNotesSet = new Set();
-            filteredLogs.forEach(l => {
-                if (l.teacherNotes && l.teacherNotes.trim()) teacherNotesSet.add(l.teacherNotes.trim());
-                if (l.materi && l.materi.trim()) teacherNotesSet.add(l.materi.trim());
-                if (l.remarks && l.remarks.trim()) teacherNotesSet.add(l.remarks.trim());
-            });
-            const collectedNotes = Array.from(teacherNotesSet);
+            if (compBadge) compBadge.innerText = `${compRate}%`;
+            if (compBar) compBar.style.height = `${Math.max(compRate, 6)}%`;
+            if (compSub) compSub.innerText = `${compSessionsCount} Session(s)`;
+
+            const topicsCovered = Array.from(new Set(
+                filteredLogs.map(l => (l.materi || l.topic || '').trim()).filter(Boolean)
+            ));
+
+            const teacherNotesList = Array.from(new Set(
+                filteredLogs.map(l => (l.teacherNotes || l.teacherNote || '').trim()).filter(Boolean)
+            ));
+
+            let whatChildrenLearned = [];
+            let expectedOutcomes = [];
+            let teacherObservations = [];
+            let actionPlan = [];
+
+            if (topicsCovered.length > 0) {
+                const topicsLower = topicsCovered.join(' ').toLowerCase();
+                if (topicsLower.includes('convers') || topicsLower.includes('speak') || topicsLower.includes('dialogue') || topicsLower.includes('vocab') || topicsLower.includes('english')) {
+                    whatChildrenLearned.push("<strong>Interactive English Practice:</strong> Students focused on conversational fluency, key daily vocabulary, and building confidence in guided dialogue practice.");
+                }
+                if (topicsLower.includes('computer') || topicsLower.includes('typing') || topicsLower.includes('office') || topicsLower.includes('word') || topicsLower.includes('excel') || topicsLower.includes('software')) {
+                    whatChildrenLearned.push("<strong>Computer Literacy & Operations:</strong> Students were introduced to hardware and software basics, touch-typing practice, and introductory document creation.");
+                }
+                if (whatChildrenLearned.length === 0) {
+                    const topicsPreview = topicsCovered.slice(0, 3).join(', ');
+                    whatChildrenLearned.push(`<strong>KLC Core Modules Covered:</strong> Active learning sessions focused on key modules: <em>${topicsPreview}</em>.`);
+                }
+            } else {
+                whatChildrenLearned.push("<strong>Structured KLC Curriculum:</strong> Guided practice sessions combining core theoretical concepts with hands-on exercises in English and Computer classes.");
+            }
+
+            if (engLogs.length > 0 && compLogs.length > 0) {
+                expectedOutcomes.push("<strong>Dual Competency:</strong> Develops confident English communication alongside fundamental digital skills required for school projects.");
+            } else if (engLogs.length > 0) {
+                expectedOutcomes.push("<strong>Public Speaking Confidence:</strong> Enhances student willingness to express ideas verbally and reduces hesitance when speaking in public.");
+            } else if (compLogs.length > 0) {
+                expectedOutcomes.push("<strong>Digital Independence:</strong> Builds accuracy in software navigation and speeds up technology adaptation for independent studying.");
+            }
+
+            if (avgRate >= 80) {
+                expectedOutcomes.push("<strong>High Skill Retention:</strong> Strong attendance rate (<strong>" + avgRate + "%</strong>) ensures seamless lesson continuity without learning gaps.");
+            } else {
+                expectedOutcomes.push("<strong>Targeted Support:</strong> Continuous review ensures students catch up on missed concepts and maintain learning momentum.");
+            }
+
+            if (teacherNotesList.length > 0) {
+                const notesLower = teacherNotesList.join(' ').toLowerCase();
+                if (notesLower.includes('excellent') || notesLower.includes('good') || notesLower.includes('aktif') || notesLower.includes('antusias') || notesLower.includes('participat')) {
+                    teacherObservations.push("<strong>Active Class Participation:</strong> Teachers noted high student enthusiasm, strong peer collaboration, and active engagement during practical activities.");
+                } else {
+                    teacherObservations.push("<strong>Focus & Classroom Discipline:</strong> Students demonstrated great attention to instructions and completed practical exercises effectively.");
+                }
+            } else {
+                teacherObservations.push("<strong>Positive Learning Environment:</strong> Sessions at Community Hall Kaura Manggis maintained an encouraging atmosphere conducive to student growth.");
+            }
+
+            actionPlan.push("Continue interactive, hands-on activities and educational learning games to keep students motivated.");
+            if (avgRate < 80) {
+                actionPlan.push("Coordinate with parents to encourage more consistent attendance for students who missed sessions.");
+            } else {
+                actionPlan.push("Maintain attendance consistency and recognize student dedication in upcoming sessions.");
+            }
 
             const bulletsContainer = document.getElementById('aiHighlightBullets');
+            
             if (bulletsContainer) {
                 bulletsContainer.innerHTML = `
-                    <div class="flex items-center gap-3 text-slate-500 py-4">
-                        <i class="fa-solid fa-spinner fa-spin text-klc-600 text-lg"></i>
-                        <span>Gemini is analyzing student attendance summary and log notes for the period...</span>
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 shadow-xs">
+                        <h4 class="text-xs font-black text-klc-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-klc-600"></i>
+                            <span>Key Skills & Subjects Mastered</span>
+                        </h4>
+                        <ul class="space-y-1.5 text-slate-700 font-medium text-xs leading-relaxed list-disc list-inside">
+                            ${whatChildrenLearned.map(pt => `<li>${pt}</li>`).join('')}
+                            ${teacherObservations.map(pt => `<li>${pt}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 shadow-xs">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-sky-600"></i>
+                            <span>Student Growth & Learning Outcomes</span>
+                        </h4>
+                        <ul class="space-y-1.5 text-slate-700 font-medium text-xs leading-relaxed list-disc list-inside">
+                            ${expectedOutcomes.map(pt => `<li>${pt}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 shadow-xs">
+                        <h4 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-600"></i>
+                            <span>Teacher Recommendations & Next Steps</span>
+                        </h4>
+                        <ul class="space-y-1.5 text-slate-700 font-medium text-xs leading-relaxed list-disc list-inside">
+                            ${actionPlan.map(pt => `<li>${pt}</li>`).join('')}
+                        </ul>
                     </div>
                 `;
             }
 
-            try {
-                const systemPrompt = "Act as an expert educational analyst for Kaura Learning Centre (KLC). Review the provided attendance summary dataset, attendance percentages, and teacher session notes, then summarize key trends, student attendance patterns, and overall performance into 3 clear, professional bullet points starting with HTML bullet formatting.";
-                const userQuery = `Analyze these student attendance summary records, logs, and teacher notes for the selected period (Total Conducted Sessions: ${totalConductedSess > 0 ? totalConductedSess : filteredLogs.length}, Average Attendance: ${avgRate}%, English Rate: ${engRate}%, Computer Rate: ${compRate}%). Teacher Notes / Topics: ${JSON.stringify(collectedNotes)}. Student Summaries: ${JSON.stringify(studentSummaries.slice(0, 100))}`;
-                
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (text && bulletsContainer) {
-                    const bullets = text.split('\n').filter(line => line.trim().length > 0);
-                    let htmlContent = '';
-                    bullets.forEach(b => {
-                        const cleanLine = b.replace(/^[\*\-\•\d\.]+\s*/, '');
-                        if (cleanLine.length > 3) {
-                            htmlContent += `
-                                <div class="flex items-start gap-3">
-                                    <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                                        <i class="fa-solid fa-check text-xs"></i>
-                                    </div>
-                                    <p>${cleanLine}</p>
-                                </div>
-                            `;
-                        }
-                    });
-                    bulletsContainer.innerHTML = htmlContent || `<p>${text}</p>`;
-                    window.showToast('Gemini HIGHLIGHT successfully generated!', 'success');
-                } else {
-                    throw new Error('No text returned from Gemini');
-                }
-            } catch (err) {
-                console.warn('Gemini AI fallback:', err);
-                if (bulletsContainer) {
-                    bulletsContainer.innerHTML = `
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-solid fa-check text-xs"></i>
-                            </div>
-                            <p>Student attendance rates across active classes remain stable with overall average at <strong>${avgRate}%</strong> over ${totalConductedSess > 0 ? totalConductedSess : filteredLogs.length} session(s).</p>
-                        </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-klc-100 text-klc-800 flex items-center justify-center shrink-0 mt-0.5">
-                                <i class="fa-solid fa-check text-xs"></i>
-                            </div>
-                            <p>English (${engRate}%) and Computer (${compRate}%) curriculum classes show consistent student engagement during the selected timeframe.</p>
-                        </div>
-                    `;
-                }
-                window.showToast('Generated summary based on student attendance metrics.', 'success');
-            }
+            window.showToast('Student progress report updated!', 'success');
         };
 
         window.openModalAddStudent = function() {
@@ -2519,10 +2599,7 @@ function doGet(e) {
                 method: 'POST',
                 mode: 'no-cors', 
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'addStudent',
-                    ...studentData
-                })
+                body: JSON.stringify({ action: 'addStudent', ...studentData })
             })
             .then(() => {
                 window.showToast('Student successfully synced to Google Sheet!', 'success');
@@ -2604,10 +2681,7 @@ function doGet(e) {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'deleteStudent',
-                    nis: studentId
-                })
+                body: JSON.stringify({ action: 'deleteStudent', nis: studentId })
             }).catch(err => console.warn('Delete sheet sync warning:', err));
         };
 
@@ -2667,9 +2741,9 @@ function doGet(e) {
                     const remarkText = l.remarks || l.remark || '-';
                     html += `
                         <tr class="hover:bg-slate-50">
-                            <td class="py-3 px-4 font-bold text-slate-800 font-mono">${cleanDate}</td>
-                            <td class="py-3 px-4 font-semibold text-slate-700">${l.namaKelas || '-'}</td>
-                            <td class="py-3 px-4 text-center"><span class="px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase ${badgeBg}">${l.status}</span></td>
+                            <td class="py-3 px-4 font-bold text-slate-800 font-mono whitespace-nowrap">${cleanDate}</td>
+                            <td class="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">${l.namaKelas || '-'}</td>
+                            <td class="py-3 px-4 text-center whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase ${badgeBg}">${l.status}</span></td>
                             <td class="py-3 px-4 text-slate-500">${remarkText}</td>
                         </tr>
                     `;
@@ -2684,10 +2758,45 @@ function doGet(e) {
             document.getElementById('modalStudentSummary').classList.add('hidden');
         };
 
-        window.updateDashboardStats = function() {
-            const statElem = document.getElementById('statTotalLogs');
-            if (statElem) statElem.innerText = window.logs.length;
+        window.downloadStudentCardImage = function() {
+            const cardArea = document.getElementById('studentReportCardArea');
+            const studentId = document.getElementById('modalSummaryId').innerText || 'Student';
+            
+            if (!cardArea) return;
 
+            window.showToast('Generating student report card image...', 'info');
+
+            html2canvas(cardArea, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true,
+                logging: false,
+                scrollX: 0,
+                scrollY: 0,
+                onclone: (clonedDoc) => {
+                    const clonedCard = clonedDoc.getElementById('studentReportCardArea');
+                    if (clonedCard) {
+                        clonedCard.style.maxHeight = 'none';
+                        clonedCard.style.overflow = 'visible';
+                        clonedCard.style.width = '720px';
+                        clonedCard.style.padding = '24px';
+                        clonedCard.style.margin = '0 auto';
+                        clonedCard.style.boxSizing = 'border-box';
+                    }
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `KLC_Attendance_Report_${studentId.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                window.showToast('Student report card downloaded successfully!', 'success');
+            }).catch(err => {
+                console.error('Download card error:', err);
+                window.showToast('Failed to generate image. Please try again.', 'error');
+            });
+        };
+
+        window.updateDashboardStats = function() {
             const conductedSessionsMap = new Set();
             (window.logs || []).forEach(l => {
                 const dateClean = window.formatDisplayDate(l.tanggal);
@@ -2702,9 +2811,11 @@ function doGet(e) {
             if (totalClassesElem) {
                 totalClassesElem.innerHTML = `${totalConductedCount} <span class="text-sm font-semibold text-slate-400">Sessions</span>`;
             }
-            const totalClassesSub = document.getElementById('statTotalClassesSub');
-            if (totalClassesSub) {
-                totalClassesSub.innerHTML = `<i class="fa-solid fa-layer-group text-klc-600"></i> Total Class Sessions Conducted`;
+
+            const activeStudentsCount = window.getUniqueStudents().filter(s => s.status === 'Active' || s.status === 'Aktif').length;
+            const totalStudentsElem = document.getElementById('statTotalStudents');
+            if (totalStudentsElem) {
+                totalStudentsElem.innerHTML = `${activeStudentsCount} <span class="text-sm font-semibold text-slate-400">Enrolled</span>`;
             }
 
             const rateElem = document.getElementById('statAvgAttendanceRate');
@@ -2753,14 +2864,9 @@ function doGet(e) {
             const codeDisplay = document.getElementById('gasCodeDisplay');
             if (!codeDisplay) return;
             
-            const tempArea = document.createElement('textarea');
-            tempArea.value = codeDisplay.innerText;
-            document.body.appendChild(tempArea);
-            tempArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempArea);
-            
-            window.showToast('Apps Script code successfully copied to clipboard!', 'success');
+            navigator.clipboard.writeText(codeDisplay.innerText)
+                .then(() => window.showToast('Apps Script code successfully copied to clipboard!', 'success'))
+                .catch(() => window.showToast('Failed to copy code to clipboard.', 'error'));
         };
 
         window.exportToCSV = function() {
