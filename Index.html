@@ -2969,6 +2969,22 @@ function doGet(e) {
             window.generateAiReport();
         };
 
+        window.cleanGeminiHtmlOutput = function(rawText) {
+            if (!rawText) return '';
+            
+            // 1. Remove markdown code fence indicators
+            let clean = rawText.replace(/```html/gi, '').replace(/```/gi, '').trim();
+
+            // 2. Extract ONLY valid HTML <div>...</div> containers
+            const divMatches = clean.match(/<div[\s\S]*?<\/div>/gi);
+            if (divMatches && divMatches.length > 0) {
+                return divMatches.join('');
+            }
+
+            // 3. Fallback cleanup if div regex didn't match (strip markdown prompts and labels)
+            return clean.replace(/\*+/g, '').replace(/Section \d+ HTML:/gi, '').trim();
+        };
+
         window.generateAiReport = async function() {
             const box = document.getElementById('aiSummaryBox');
             if (box) box.classList.remove('hidden');
@@ -3044,18 +3060,25 @@ function doGet(e) {
             }
 
             try {
-                const systemPrompt = "Act as an educational analyst for Kaura Learning Centre (KLC). Based on the provided attendance data, generate a concise, qualitative progress report. Format the output in 3 short HTML sections using these exact classes: 1) <div class='p-3 bg-slate-50 rounded-xl border border-slate-200 mb-2'><span class='font-bold text-slate-900 block mb-1'>Key Curriculum Focus:</span><p class='text-slate-600'>...</p></div> 2) <div class='p-3 bg-emerald-50 rounded-xl border border-emerald-200 mb-2'><span class='font-bold text-emerald-900 block mb-1'>Attendance & Engagement:</span><p class='text-emerald-800'>...</p></div> 3) <div class='p-3 bg-sky-50 rounded-xl border border-sky-200'><span class='font-bold text-sky-900 block mb-1'>Next Steps & Action Plan:</span><p class='text-sky-800'>...</p></div>. Do NOT use markdown code blocks like ```html, just return the raw HTML string.";
+                const systemPromptText = "You are an educational analyst for Kaura Learning Centre (KLC). Output ONLY raw HTML div elements containing the analysis report. Do NOT output any preamble, role prompt echo, section labels (such as '**Section 1 HTML:**'), meta-text, bullet checklists outside div, or markdown code fences.";
                 
-                const userQuery = `
+                const userQuery = `Analyze the following KLC attendance data and produce EXACTLY 3 clean HTML card containers. Each card MUST combine a concise overview paragraph AND 2-3 structured bullet points (<ul class="list-disc pl-4 mt-2 space-y-1"><li>...</li></ul>) to highlight key findings:
+
+1. Key Curriculum Focus:
+<div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 mb-3"><span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span><p class="text-slate-600 text-xs">Executive summary paragraph of core topics taught and learning objectives...</p><ul class="list-disc pl-4 mt-2 space-y-1 text-slate-600 text-xs"><li>Highlight key skill competency achieved</li><li>Specific module or practical exercise covered</li></ul></div>
+
+2. Attendance & Engagement:
+<div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 mb-3"><span class="font-bold text-emerald-900 block mb-1">Attendance & Engagement:</span><p class="text-emerald-800 text-xs">Summary paragraph on student participation trends and overall consistency...</p><ul class="list-disc pl-4 mt-2 space-y-1 text-emerald-800 text-xs"><li>English class attendance insight</li><li>Computer class engagement benchmark</li></ul></div>
+
+3. Recommended Next Steps & Action Plan:
+<div class="p-3.5 bg-sky-50 rounded-xl border border-sky-200"><span class="font-bold text-sky-900 block mb-1">Recommended Next Steps & Action Plan:</span><p class="text-sky-800 text-xs">Summary paragraph recommending pedagogical strategies and next objectives...</p><ul class="list-disc pl-4 mt-2 space-y-1 text-sky-800 text-xs"><li>Targeted learning activity or curriculum addition</li><li>Student retention and engagement strategy</li></ul></div>
+
 Data Summary:
 - Total Log Entries: ${totalLogEntries}
 - Overall Attendance Rate: ${avgRate}%
 - English Classes: ${engSessionsCount} sessions, ${engRate}% attendance rate.
 - Computer Classes: ${compSessionsCount} sessions, ${compRate}% attendance rate.
-- Topics Covered: ${topicsCovered.join(', ')}
-
-Please provide the 3-section qualitative summary based on this data. Make it insightful and professional.
-`;
+- Topics Covered: ${topicsCovered.join(', ')}`;
 
                 let discoveredModels = [];
                 try {
@@ -3082,7 +3105,10 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                     try {
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
                         const payload = {
-                            contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }]
+                            system_instruction: {
+                                parts: [{ text: systemPromptText }]
+                            },
+                            contents: [{ parts: [{ text: userQuery }] }]
                         };
 
                         const response = await fetch(apiUrl, {
@@ -3108,9 +3134,9 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                 }
 
                 if (candidateText) {
-                    let aiHtml = candidateText.replace(/```html/g, '').replace(/```/g, '').trim();
+                    let cleanHtml = window.cleanGeminiHtmlOutput(candidateText);
                     if (bulletContainer) {
-                        bulletContainer.innerHTML = aiHtml;
+                        bulletContainer.innerHTML = cleanHtml;
                     }
                     window.showToast('Generated analysis report with Gemini!', 'success');
                 } else {
