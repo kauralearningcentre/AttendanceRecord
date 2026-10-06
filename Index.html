@@ -8,6 +8,7 @@
     <!-- Custom Favicon: Dark Green Circle with White 'K' -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23064e3b'/%3E%3Ctext x='50' y='68' font-size='55' font-family='Arial, sans-serif' font-weight='bold' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
     
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -36,9 +37,8 @@
         }
     </script>
     
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Font Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- HTML2Canvas Library for Image Downloading -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -127,7 +127,7 @@
                     <span id="syncStatusText" class="truncate">Waiting for Sync</span>
                 </div>
                 <button onclick="window.fetchDataFromGoogleSheets()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-white border border-emerald-400/30 flex items-center space-x-1.5 font-semibold shadow-sm cursor-pointer shrink-0">
-                    <i class="fa-solid fa-rotate text-xs"></i>
+                    <i id="syncIcon" class="fa-solid fa-rotate text-xs"></i>
                     <span>Sync</span>
                 </button>
                 <button onclick="window.switchTab('tab-settings')" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition text-slate-100 border border-white/10 flex items-center justify-center cursor-pointer hidden sm:flex" title="Apps Script Setup">
@@ -719,12 +719,33 @@
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                     <div>
                         <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Integration</span>
-                        <h2 class="text-lg sm:text-xl font-bold text-slate-900">Google Sheets Integration</h2>
-                        <p class="text-xs text-slate-500 mt-0.5 font-medium">Web App Deployment Endpoint and Google Apps Script Code.</p>
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-900">Google Sheets & AI Integration</h2>
+                        <p class="text-xs text-slate-500 mt-0.5 font-medium">Web App Deployment Endpoint, Gemini API Key, and Apps Script Code.</p>
                     </div>
                     <button onclick="window.switchTab('tab-absensi')" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-arrow-left"></i> Dashboard
                     </button>
+                </div>
+
+                <!-- Gemini API Key Configuration -->
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-purple-900 text-sm">Gemini AI API Key Configuration</h3>
+                            <p class="text-xs text-purple-700 font-medium">Enter your Google Gemini API key to enable AI-powered report summaries.</p>
+                        </div>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-purple-700 hover:text-purple-900 underline flex items-center gap-1">
+                            <span>Get API Key</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="password" id="geminiApiKeyInput" placeholder="Enter your Gemini API Key (e.g. AIzaSy...)" class="touch-btn flex-grow px-3.5 py-2.5 rounded-xl border border-purple-200 text-xs font-mono bg-white">
+                        <button onclick="window.saveGeminiApiKey()" class="touch-btn px-5 py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Save API Key</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- AI Quick Access Card -->
@@ -756,8 +777,356 @@
                         <i class="fa-solid fa-copy"></i> <span>Copy Code</span>
                     </button>
                     <pre id="gasCodeDisplay" class="bg-slate-900 text-slate-100 p-5 rounded-xl text-[11px] font-mono overflow-x-auto leading-relaxed border border-slate-800 max-h-96 custom-scrollbar">
-// (Code for Google Apps Script omitted for brevity, identical to original)
-function doPost(e) { /* Google Apps Script Content */ }
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+  
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error("No POST data payload provided.");
+    }
+
+    var data = JSON.parse(e.postData.contents);
+    var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    
+    function getOrCreateSheet(name, headers) {
+      var sh = spreadsheet.getSheetByName(name);
+      if (!sh) {
+        sh = spreadsheet.insertSheet(name);
+        if (headers && headers.length > 0) {
+          sh.appendRow(headers);
+        }
+      }
+      return sh;
+    }
+    
+    // 1. Handle addStudent (Insert / Update)
+    if (data.action === 'addStudent') {
+      var sheet = getOrCreateSheet('Student_Data', ['ID Siswa', 'Full Name', 'Enrolled Classes', 'Class Name', 'Class ID', 'Status']);
+      var rows = sheet.getDataRange().getValues();
+      var targetId = String(data.nis || '').trim().toUpperCase();
+      var updated = false;
+      
+      for (var i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]).trim().toUpperCase() === targetId) {
+          sheet.getRange(i + 1, 1, 1, 6).setValues([[
+            data.nis, 
+            data.name, 
+            data.enrolledClasses || 'English', 
+            data.className || '', 
+            data.classId || '', 
+            data.status || 'Aktif'
+          ]]);
+          updated = true;
+          break;
+        }
+      }
+      if (!updated) {
+        sheet.appendRow([data.nis, data.name, data.enrolledClasses || 'English', data.className || '', data.classId || '', data.status || 'Aktif']);
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 2. Handle addClass (Insert / Update)
+    if (data.action === 'addClass') {
+      var classSheet = getOrCreateSheet('KLC_Classes', ['Class ID', 'Class Name', 'Category', 'Schedule', 'Room']);
+      var cRows = classSheet.getDataRange().getValues();
+      var targetClassId = String(data.classId || '').trim().toUpperCase();
+      var classUpdated = false;
+      
+      for (var c = 1; c < cRows.length; c++) {
+        if (String(cRows[c][0]).trim().toUpperCase() === targetClassId) {
+          classSheet.getRange(c + 1, 1, 1, 5).setValues([[
+            data.classId,
+            data.className,
+            data.category || '',
+            data.schedule || '',
+            data.room || 'Community Hall Kaura Manggis'
+          ]]);
+          classUpdated = true;
+          break;
+        }
+      }
+      if (!classUpdated) {
+        classSheet.appendRow([data.classId, data.className, data.category || '', data.schedule || '', data.room || 'Community Hall Kaura Manggis']);
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 3. Handle deleteStudent
+    if (data.action === 'deleteStudent') {
+      var sheet = spreadsheet.getSheetByName('Student_Data');
+      if (sheet) {
+        var rows = sheet.getDataRange().getValues();
+        var targetId = String(data.nis || '').trim().toUpperCase();
+        
+        for (var i = rows.length - 1; i >= 1; i--) {
+          if (String(rows[i][0]).trim().toUpperCase() === targetId) {
+            sheet.deleteRow(i + 1);
+            break;
+          }
+        }
+      }
+      return ContentService.createTextOutput(JSON.stringify({status: 'success'})).setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // 4. Handle Attendance Log submission & Learning Modules Sync
+    var logHeaders = ['Timestamp', 'Date', 'Student ID', 'Student Name', 'Class ID', 'Class Name', 'Status', 'Topic', 'Teacher Note', 'Module Link', 'Remark'];
+    var logSheet = getOrCreateSheet('Attendance_Log', logHeaders);
+    var moduleSheet = getOrCreateSheet('Learning_Modules', ['Module ID', 'Class ID', 'Class Name', 'Topic', 'Module Link', 'Description', 'Date Added']);
+    
+    var records = data.records || data.data;
+    
+    if (Array.isArray(records) && records.length > 0) {
+      var sampleRecord = records[0];
+      var targetClass = String(sampleRecord.kodeKelas || sampleRecord.classId || '').trim().toUpperCase();
+      
+      var rawTargetDate = String(sampleRecord.tanggal || sampleRecord.date || '').trim();
+      var targetDate = rawTargetDate.replace(/\//g, '-');
+      if (targetDate.includes('T')) targetDate = targetDate.split('T')[0];
+      if (targetDate.includes(' ')) targetDate = targetDate.split(' ')[0];
+
+      // Hapus log lama untuk kelas & tanggal yang sama agar tidak duplikat
+      if (targetClass && targetDate) {
+        var existingLogRows = logSheet.getDataRange().getValues();
+        for (var l = existingLogRows.length - 1; l >= 1; l--) {
+          var rawRowDate = existingLogRows[l][1];
+          var rowDate = '';
+          
+          if (rawRowDate instanceof Date) {
+            rowDate = Utilities.formatDate(rawRowDate, spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd");
+          } else {
+            rowDate = String(rawRowDate || '').trim().replace(/\//g, '-');
+            if (rowDate.includes('T')) rowDate = rowDate.split('T')[0];
+            if (rowDate.includes(' ')) rowDate = rowDate.split(' ')[0];
+          }
+
+          var rowClass = String(existingLogRows[l][4] || '').trim().toUpperCase();
+          if (rowDate === targetDate && rowClass === targetClass) {
+            logSheet.deleteRow(l + 1);
+          }
+        }
+      }
+      
+      records.forEach(function(r) {
+        logSheet.appendRow([
+          r.timestamp || new Date(),
+          r.tanggal || r.date,
+          r.idSiswa || r.studentId,
+          r.namaSiswa || r.studentName,
+          r.kodeKelas || r.classId,
+          r.namaKelas || r.className,
+          r.status,
+          r.materi || r.topic,
+          r.teacherNotes || r.teacherNote || '', 
+          r.moduleLink || r.materiLink || r.link || '', 
+          r.remarks || r.remark || ''              
+        ]);
+      });
+
+      // Sync Learning Modules
+      var moduleLink = sampleRecord.moduleLink || sampleRecord.materiLink || sampleRecord.link || '';
+      var topic = sampleRecord.materi || sampleRecord.topic || '';
+      var className = sampleRecord.namaKelas || sampleRecord.className || '';
+
+      if (moduleLink && moduleLink.trim() !== '') {
+        var mRows = moduleSheet.getDataRange().getValues();
+        var moduleUpdated = false;
+        var cleanLink = moduleLink.trim();
+
+        for (var m = 1; m < mRows.length; m++) {
+          var existingLink = String(mRows[m][4] || '').trim();
+          var existingClass = String(mRows[m][1] || '').trim().toUpperCase();
+          var existingTopic = String(mRows[m][3] || '').trim().toLowerCase();
+
+          if (existingLink === cleanLink || (existingClass === targetClass && existingTopic === topic.toLowerCase())) {
+            moduleSheet.getRange(m + 1, 1, 1, 7).setValues([[
+              mRows[m][0] || 'MOD-' + Date.now(),
+              targetClass,
+              className,
+              topic,
+              cleanLink,
+              sampleRecord.teacherNotes || sampleRecord.description || 'Module from class session',
+              targetDate || Utilities.formatDate(new Date(), spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd")
+            ]]);
+            moduleUpdated = true;
+            break;
+          }
+        }
+
+        if (!moduleUpdated) {
+          var newModuleId = 'MOD-' + Date.now().toString().slice(-6);
+          moduleSheet.appendRow([
+            newModuleId,
+            targetClass,
+            className,
+            topic,
+            cleanLink,
+            sampleRecord.teacherNotes || sampleRecord.description || 'Module from class session',
+            targetDate || Utilities.formatDate(new Date(), spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd")
+          ]);
+        }
+      }
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tz = ss.getSpreadsheetTimeZone();
+  
+  // 1. Fetch Classes dari Sheet KLC_Classes
+  var classes = [];
+  var classLookup = {}; 
+  var classSheet = ss.getSheetByName("KLC_Classes");
+  
+  if (classSheet) {
+    var cRows = classSheet.getDataRange().getValues();
+    for (var c = 1; c < cRows.length; c++) {
+      var cr = cRows[c];
+      var rawCId = String(cr[0] || '').trim();
+      if (!rawCId) continue;
+      
+      var cObj = {
+        id: rawCId,
+        name: cr[1] || rawCId,
+        category: cr[2] || (rawCId.toUpperCase().includes('ENG') ? 'English' : 'Computer'),
+        schedule: cr[3] || 'Scheduled Session',
+        room: cr[4] || 'Community Hall Kaura Manggis'
+      };
+      
+      classes.push(cObj);
+      classLookup[rawCId.toUpperCase()] = cObj;
+    }
+  }
+
+  // 2. Fetch Students & Auto-Register Classes jika KLC_Classes belum lengkap
+  var studentSheet = ss.getSheetByName("Student_Data");
+  var students = [];
+  var autoClassMap = {};
+  
+  if (studentSheet) {
+    var rows = studentSheet.getDataRange().getValues();
+    for (var i = 1; i < rows.length; i++) {
+      var row = rows[i];
+      var idSiswa = String(row[0] || '').trim();
+      if (!idSiswa) continue;
+      
+      var fullName = String(row[1] || '').trim();
+      var enrolledClassesRaw = String(row[2] || '').trim();
+      var rawClassName = String(row[3] || '').trim();
+      var rawClassId = String(row[4] || '').trim();
+      var status = String(row[5] || 'Aktif').trim();
+      
+      var primaryClassId = rawClassId;
+      var primaryClassName = rawClassName || primaryClassId;
+
+      if (primaryClassId && !classLookup[primaryClassId.toUpperCase()] && !autoClassMap[primaryClassId.toUpperCase()]) {
+        autoClassMap[primaryClassId.toUpperCase()] = {
+          id: primaryClassId,
+          name: primaryClassName,
+          category: enrolledClassesRaw || (primaryClassId.toUpperCase().includes('ENG') ? 'English' : 'Computer'),
+          schedule: 'Scheduled Session',
+          room: 'Community Hall Kaura Manggis'
+        };
+      }
+
+      students.push({
+        id: idSiswa,
+        name: fullName,
+        fullName: fullName,
+        enrolledClasses: enrolledClassesRaw,
+        className: primaryClassName,
+        classId: primaryClassId,
+        classes: [primaryClassId],
+        status: status
+      });
+    }
+  }
+
+  for (var key in autoClassMap) {
+    classes.push(autoClassMap[key]);
+  }
+
+  // 3. Fetch Logs
+  var logSheet = ss.getSheetByName("Attendance_Log");
+  var logs = [];
+  if (logSheet) {
+    var logRows = logSheet.getDataRange().getValues();
+    for (var j = 1; j < logRows.length; j++) {
+      var lr = logRows[j];
+      if (!lr[2]) continue;
+      
+      var rawDate = lr[1];
+      var cleanDateStr = '';
+      if (rawDate instanceof Date) {
+        cleanDateStr = Utilities.formatDate(rawDate, tz, "yyyy-MM-dd");
+      } else {
+        var strVal = String(rawDate || '').trim().replace(/\//g, '-');
+        if (strVal.includes('T')) cleanDateStr = strVal.split('T')[0];
+        else if (strVal.includes(' ')) cleanDateStr = strVal.split(' ')[0];
+        else cleanDateStr = strVal;
+      }
+
+      logs.push({
+        timestamp: lr[0],       
+        tanggal: cleanDateStr,  
+        idSiswa: String(lr[2]).trim(), 
+        namaSiswa: lr[3],       
+        kodeKelas: String(lr[4] || '').trim(),       
+        namaKelas: lr[5],       
+        status: lr[6],          
+        materi: lr[7],          
+        teacherNotes: lr[8],    
+        moduleLink: lr[9],      
+        remarks: lr[10]         
+      });
+    }
+  }
+
+  // 4. Fetch Learning Modules
+  var moduleSheet = ss.getSheetByName("Learning_Modules");
+  var modules = [];
+  if (moduleSheet) {
+    var mRows = moduleSheet.getDataRange().getValues();
+    for (var k = 1; k < mRows.length; k++) {
+      var mr = mRows[k];
+      if (!mr[4]) continue;
+      
+      var rawAddDate = mr[6];
+      var cleanAddDate = '';
+      if (rawAddDate instanceof Date) {
+        cleanAddDate = Utilities.formatDate(rawAddDate, tz, "yyyy-MM-dd");
+      } else {
+        cleanAddDate = String(rawAddDate || '').trim();
+      }
+
+      modules.push({
+        id: mr[0] || ('MOD-' + k),
+        classId: String(mr[1] || '').trim(),
+        className: mr[2],
+        topic: mr[3],
+        moduleLink: mr[4],
+        description: mr[5],
+        dateAdded: cleanAddDate
+      });
+    }
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    status: "success",
+    students: students,
+    classes: classes,
+    logs: logs,
+    modules: modules
+  })).setMimeType(ContentService.MimeType.JSON);
+}
                     </pre>
                 </div>
             </div>
@@ -1016,8 +1385,8 @@ function doPost(e) { /* Google Apps Script Content */ }
         </div>
     </div>
 
-    <!-- JavaScript Application Core -->
     <script>
+        // Global State Collections
         window.klcClasses = [];
         window.students = [];
         window.logs = [];
@@ -1025,12 +1394,11 @@ function doPost(e) { /* Google Apps Script Content */ }
         window.currentAttendanceState = {};
         window.pendingActionCallback = null;
 
-        // FIXED: Added missing isValidRealClass function
+        // Validation & Helper Utility Functions
         window.isValidRealClass = function(id, name) {
             return !!(id && String(id).trim() !== '');
         };
 
-        // FIXED: Cleaned up duplicated formatClassName functions and syntactical bugs
         window.formatClassName = function(id, name) {
             if (name && name.trim() !== '') return name.trim();
             return id || 'General Class';
@@ -1045,15 +1413,6 @@ function doPost(e) { /* Google Apps Script Content */ }
             return window.getCleanClassName(classId, rawClassName);
         };
 
-        window.sanitizeData = function(dataList) {
-            if (!Array.isArray(dataList)) return [];
-            return dataList.map(item => ({
-                ...item,
-                className: window.getCleanClassName(item.classId, item.className)
-            }));
-        };
-
-        /* Initialization */
         window.onload = function() {
             window.initData();
             window.setupDefaultDates();
@@ -1122,10 +1481,24 @@ function doPost(e) { /* Google Apps Script Content */ }
             let gasUrl = localStorage.getItem('klc_gas_url') || '';
             const gasInput = document.getElementById('gasEndpointUrl');
             if (gasInput) gasInput.value = gasUrl;
+
+            let geminiKey = localStorage.getItem('klc_gemini_api_key') || '';
+            const geminiInput = document.getElementById('geminiApiKeyInput');
+            if (geminiInput) geminiInput.value = geminiKey;
+
             window.updateSyncBadge(!!gasUrl);
         };
 
-        // Utility Modals Configuration
+        window.saveGeminiApiKey = function() {
+            let key = document.getElementById('geminiApiKeyInput').value.trim();
+            localStorage.setItem('klc_gemini_api_key', key);
+            if (key) {
+                window.showToast('Gemini API Key saved successfully!', 'success');
+            } else {
+                window.showToast('Gemini API Key removed.', 'info');
+            }
+        };
+
         window.openConfirmModal = function(title, message, actionCallback) {
             document.getElementById('deleteModalTitle').innerText = title;
             document.getElementById('deleteConfirmText').innerText = message;
@@ -2665,7 +3038,13 @@ function doPost(e) { /* Google Apps Script Content */ }
                 return;
             }
 
-            // Generate AI Summary using Gemini API
+            const apiKey = localStorage.getItem('klc_gemini_api_key') || '';
+            if (!apiKey) {
+                window.showToast('Please configure your Gemini API Key in Settings first.', 'warning');
+                window.switchTab('tab-settings');
+                return;
+            }
+
             try {
                 const systemPrompt = "Act as an educational analyst for Kaura Learning Centre (KLC). Based on the provided attendance data, generate a concise, qualitative progress report. Format the output in 3 short HTML sections using these exact classes: 1) <div class='p-3 bg-slate-50 rounded-xl border border-slate-200 mb-2'><span class='font-bold text-slate-900 block mb-1'>Key Curriculum Focus:</span><p class='text-slate-600'>...</p></div> 2) <div class='p-3 bg-emerald-50 rounded-xl border border-emerald-200 mb-2'><span class='font-bold text-emerald-900 block mb-1'>Attendance & Engagement:</span><p class='text-emerald-800'>...</p></div> 3) <div class='p-3 bg-sky-50 rounded-xl border border-sky-200'><span class='font-bold text-sky-900 block mb-1'>Next Steps & Action Plan:</span><p class='text-sky-800'>...</p></div>. Do NOT use markdown code blocks like ```html, just return the raw HTML string.";
                 
@@ -2680,37 +3059,51 @@ Data Summary:
 Please provide the 3-section qualitative summary based on this data. Make it insightful and professional.
 `;
 
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
+                // Try standard Google AI Studio models in order of support
+                const modelsToTry = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash'];
+                let candidateText = null;
+                let lastError = null;
 
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                for (const model of modelsToTry) {
+                    try {
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                        const payload = {
+                            contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }]
+                        };
 
-                const result = await response.json();
-                const candidate = result.candidates?.[0];
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
 
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    let aiHtml = candidate.content.parts[0].text;
-                    // clean up any markdown if the model hallucinated it
-                    aiHtml = aiHtml.replace(/```html/g, '').replace(/```/g, '').trim();
+                        const result = await response.json();
+                        if (result.error) {
+                            lastError = result.error.message || `API error (${result.error.code})`;
+                            continue;
+                        }
+
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) {
+                            candidateText = text;
+                            break;
+                        }
+                    } catch (err) {
+                        lastError = err.message;
+                    }
+                }
+
+                if (candidateText) {
+                    let aiHtml = candidateText.replace(/```html/g, '').replace(/```/g, '').trim();
                     if (bulletContainer) {
                         bulletContainer.innerHTML = aiHtml;
                     }
                     window.showToast('Generated analysis report with Gemini!', 'success');
                 } else {
-                    throw new Error("Invalid response from Gemini API");
+                    throw new Error(lastError || "Invalid response from Gemini API");
                 }
             } catch (error) {
                 console.error("Gemini API Error:", error);
-                // Fallback to basic logic if API fails
                 let whatChildrenLearned = "Focus on fluency practice, digital literacy, and core modules.";
                 let expectedOutcomes = avgRate >= 75 ? "High overall engagement and consistent session attendance across active classes." : "Moderate to low attendance level. Regular monitoring recommended for consistency.";
                 let actionPlan = "Continue interactive classroom exercises and track digital learning module distribution.";
@@ -2718,7 +3111,7 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                 if (bulletContainer) {
                     bulletContainer.innerHTML = `
                         <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 mb-2">
-                            <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus (Fallback Mode):</span>
+                            <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span>
                             <p class="text-slate-600">${whatChildrenLearned}</p>
                         </div>
                         <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 mb-2">
@@ -2731,7 +3124,7 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                         </div>
                     `;
                 }
-                window.showToast('Using basic summary (API connection error).', 'warning');
+                window.showToast(`Gemini API info: ${error.message}. Loaded local summary.`, 'info');
             }
         };
 
