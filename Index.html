@@ -334,6 +334,7 @@
             </div>
         </section>
 
+        <!-- Other Tabs -->
         <section id="tab-materi" class="tab-content space-y-5">
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-6">
                 <!-- Header Banner -->
@@ -735,7 +736,7 @@
                             <p class="text-xs text-purple-700 font-medium">Enter your Google Gemini API key to enable AI-powered report summaries.</p>
                         </div>
                         <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-purple-700 hover:text-purple-900 underline flex items-center gap-1">
-                            <span>Get API Key</span>
+                            <span>Get Free API Key</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                         </a>
                     </div>
@@ -746,18 +747,6 @@
                             <span>Save API Key</span>
                         </button>
                     </div>
-                </div>
-
-                <!-- AI Quick Access Card -->
-                <div class="p-4 bg-purple-50 rounded-xl border border-purple-200 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-purple-900 text-sm">Gemini AI Assistant</h3>
-                        <p class="text-xs text-purple-700 font-medium">Access your shared AI workspace.</p>
-                    </div>
-                    <a href="https://share.gemini.google/HD4ES8LvNqfE" target="_blank" rel="noopener noreferrer" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>Open Gemini</span>
-                    </a>
                 </div>
 
                 <!-- Endpoint URL Input -->
@@ -1133,6 +1122,7 @@ function doGet(e) {
         </section>
 
     </main>
+
 
     <!-- Modal Add Manual Module -->
     <div id="modalAddModule" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -3040,8 +3030,16 @@ function doGet(e) {
 
             const apiKey = localStorage.getItem('klc_gemini_api_key') || '';
             if (!apiKey) {
+                if (bulletContainer) {
+                    bulletContainer.innerHTML = `
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs font-medium space-y-2">
+                            <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-key text-amber-600"></i> API Key Required</p>
+                            <p>Please enter your Gemini API Key in the Settings tab to enable AI summaries.</p>
+                            <button onclick="window.switchTab('tab-settings')" class="px-3 py-1 bg-amber-600 text-white rounded-lg font-bold text-[11px] cursor-pointer">Open Settings</button>
+                        </div>
+                    `;
+                }
                 window.showToast('Please configure your Gemini API Key in Settings first.', 'warning');
-                window.switchTab('tab-settings');
                 return;
             }
 
@@ -3059,8 +3057,24 @@ Data Summary:
 Please provide the 3-section qualitative summary based on this data. Make it insightful and professional.
 `;
 
-                // Try standard Google AI Studio models in order of support
-                const modelsToTry = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-1.5-flash-latest', 'gemini-1.5-flash'];
+                let discoveredModels = [];
+                try {
+                    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+                    if (listRes.ok) {
+                        const listData = await listRes.json();
+                        if (listData && Array.isArray(listData.models)) {
+                            discoveredModels = listData.models
+                                .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+                                .map(m => m.name.replace(/^models\//, ''));
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not list models automatically from API key:', e);
+                }
+
+                const fallbackModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite', 'gemini-1.5-flash-latest'];
+                const modelsToTry = Array.from(new Set([...discoveredModels, ...fallbackModels]));
+
                 let candidateText = null;
                 let lastError = null;
 
@@ -3103,38 +3117,129 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                     throw new Error(lastError || "Invalid response from Gemini API");
                 }
             } catch (error) {
-                console.error("Gemini API Error:", error);
-                let whatChildrenLearned = "Focus on fluency practice, digital literacy, and core modules.";
-                let expectedOutcomes = avgRate >= 75 ? "High overall engagement and consistent session attendance across active classes." : "Moderate to low attendance level. Regular monitoring recommended for consistency.";
-                let actionPlan = "Continue interactive classroom exercises and track digital learning module distribution.";
-                
+                console.warn('Gemini API Error:', error);
                 if (bulletContainer) {
                     bulletContainer.innerHTML = `
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 mb-2">
-                            <span class="font-bold text-slate-900 block mb-1">Key Curriculum Focus:</span>
-                            <p class="text-slate-600">${whatChildrenLearned}</p>
-                        </div>
-                        <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 mb-2">
-                            <span class="font-bold text-emerald-900 block mb-1">Attendance & Engagement:</span>
-                            <p class="text-emerald-800">${expectedOutcomes}</p>
-                        </div>
-                        <div class="p-3 bg-sky-50 rounded-xl border border-sky-200">
-                            <span class="font-bold text-sky-900 block mb-1">Next Steps & Action Plan:</span>
-                            <p class="text-sky-800">${actionPlan}</p>
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs font-medium space-y-1">
+                            <p class="font-bold flex items-center gap-1.5 text-amber-800">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>Gemini API Notice</span>
+                            </p>
+                            <p>${error.message || 'Could not fetch remote AI summary.'}</p>
+                            <p class="text-[11px] text-amber-700 font-normal">Attendance report metrics above remain fully updated.</p>
                         </div>
                     `;
                 }
-                window.showToast(`Gemini API info: ${error.message}. Loaded local summary.`, 'info');
+                window.showToast(`Gemini API info: ${error.message}`, 'warning');
             }
         };
 
+
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto p-3.5 rounded-xl text-xs font-semibold text-white shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-3 ${
+                type === 'success' ? 'bg-emerald-700' :
+                type === 'error' ? 'bg-rose-600' :
+                type === 'warning' ? 'bg-amber-600' : 'bg-slate-800'
+            }`;
+
+            const icon = type === 'success' ? 'fa-circle-check' :
+                         type === 'error' ? 'fa-circle-xmark' :
+                         type === 'warning' ? 'fa-triangle-exclamation' : 'fa-circle-info';
+
+            toast.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid ${icon}"></i>
+                    <span>${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-white/80 hover:text-white cursor-pointer ml-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 4000);
+        };
+
+        window.updateSyncBadge = function(isSynced) {
+            const dot = document.getElementById('syncDot');
+            const text = document.getElementById('syncStatusText');
+            if (!dot || !text) return;
+
+            if (isSynced) {
+                dot.className = 'w-2 h-2 rounded-full bg-emerald-400 shrink-0';
+                text.innerText = 'Synced with Sheets';
+            } else {
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+                text.innerText = 'Local Storage Only';
+            }
+        };
+
+        window.updateDashboardStats = function() {
+            const totalClassesElem = document.getElementById('statTotalClasses');
+            const avgAttendanceElem = document.getElementById('statAvgAttendanceRate');
+            const totalStudentsElem = document.getElementById('statTotalStudents');
+
+            const totalClasses = (window.klcClasses || []).length;
+            const uniqueStudents = window.getUniqueStudents();
+            const totalStudents = uniqueStudents.length;
+
+            const totalLogs = (window.logs || []).length;
+            const presentLogs = (window.logs || []).filter(l => l.status === 'Present' || l.status === 'Hadir').length;
+            const avgRate = totalLogs > 0 ? Math.round((presentLogs / totalLogs) * 100) : 0;
+
+            if (totalClassesElem) totalClassesElem.innerHTML = `${totalClasses} <span class="text-xs font-normal text-slate-500">Sessions</span>`;
+            if (avgAttendanceElem) avgAttendanceElem.innerText = `${avgRate}%`;
+            if (totalStudentsElem) totalStudentsElem.innerHTML = `${totalStudents} <span class="text-xs font-normal text-slate-500">Enrolled</span>`;
+        };
+
+        window.saveGasEndpoint = function() {
+            const url = document.getElementById('gasEndpointUrl').value.trim();
+            localStorage.setItem('klc_gas_url', url);
+            window.updateSyncBadge(!!url);
+            if (url) {
+                window.showToast('Google Apps Script URL endpoint saved!', 'success');
+                window.fetchDataFromGoogleSheets();
+            } else {
+                window.showToast('Endpoint URL removed.', 'info');
+            }
+        };
+
+        window.copyGasCode = function() {
+            const codeElem = document.getElementById('gasCodeDisplay');
+            if (!codeElem) return;
+            const text = codeElem.innerText;
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            window.showToast('Apps Script code copied to clipboard!', 'success');
+        };
+
         window.openModalAddStudent = function() {
+            document.getElementById('modalStudentTitle').innerText = 'Add New KLC Student';
             document.getElementById('studentEditId').value = '';
             document.getElementById('studentIdInput').value = '';
             document.getElementById('studentIdInput').removeAttribute('readonly');
             document.getElementById('studentNameInput').value = '';
-            document.getElementById('modalStudentTitle').innerText = 'Add New KLC Student';
-            window.renderModalClassCheckboxes([]);
+
+            window.populateModalStudentClasses([]);
             document.getElementById('modalAddStudent').classList.remove('hidden');
         };
 
@@ -3142,158 +3247,153 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
             document.getElementById('modalAddStudent').classList.add('hidden');
         };
 
-        window.renderModalClassCheckboxes = function(selectedClasses) {
+        window.populateModalStudentClasses = function(selectedClasses = []) {
             const container = document.getElementById('modalClassCheckboxes');
             if (!container) return;
 
             const validClasses = (window.klcClasses || []).filter(c => window.isValidRealClass(c.id, c.name));
+            if (validClasses.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 font-medium col-span-2">No classes found. Please create a class first.</p>';
+                return;
+            }
+
             let html = '';
-            validClasses.forEach(c => {
-                const isChecked = selectedClasses.includes(c.id) ? 'checked' : '';
-                const displayName = window.formatClassName(c.id, c.name);
+            validClasses.forEach(cls => {
+                const classIdUpper = String(cls.id).toUpperCase();
+                const isChecked = selectedClasses.some(sc => {
+                    const scId = typeof sc === 'object' ? sc.id : sc;
+                    return scId && String(scId).toUpperCase() === classIdUpper;
+                });
+
                 html += `
-                    <label class="flex items-center space-x-2 text-xs font-semibold text-slate-700 bg-white p-2 rounded-lg border border-slate-200 cursor-pointer hover:border-klc-500 transition">
-                        <input type="checkbox" name="studentClassCheck" value="${c.id}" ${isChecked} class="rounded border-slate-300 text-klc-600 focus:ring-klc-500 w-4 h-4">
-                        <span class="truncate">${displayName}</span>
+                    <label class="flex items-center space-x-2 p-2 rounded-lg bg-white border border-slate-200 hover:border-klc-500 transition cursor-pointer text-xs font-semibold text-slate-800">
+                        <input type="checkbox" name="studentClassCheck" value="${cls.id}" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-klc-600 rounded border-slate-300 focus:ring-klc-500">
+                        <span class="truncate">${cls.name} [${cls.id}]</span>
                     </label>
                 `;
             });
             container.innerHTML = html;
         };
 
-        window.editStudent = function(studentId) {
-            const uniqueStudents = window.getUniqueStudents();
-            const stu = uniqueStudents.find(s => s.id === studentId);
-            if (!stu) return;
+        window.handleSaveStudent = function(e) {
+            e.preventDefault();
+            const editId = document.getElementById('studentEditId').value.trim();
+            const id = document.getElementById('studentIdInput').value.trim().toUpperCase();
+            const name = document.getElementById('studentNameInput').value.trim();
 
-            document.getElementById('studentEditId').value = stu.id;
-            document.getElementById('studentIdInput').value = stu.id;
-            document.getElementById('studentIdInput').setAttribute('readonly', true);
-            document.getElementById('studentNameInput').value = stu.name;
-            document.getElementById('modalStudentTitle').innerText = 'Edit KLC Student';
-
-            const classIdsOnly = stu.classes.map(item => typeof item === 'object' ? item.id : item);
-            window.renderModalClassCheckboxes(classIdsOnly);
-            document.getElementById('modalAddStudent').classList.remove('hidden');
-        };
-
-        window.addNewStudentToSheet = function(studentData) {
-            const webAppUrl = localStorage.getItem('klc_gas_url'); 
-            if (!webAppUrl) {
-                window.showToast('Saved locally. Google Apps Script URL not configured.', 'warning');
+            if (!id || !name) {
+                window.showToast('Please enter both Student ID and Name.', 'warning');
                 return;
             }
 
-            fetch(webAppUrl, {
-                method: 'POST',
-                mode: 'no-cors', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'addStudent', ...studentData })
-            })
-            .then(() => {
-                window.showToast('Student synced to Google Sheet!', 'success');
-                if (typeof window.fetchDataFromGoogleSheets === 'function') {
-                    window.fetchDataFromGoogleSheets(); 
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                window.showToast('Failed to sync new student to Google Sheet.', 'error');
+            const checkedBoxes = document.querySelectorAll('input[name="studentClassCheck"]:checked');
+            const selectedClasses = Array.from(checkedBoxes).map(cb => {
+                const clsObj = window.klcClasses.find(c => c.id === cb.value);
+                return { id: cb.value, name: clsObj ? clsObj.name : cb.value };
             });
-        };
 
-        window.handleSaveStudent = function(e) {
-            e.preventDefault();
-            const editId = document.getElementById('studentEditId').value;
-            const id = document.getElementById('studentIdInput').value.trim();
-            const name = document.getElementById('studentNameInput').value.trim();
-
-            const checkboxes = document.querySelectorAll('input[name="studentClassCheck"]:checked');
-            const selectedClassIds = Array.from(checkboxes).map(cb => cb.value);
-
-            if (editId) {
-                window.students = window.students.filter(s => s.id !== editId);
+            if (selectedClasses.length === 0) {
+                window.showToast('Please select at least one class enrollment.', 'warning');
+                return;
             }
 
-            selectedClassIds.forEach(cId => {
-                const clsObj = window.klcClasses.find(c => c.id === cId);
-                window.students.push({
-                    id: id,
-                    name: name,
-                    fullName: name,
-                    enrolledClasses: selectedClassIds.join(', '),
-                    className: clsObj ? clsObj.name : cId,
-                    classId: cId,
-                    classes: selectedClassIds,
-                    status: 'Active'
-                });
-            });
+            const primaryClass = selectedClasses[0];
 
-            if (selectedClassIds.length === 0) {
-                window.students.push({
-                    id: id,
-                    name: name,
-                    fullName: name,
-                    enrolledClasses: '',
-                    className: '',
-                    classId: '',
-                    classes: [],
-                    status: 'Active'
-                });
+            const studentObj = {
+                id: id,
+                name: name,
+                fullName: name,
+                classId: primaryClass.id,
+                className: primaryClass.name,
+                classes: selectedClasses,
+                enrolledClasses: selectedClasses.map(c => c.name).join(', '),
+                status: 'Active'
+            };
+
+            if (editId) {
+                window.students = window.students.map(s => String(s.id).toUpperCase() === editId.toUpperCase() ? studentObj : s);
+            } else {
+                const exists = window.students.some(s => String(s.id).toUpperCase() === id);
+                if (exists) {
+                    window.students = window.students.map(s => String(s.id).toUpperCase() === id ? studentObj : s);
+                } else {
+                    window.students.push(studentObj);
+                }
             }
 
             window.saveStudentsToStorage();
+            window.populateClassSelects();
             window.renderStudentTable();
+            window.renderSummaryTable();
             window.closeModalAddStudent();
+            window.showToast(`Student ${name} saved successfully!`, 'success');
 
-            if (!editId) {
-                const firstClassId = selectedClassIds.length > 0 ? selectedClassIds[0] : '';
-                const firstClassObj = window.klcClasses.find(c => c.id === firstClassId);
-                window.addNewStudentToSheet({
-                    nis: id,
-                    name: name,
-                    enrolledClasses: selectedClassIds.join(', '),
-                    className: firstClassObj ? firstClassObj.name : firstClassId,
-                    classId: firstClassId,
-                    status: 'Active'
-                });
-            } else {
-                window.showToast('Student updated!', 'success');
+            let gasUrl = localStorage.getItem('klc_gas_url');
+            if (gasUrl) {
+                fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'addStudent',
+                        nis: id,
+                        name: name,
+                        classId: primaryClass.id,
+                        className: primaryClass.name,
+                        enrolledClasses: studentObj.enrolledClasses,
+                        status: 'Active'
+                    })
+                }).then(() => {
+                    window.showToast('Student synced to Google Sheets!', 'success');
+                }).catch(err => console.warn(err));
             }
         };
 
-        window.deleteStudentFromSheet = function(studentId) {
-            const webAppUrl = localStorage.getItem('klc_gas_url');
-            if (!webAppUrl) return;
+        window.editStudent = function(studentId) {
+            const student = window.getUniqueStudents().find(s => String(s.id).toUpperCase() === String(studentId).toUpperCase());
+            if (!student) return;
 
-            fetch(webAppUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'deleteStudent', nis: studentId })
-            }).catch(err => console.warn('Delete sheet sync warning:', err));
+            document.getElementById('modalStudentTitle').innerText = 'Edit KLC Student';
+            document.getElementById('studentEditId').value = student.id;
+            document.getElementById('studentIdInput').value = student.id;
+            document.getElementById('studentIdInput').setAttribute('readonly', 'readonly');
+            document.getElementById('studentNameInput').value = student.name;
+
+            window.populateModalStudentClasses(student.classes || []);
+            document.getElementById('modalAddStudent').classList.remove('hidden');
         };
 
         window.deleteStudent = function(studentId) {
-            window.openConfirmModal('Delete Student', `Are you sure you want to permanently delete student ID ${studentId}?`, () => {
-                window.students = window.students.filter(s => s.id !== studentId);
+            window.openConfirmModal('Delete Student', `Are you sure you want to delete student ID ${studentId}?`, () => {
+                window.students = window.students.filter(s => String(s.id).toUpperCase() !== String(studentId).toUpperCase());
                 window.saveStudentsToStorage();
+                window.populateClassSelects();
                 window.renderStudentTable();
                 window.renderSummaryTable();
-                window.deleteStudentFromSheet(studentId);
-                window.showToast('Student deleted successfully.', 'success');
+                window.showToast(`Student ${studentId} deleted.`, 'success');
+
+                let gasUrl = localStorage.getItem('klc_gas_url');
+                if (gasUrl) {
+                    fetch(gasUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'deleteStudent', nis: studentId })
+                    }).catch(err => console.warn(err));
+                }
             });
         };
 
         window.openStudentDetail = function(studentId) {
-            const uniqueStudents = window.getUniqueStudents();
-            const stu = uniqueStudents.find(s => s.id === studentId);
-            if (!stu) return;
+            const student = window.getUniqueStudents().find(s => String(s.id).toUpperCase() === String(studentId).toUpperCase());
+            if (!student) return;
 
-            document.getElementById('modalSummaryName').innerText = stu.name;
-            document.getElementById('modalSummaryId').innerText = stu.id;
+            const modalName = document.getElementById('modalSummaryName');
+            const modalId = document.getElementById('modalSummaryId');
+            if (modalName) modalName.innerText = student.name;
+            if (modalId) modalId.innerText = `ID: ${student.id}`;
 
-            const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
+            const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(student.id));
             const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
             const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
@@ -3303,28 +3403,29 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
             document.getElementById('modalCountSakit').innerText = sick;
 
             const tbody = document.getElementById('modalStudentHistoryBody');
-            if (stuLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">No session attendance logs recorded.</td></tr>`;
-            } else {
-                let html = '';
-                stuLogs.forEach(l => {
-                    let badgeBg = 'bg-emerald-100 text-emerald-800';
-                    if (l.status === 'Absent' || l.status === 'Tidak Hadir') badgeBg = 'bg-rose-100 text-rose-800';
-                    if (l.status === 'Sick' || l.status === 'Sakit') badgeBg = 'bg-amber-100 text-amber-800';
+            if (tbody) {
+                if (stuLogs.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">No attendance history logged.</td></tr>`;
+                } else {
+                    let html = '';
+                    stuLogs.forEach(l => {
+                        const dateClean = window.parseToYYYYMMDD(window.formatDisplayDate(l.tanggal));
+                        const statusVal = l.status || 'Present';
+                        let stBadge = 'bg-emerald-100 text-emerald-800';
+                        if (statusVal === 'Absent' || statusVal === 'Tidak Hadir') stBadge = 'bg-rose-100 text-rose-800';
+                        if (statusVal === 'Sick' || statusVal === 'Sakit') stBadge = 'bg-amber-100 text-amber-800';
 
-                    const rawDate = window.formatDisplayDate(l.tanggal);
-                    const cleanDate = window.parseToYYYYMMDD(rawDate);
-                    const remarkText = l.remarks || l.remark || '-';
-                    html += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="py-2.5 px-3 font-bold text-slate-800 font-mono whitespace-nowrap">${cleanDate}</td>
-                            <td class="py-2.5 px-3 font-semibold text-slate-700 whitespace-nowrap">${l.namaKelas || '-'}</td>
-                            <td class="py-2.5 px-3 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-md font-bold text-[10px] uppercase ${badgeBg}">${l.status}</span></td>
-                            <td class="py-2.5 px-3 text-slate-500">${remarkText}</td>
-                        </tr>
-                    `;
-                });
-                tbody.innerHTML = html;
+                        html += `
+                            <tr>
+                                <td class="py-2.5 px-3 font-mono font-bold">${dateClean}</td>
+                                <td class="py-2.5 px-3 font-semibold">${l.namaKelas || l.kodeKelas || '-'}</td>
+                                <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase ${stBadge}">${statusVal}</span></td>
+                                <td class="py-2.5 px-3 text-slate-600">${l.remarks || l.materi || '-'}</td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html;
+                }
             }
 
             document.getElementById('modalStudentSummary').classList.remove('hidden');
@@ -3336,128 +3437,22 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
 
         window.downloadStudentCardImage = function() {
             const cardArea = document.getElementById('studentReportCardArea');
-            const studentId = document.getElementById('modalSummaryId').innerText || 'Student';
-            
-            if (!cardArea) return;
+            if (!cardArea || typeof html2canvas === 'undefined') {
+                window.showToast('Report card element or export library unavailable.', 'error');
+                return;
+            }
 
-            window.showToast('Generating student report card image...', 'info');
-
-            html2canvas(cardArea, {
-                scale: 2,
-                backgroundColor: '#ffffff',
-                useCORS: true,
-                logging: false,
-                scrollX: 0,
-                scrollY: 0,
-                onclone: (clonedDoc) => {
-                    const clonedCard = clonedDoc.getElementById('studentReportCardArea');
-                    if (clonedCard) {
-                        clonedCard.style.maxHeight = 'none';
-                        clonedCard.style.overflow = 'visible';
-                        clonedCard.style.width = '100%';
-                        clonedCard.style.padding = '16px';
-                    }
-                }
-            }).then(canvas => {
+            window.showToast('Generating report card image...', 'info');
+            html2canvas(cardArea, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `KLC_Attendance_Report_${studentId.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+                link.download = `KLC_ReportCard_${new Date().toISOString().split('T')[0]}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                window.showToast('Student report card downloaded!', 'success');
+                window.showToast('Report card downloaded!', 'success');
             }).catch(err => {
-                console.error('Download card error:', err);
-                window.showToast('Failed to generate image. Please try again.', 'error');
+                console.error(err);
+                window.showToast('Failed to download image.', 'error');
             });
-        };
-
-        window.updateDashboardStats = function() {
-            const conductedSessionsMap = new Set();
-            (window.logs || []).forEach(l => {
-                const dateClean = window.formatDisplayDate(l.tanggal);
-                const classCode = String(l.kodeKelas || '').trim().toUpperCase();
-                if (dateClean && classCode) {
-                    conductedSessionsMap.add(`${dateClean}_${classCode}`);
-                }
-            });
-            const totalConductedCount = conductedSessionsMap.size;
-
-            const totalClassesElem = document.getElementById('statTotalClasses');
-            if (totalClassesElem) {
-                totalClassesElem.innerHTML = `${totalConductedCount} <span class="text-xs font-normal text-slate-500">Sessions</span>`;
-            }
-
-            const activeStudentsCount = window.getUniqueStudents().filter(s => s.status === 'Active' || s.status === 'Aktif').length;
-            const totalStudentsElem = document.getElementById('statTotalStudents');
-            if (totalStudentsElem) {
-                totalStudentsElem.innerHTML = `${activeStudentsCount} <span class="text-xs font-normal text-slate-500">Enrolled</span>`;
-            }
-
-            const rateElem = document.getElementById('statAvgAttendanceRate');
-            if (rateElem) {
-                if (window.logs.length === 0) {
-                    rateElem.innerText = '0%';
-                } else {
-                    const hadirCount = window.logs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-                    const avg = Math.round((hadirCount / window.logs.length) * 100);
-                    rateElem.innerText = `${avg}%`;
-                }
-            }
-        };
-
-        window.saveGasEndpoint = function() {
-            let url = document.getElementById('gasEndpointUrl').value.trim();
-            localStorage.setItem('klc_gas_url', url);
-            if (url) {
-                window.updateSyncBadge(true);
-                window.fetchDataFromGoogleSheets();
-                window.showToast('API Endpoint URL saved.', 'success');
-            } else {
-                window.updateSyncBadge(false);
-                window.showToast('API Endpoint URL removed.', 'info');
-            }
-        };
-
-        window.updateSyncBadge = function(isSynced) {
-            const badge = document.getElementById('syncStatusBadge');
-            const text = document.getElementById('syncStatusText');
-            const dot = document.getElementById('syncDot');
-            if (!badge || !text) return;
-
-            if (isSynced) {
-                badge.className = "flex-grow sm:flex-grow-0 flex items-center justify-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 text-white border border-white/10 font-medium text-xs truncate";
-                dot.className = "w-2 h-2 rounded-full bg-emerald-400 shrink-0 shadow-sm";
-                text.innerText = "Google Sheets Connected";
-            } else {
-                badge.className = "flex-grow sm:flex-grow-0 flex items-center justify-center space-x-2 px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-200 border border-amber-500/30 font-medium text-xs truncate";
-                dot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0";
-                text.innerText = "Waiting for Sync";
-            }
-        };
-
-        window.copyGasCode = function() {
-            const codeDisplay = document.getElementById('gasCodeDisplay');
-            if (!codeDisplay) return;
-            
-            const textToCopy = codeDisplay.innerText;
-            
-            try {
-                const textArea = document.createElement('textarea');
-                textArea.value = textToCopy;
-                textArea.style.position = 'fixed';
-                textArea.style.top = '0';
-                textArea.style.left = '0';
-                textArea.style.opacity = '0';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                window.showToast('Google Apps Script code copied to clipboard!', 'success');
-            } catch (err) {
-                console.error('Failed to copy code:', err);
-                window.showToast('Could not copy code automatically.', 'error');
-            }
         };
 
         window.exportToCSV = function() {
@@ -3467,8 +3462,7 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Student ID,Student Name,Enrolled Classes,Total Sessions,Present,Absent,Sick,Attendance Rate (%)\n";
+            let csvContent = "data:text/csv;charset=utf-8,Student ID,Student Name,Enrolled Classes,Total Sessions,Present,Absent,Sick,Attendance Rate (%)\n";
 
             uniqueStudents.forEach(stu => {
                 const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
@@ -3477,49 +3471,19 @@ Please provide the 3-section qualitative summary based on this data. Make it ins
                 const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
                 const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
                 const rate = total > 0 ? Math.round((present / total) * 100) : 100;
+                const classNames = (stu.classes || []).map(c => typeof c === 'object' ? c.name : c).join('; ');
 
-                const classesStr = (stu.classes || []).map(c => typeof c === 'object' ? c.id : c).join('; ');
-                csvContent += `"${stu.id}","${stu.name}","${classesStr}",${total},${present},${absent},${sick},${rate}\n`;
+                csvContent += `"${stu.id}","${stu.name}","${classNames}",${total},${present},${absent},${sick},${rate}%\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `KLC_Attendance_Summary_${new Date().toISOString().slice(0,10)}.csv`);
+            link.setAttribute("download", `KLC_Attendance_Summary_${new Date().toISOString().split('T')[0]}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.showToast('CSV Summary exported successfully!', 'success');
-        };
-
-        window.showToast = function(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            toast.className = `p-3.5 rounded-xl shadow-lg border text-xs font-semibold flex items-center gap-2.5 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${
-                type === 'success' ? 'bg-emerald-900 text-white border-emerald-700' :
-                type === 'error' ? 'bg-rose-900 text-white border-rose-700' :
-                type === 'warning' ? 'bg-amber-900 text-white border-amber-700' :
-                'bg-slate-900 text-white border-slate-700'
-            }`;
-
-            const icon = type === 'success' ? 'fa-circle-check text-emerald-400' :
-                         type === 'error' ? 'fa-circle-xmark text-rose-400' :
-                         type === 'warning' ? 'fa-triangle-exclamation text-amber-400' :
-                         'fa-circle-info text-sky-400';
-
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            window.showToast('Exported summary to CSV!', 'success');
         };
     </script>
 </body>
