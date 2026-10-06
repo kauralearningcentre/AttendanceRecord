@@ -2850,22 +2850,28 @@ function doGet(e) {
 
             filteredLogs.forEach(l => {
                 const classCode = String(l.kodeKelas || 'GENERAL').trim().toUpperCase();
-                const className = l.namaKelas || classCode;
+                const rawClassName = l.namaKelas || classCode;
+                const displayName = window.getClassName(classCode, rawClassName);
+                // Group by normalized class name instead of class code
+                const groupKey = displayName.trim().toUpperCase();
                 const dateClean = window.formatDisplayDate(l.tanggal);
+                const sessionKey = `${dateClean}_${classCode}`;
 
-                if (!classMap.has(classCode)) {
-                    classMap.set(classCode, {
+                if (!classMap.has(groupKey)) {
+                    classMap.set(groupKey, {
                         code: classCode,
-                        name: className,
-                        uniqueDates: new Set(),
+                        name: displayName,
+                        codes: new Set([classCode]),
+                        uniqueSessions: new Set(),
                         totalLogs: 0,
                         presentLogs: 0
                     });
                 }
 
-                const entry = classMap.get(classCode);
+                const entry = classMap.get(groupKey);
+                entry.codes.add(classCode);
                 if (dateClean && dateClean !== '-') {
-                    entry.uniqueDates.add(dateClean);
+                    entry.uniqueSessions.add(sessionKey);
                 }
                 entry.totalLogs += 1;
                 if (l.status === 'Present' || l.status === 'Hadir') {
@@ -2876,7 +2882,7 @@ function doGet(e) {
             const perClassList = Array.from(classMap.values());
 
             if (countBadge) {
-                countBadge.innerText = `${perClassList.length} Classes`;
+                countBadge.innerText = `${perClassList.length} Class Categories`;
             }
 
             if (perClassList.length === 0) {
@@ -2898,7 +2904,7 @@ function doGet(e) {
 
             let rowsHtml = '';
             perClassList.forEach(item => {
-                const sessionsConducted = item.uniqueDates.size > 0 ? item.uniqueDates.size : (item.totalLogs > 0 ? 1 : 0);
+                const sessionsConducted = item.uniqueSessions.size > 0 ? item.uniqueSessions.size : (item.totalLogs > 0 ? 1 : 0);
                 const totalHours = sessionsConducted * 1;
                 const rate = item.totalLogs > 0 ? Math.round((item.presentLogs / item.totalLogs) * 100) : 0;
 
@@ -2907,17 +2913,18 @@ function doGet(e) {
                 totalLogsOverall += item.totalLogs;
                 totalPresentOverall += item.presentLogs;
 
-                const displayName = window.getClassName(item.code, item.name);
-
                 let rateColor = 'text-emerald-700 bg-emerald-50';
                 if (rate < 75) rateColor = 'text-rose-700 bg-rose-50';
+
+                const codesArray = Array.from(item.codes).filter(Boolean);
+                const codesLabel = codesArray.length > 0 ? ` <span class="text-[10px] text-slate-400 font-mono font-normal">(${codesArray.join(', ')})</span>` : '';
 
                 rowsHtml += `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3.5 font-bold text-slate-900">
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-klc-600 shrink-0"></span>
-                                <span>${displayName}</span>
+                                <span>${item.name}${codesLabel}</span>
                             </div>
                         </td>
                         <td class="p-3.5 text-center font-bold text-slate-800">${sessionsConducted} Sessions</td>
@@ -3218,7 +3225,13 @@ Data Summary:
             const avgAttendanceElem = document.getElementById('statAvgAttendanceRate');
             const totalStudentsElem = document.getElementById('statTotalStudents');
 
-            const totalClasses = (window.klcClasses || []).length;
+            // Compute actual conducted sessions count to date directly from attendance logs
+            const uniqueConductedSessions = new Set(
+                (window.logs || [])
+                    .filter(l => l && l.tanggal && l.kodeKelas)
+                    .map(l => `${window.formatDisplayDate(l.tanggal)}_${String(l.kodeKelas).trim().toUpperCase()}`)
+            ).size;
+
             const uniqueStudents = window.getUniqueStudents();
             const totalStudents = uniqueStudents.length;
 
@@ -3226,7 +3239,7 @@ Data Summary:
             const presentLogs = (window.logs || []).filter(l => l.status === 'Present' || l.status === 'Hadir').length;
             const avgRate = totalLogs > 0 ? Math.round((presentLogs / totalLogs) * 100) : 0;
 
-            if (totalClassesElem) totalClassesElem.innerHTML = `${totalClasses} <span class="text-xs font-normal text-slate-500">Sessions</span>`;
+            if (totalClassesElem) totalClassesElem.innerHTML = `${uniqueConductedSessions} <span class="text-xs font-normal text-slate-500">Conducted</span>`;
             if (avgAttendanceElem) avgAttendanceElem.innerText = `${avgRate}%`;
             if (totalStudentsElem) totalStudentsElem.innerHTML = `${totalStudents} <span class="text-xs font-normal text-slate-500">Enrolled</span>`;
         };
