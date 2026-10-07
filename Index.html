@@ -30,7 +30,7 @@
                     boxShadow: {
                         'soft': '0 2px 10px -1px rgba(15, 23, 42, 0.05), 0 1px 4px -1px rgba(15, 23, 42, 0.03)',
                         'card': '0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
-                        'glow': '0 0 20px -3px rgba(22, 163, 74, 0.25)',
+                        'glow': '0 0 25px -2px rgba(22, 163, 74, 0.3)',
                     }
                 }
             }
@@ -48,12 +48,11 @@
             font-family: 'Plus Jakarta Sans', sans-serif; 
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
-            color: #1e293b;
+            color: #0f172a;
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Custom Mobile Smooth Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
@@ -90,24 +89,31 @@
             background: #22c55e;
             border-radius: 99px;
         }
+        .card-hover-effect {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-klc-600 selection:text-white relative overflow-x-hidden pb-12 sm:pb-0">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-klc-600 selection:text-white relative overflow-x-hidden pb-12 sm:pb-0">
 
     <header class="bg-klc-950 text-white sticky top-0 z-40 border-b border-klc-900 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
             <!-- Brand Logo & Information -->
             <div class="flex items-center justify-between sm:justify-start gap-3">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-klc-700 to-emerald-500 flex items-center justify-center text-white font-bold text-lg shadow-glow ring-2 ring-white/20 shrink-0">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-klc-700 via-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-xl shadow-glow ring-2 ring-white/20 shrink-0">
                         K
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-tight">Kaura Learning Centre</h1>
-                            <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/20">2026/2027</span>
+                            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white leading-tight">Kaura Learning Centre</h1>
+                            <span class="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">2026/2027</span>
                         </div>
-                        <p class="text-xs text-emerald-100/70 mt-0.5 flex items-center gap-1.5 font-medium">
+                        <p class="text-xs text-emerald-100/80 mt-0.5 flex items-center gap-1.5 font-medium">
                             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                             <span class="truncate">Smart Attendance Portal • Community Hall</span>
                         </p>
@@ -122,11 +128,11 @@
 
             <!-- Sync Status & Desktop Actions -->
             <div class="flex items-center justify-between sm:justify-end gap-2 text-xs">
-                <div id="syncStatusBadge" class="flex-grow sm:flex-grow-0 flex items-center justify-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 text-white border border-white/10 font-medium text-xs truncate">
+                <div id="syncStatusBadge" class="flex-grow sm:flex-grow-0 flex items-center justify-center space-x-2 px-3 py-1.5 rounded-xl bg-white/10 text-white border border-white/10 font-semibold text-xs truncate">
                     <span id="syncDot" class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
                     <span id="syncStatusText" class="truncate">Waiting for Sync</span>
                 </div>
-                <button onclick="window.fetchDataFromGoogleSheets()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-white border border-emerald-400/30 flex items-center space-x-1.5 font-semibold shadow-sm cursor-pointer shrink-0">
+                <button onclick="window.fetchDataFromGoogleSheets()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition text-white border border-emerald-400/30 flex items-center space-x-1.5 font-bold shadow-sm cursor-pointer shrink-0">
                     <i id="syncIcon" class="fa-solid fa-rotate text-xs"></i>
                     <span>Sync</span>
                 </button>
@@ -137,7 +143,7 @@
         </div>
 
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 border-t border-white/10 bg-klc-900/60">
-            <nav class="flex space-x-1 overflow-x-auto custom-scrollbar py-1.5 text-xs font-semibold scroll-smooth no-scrollbar">
+            <nav class="flex space-x-1 overflow-x-auto custom-scrollbar py-1.5 text-xs font-bold scroll-smooth no-scrollbar">
                 <button onclick="window.switchTab('tab-absensi')" id="nav-tab-absensi" class="nav-btn tab-btn active-tab-indicator flex items-center space-x-2 px-3.5 py-2 rounded-xl text-white bg-white/10 transition whitespace-nowrap cursor-pointer">
                     <i class="fa-solid fa-clipboard-user text-emerald-400"></i>
                     <span>Record Attendance</span>
@@ -172,40 +178,39 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full space-y-6 relative z-10">
 
-        <!-- Notification Toast Container -->
         <div id="toastContainer" class="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:right-6 sm:bottom-6 z-50 flex flex-col space-y-2 pointer-events-none max-w-md mx-auto sm:mx-0"></div>
 
         <!-- Dashboard Quick Overview Stats -->
         <div id="overviewStatsContainer" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft card-hover-effect flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Sessions</p>
-                    <p id="statTotalClasses" class="text-2xl font-bold text-slate-900 mt-1">0 <span class="text-xs font-normal text-slate-500">Sessions</span></p>
-                    <p class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1"><i class="fa-solid fa-layer-group text-klc-600"></i> Conducted Sessions</p>
+                    <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Conducted Sessions</p>
+                    <p id="statTotalClasses" class="text-2xl font-black text-slate-900 mt-1">0 <span class="text-xs font-normal text-slate-500">Sessions</span></p>
+                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1"><i class="fa-solid fa-layer-group text-klc-600"></i> Recorded To-Date</p>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-klc-50 text-klc-700 border border-klc-100 flex items-center justify-center text-xl">
+                <div class="w-12 h-12 rounded-2xl bg-klc-50 text-klc-700 border border-klc-100 flex items-center justify-center text-xl shadow-xs">
                     <i class="fa-solid fa-layer-group"></i>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft card-hover-effect flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Avg Attendance</p>
-                    <p id="statAvgAttendanceRate" class="text-2xl font-bold text-emerald-600 mt-1">0%</p>
-                    <p class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1"><i class="fa-solid fa-chart-line text-emerald-500"></i> Active Classes</p>
+                    <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Avg Attendance Rate</p>
+                    <p id="statAvgAttendanceRate" class="text-2xl font-black text-emerald-600 mt-1">0%</p>
+                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1"><i class="fa-solid fa-chart-line text-emerald-500"></i> All Conducted Classes</p>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-xl">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-xl shadow-xs">
                     <i class="fa-solid fa-chart-pie"></i>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft flex items-center justify-between">
+            <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-soft card-hover-effect flex items-center justify-between">
                 <div>
-                    <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Active Students</p>
-                    <p id="statTotalStudents" class="text-2xl font-bold text-slate-900 mt-1">0 <span class="text-xs font-normal text-slate-500">Enrolled</span></p>
-                    <p class="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1"><i class="fa-solid fa-user-graduate text-sky-500"></i> Active Directory</p>
+                    <p class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Enrolled Students</p>
+                    <p id="statTotalStudents" class="text-2xl font-black text-slate-900 mt-1">0 <span class="text-xs font-normal text-slate-500">Students</span></p>
+                    <p class="text-xs text-slate-500 font-semibold mt-1 flex items-center gap-1"><i class="fa-solid fa-user-graduate text-sky-500"></i> Active Directory</p>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-700 border border-sky-100 flex items-center justify-center text-xl">
+                <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-700 border border-sky-100 flex items-center justify-center text-xl shadow-xs">
                     <i class="fa-solid fa-users"></i>
                 </div>
             </div>
@@ -216,22 +221,28 @@
                 <!-- Header Actions -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md inline-block mb-1 border border-klc-200">Daily Session</span>
-                        <h2 class="text-xl font-bold text-slate-900">Record Class Attendance</h2>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md inline-block border border-klc-200">Daily Session</span>
+                            <!-- Live Session Tally Pill -->
+                            <span id="liveAttendanceCounterPill" class="hidden text-[10px] font-extrabold bg-slate-900 text-slate-100 px-2.5 py-0.5 rounded-md border border-slate-700 font-mono">
+                                Present: 0 | Absent: 0 | Sick: 0
+                            </span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-900 mt-1">Record Class Attendance</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Select class & session date. Use batch status or update individual records below.</p>
                     </div>
                     
                     <!-- Quick Bulk Status Action Buttons -->
                     <div class="grid grid-cols-3 gap-2 w-full md:w-auto">
-                        <button onclick="window.markAllStatus('Present')" class="touch-btn px-3 py-2 text-xs font-semibold rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                        <button onclick="window.markAllStatus('Present')" class="touch-btn px-3 py-2 text-xs font-bold rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs">
                             <i class="fa-solid fa-check text-emerald-600"></i>
                             <span>All Present</span>
                         </button>
-                        <button onclick="window.markAllStatus('Absent')" class="touch-btn px-3 py-2 text-xs font-semibold rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                        <button onclick="window.markAllStatus('Absent')" class="touch-btn px-3 py-2 text-xs font-bold rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs">
                             <i class="fa-solid fa-xmark text-rose-600"></i>
                             <span>All Absent</span>
                         </button>
-                        <button onclick="window.markAllStatus('Sick')" class="touch-btn px-3 py-2 text-xs font-semibold rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                        <button onclick="window.markAllStatus('Sick')" class="touch-btn px-3 py-2 text-xs font-bold rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer shadow-xs">
                             <i class="fa-solid fa-briefcase-medical text-amber-600"></i>
                             <span>All Sick</span>
                         </button>
@@ -241,21 +252,37 @@
                 <!-- Form Selection Parameters -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200/80">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Select KLC Class</label>
-                        <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white font-semibold text-slate-800 transition cursor-pointer">
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Select KLC Class</label>
+                        <select id="absensiSelectKelas" onchange="window.loadAttendanceStudentList()" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white font-bold text-slate-800 transition cursor-pointer">
                             <option value="">-- Select KLC Class --</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Session Date</label>
-                        <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white font-semibold text-slate-800 transition cursor-pointer">
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Session Date</label>
+                        <input type="date" id="absensiTanggal" onchange="window.loadAttendanceStudentList()" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm bg-white font-bold text-slate-800 transition cursor-pointer">
                     </div>
                 </div>
 
+                <!-- At-Risk Attendance Warning Banner -->
+                <div id="atRiskAttendanceBanner" class="hidden p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 text-xs flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                            <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-rose-950 block">Attendance Attention Alert</span>
+                            <span id="atRiskStudentsText" class="text-rose-800 font-medium">Some students in this class have attendance rate below 75%.</span>
+                        </div>
+                    </div>
+                    <button onclick="window.switchTab('tab-summary')" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg text-xs transition cursor-pointer shrink-0">
+                        View Summary
+                    </button>
+                </div>
+
                 <!-- Teacher Session Notes & Topic Banner -->
-                <div class="p-4 bg-emerald-50/60 border border-emerald-200/60 rounded-xl text-slate-700 text-xs space-y-3">
+                <div class="p-4 bg-emerald-50/70 border border-emerald-200/70 rounded-xl text-slate-700 text-xs space-y-3">
                     <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2 font-bold text-klc-900 uppercase tracking-wider text-xs">
+                        <div class="flex items-center gap-2 font-extrabold text-klc-900 uppercase tracking-wider text-xs">
                             <i class="fa-solid fa-chalkboard text-klc-600"></i>
                             <span>Teacher Notes, Topic & Learning Module Link</span>
                         </div>
@@ -283,7 +310,7 @@
                 <!-- Info Alert Bar for Already Saved Attendance -->
                 <div id="alreadySavedNotice" class="hidden p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                        <i class="fa-solid fa-pen-to-square text-sm"></i>
                     </div>
                     <span class="font-medium"><strong>Notice:</strong> Attendance for this session date already exists. Saving will update Google Sheets & Audit Logs.</span>
                 </div>
@@ -291,8 +318,8 @@
                 <div class="pt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-3">
                         <div class="flex items-center gap-2">
-                            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Enrolled Students</h3>
-                            <span id="countClassStudents" class="px-2.5 py-0.5 text-xs font-bold bg-klc-100 text-klc-800 rounded-md border border-klc-200">0 Students</span>
+                            <h3 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Enrolled Students</h3>
+                            <span id="countClassStudents" class="px-2.5 py-0.5 text-xs font-extrabold bg-klc-100 text-klc-800 rounded-md border border-klc-200">0 Students</span>
                         </div>
                         <div class="relative w-full sm:w-64">
                             <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
@@ -307,7 +334,7 @@
                     <div class="hidden lg:block overflow-x-auto border border-slate-200 rounded-xl bg-white">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 font-bold uppercase tracking-wider border-b border-slate-200">
+                                <tr class="bg-slate-100 text-slate-700 font-extrabold uppercase tracking-wider border-b border-slate-200">
                                     <th class="py-3 px-4 w-12 text-center">No</th>
                                     <th class="py-3 px-4 w-32">Student ID</th>
                                     <th class="py-3 px-4">Student Name</th>
@@ -322,7 +349,7 @@
 
                 <!-- Action Footer -->
                 <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div class="text-xs text-slate-500 font-medium flex items-center gap-2">
+                    <div class="text-xs text-slate-500 font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-shield-halved text-emerald-600"></i>
                         <span>Saves to local memory and Google Sheets spreadsheet.</span>
                     </div>
@@ -334,19 +361,18 @@
             </div>
         </section>
 
-        <!-- Other Tabs -->
         <section id="tab-materi" class="tab-content space-y-5">
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-6">
                 <!-- Header Banner -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div>
-                        <span class="bg-amber-100 text-amber-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md inline-block mb-1 border border-amber-200">Repository</span>
+                        <span class="bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md inline-block mb-1 border border-amber-200">Repository</span>
                         <h2 class="text-xl font-bold text-slate-900">Learning Modules & Resources</h2>
                     </div>
 
                     <!-- Search & Filters -->
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                        <select id="materiFilterClass" onchange="window.renderMateriGrid()" class="touch-btn border border-slate-300 rounded-xl px-3 py-2 text-xs font-semibold bg-white cursor-pointer">
+                        <select id="materiFilterClass" onchange="window.renderMateriGrid()" class="touch-btn border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold bg-white cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
                         <div class="relative w-full sm:w-56">
@@ -363,29 +389,29 @@
                 <!-- Metrics Overview Cards -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 shadow-xs">
                             <i class="fa-solid fa-link"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Modules</p>
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Total Modules</p>
                             <h3 id="statTotalUniqueModules" class="text-lg font-bold text-slate-900">0</h3>
                         </div>
                     </div>
                     <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-sky-100 text-sky-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">
+                        <div class="w-10 h-10 bg-sky-100 text-sky-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 shadow-xs">
                             <i class="fa-solid fa-language"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">English Modules</p>
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">English Modules</p>
                             <h3 id="statEngModules" class="text-lg font-bold text-sky-700">0</h3>
                         </div>
                     </div>
                     <div class="col-span-2 sm:col-span-1 p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0">
+                        <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-lg font-bold shrink-0 shadow-xs">
                             <i class="fa-solid fa-desktop"></i>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Computer Modules</p>
+                            <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Computer Modules</p>
                             <h3 id="statCompModules" class="text-lg font-bold text-emerald-700">0</h3>
                         </div>
                     </div>
@@ -403,7 +429,7 @@
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Avg Attendance</p>
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Avg Attendance</p>
                         <h3 id="summaryAvgPercentage" class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">0%</h3>
                     </div>
                 </div>
@@ -412,7 +438,7 @@
                         <i class="fa-solid fa-language"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">English Class</p>
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">English Class</p>
                         <h3 id="summaryAvgEnglish" class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">0%</h3>
                     </div>
                 </div>
@@ -421,7 +447,7 @@
                         <i class="fa-solid fa-computer"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Computer Class</p>
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Computer Class</p>
                         <h3 id="summaryAvgComputer" class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">0%</h3>
                     </div>
                 </div>
@@ -430,7 +456,7 @@
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Below 75%</p>
+                        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Below 75%</p>
                         <h3 id="summaryLowAttendanceCount" class="text-lg sm:text-xl font-bold text-slate-900 mt-0.5">0</h3>
                     </div>
                 </div>
@@ -439,11 +465,19 @@
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Analytics</span>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Analytics</span>
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900">Student Attendance Summary</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Cumulative attendance rate across active student profiles.</p>
                     </div>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                        <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                            <button id="btnViewTable" onclick="window.toggleSummaryViewMode('table')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs cursor-pointer">
+                                <i class="fa-solid fa-list text-xs mr-1"></i> Table
+                            </button>
+                            <button id="btnViewMatrix" onclick="window.toggleSummaryViewMode('matrix')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer">
+                                <i class="fa-solid fa-border-all text-xs mr-1"></i> Matrix Grid
+                            </button>
+                        </div>
                         <select id="summaryFilterClass" onchange="window.renderSummaryTable()" class="touch-btn border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold bg-white cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
@@ -458,11 +492,11 @@
                     </div>
                 </div>
 
-                <!-- Summary Table Wrapper -->
-                <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
+                <!-- Summary Table View -->
+                <div id="summaryTableView" class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                     <table class="w-full text-left border-collapse min-w-[640px]">
                         <thead>
-                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-bold border-b border-slate-200">
+                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-extrabold border-b border-slate-200">
                                 <th class="p-3.5">Student ID & Name</th>
                                 <th class="p-3.5">Enrolled Classes</th>
                                 <th class="p-3.5 text-center">Sessions</th>
@@ -477,6 +511,15 @@
                         <tbody id="summaryTableBody" class="divide-y divide-slate-100 text-xs font-medium text-slate-800"></tbody>
                     </table>
                 </div>
+
+                <!-- Summary Visual Matrix View -->
+                <div id="summaryMatrixView" class="hidden overflow-x-auto border border-slate-200 rounded-xl bg-white p-4">
+                    <div class="mb-3 flex items-center justify-between text-xs font-semibold text-slate-500">
+                        <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-emerald-600"></i> Visual Attendance Grid: Green = Present | Red = Absent | Yellow = Sick</span>
+                        <span id="matrixSessionCountBadge" class="px-2 py-0.5 rounded bg-slate-100 font-bold font-mono">0 Dates</span>
+                    </div>
+                    <div id="matrixGridContainer" class="overflow-x-auto custom-scrollbar"></div>
+                </div>
             </div>
         </section>
 
@@ -484,7 +527,7 @@
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Database</span>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Database</span>
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900">Student Directory</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Manage student records and class enrollment assignments.</p>
                     </div>
@@ -506,12 +549,12 @@
                 <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                     <table class="w-full text-left border-collapse min-w-[560px]">
                         <thead>
-                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-bold border-b border-slate-200">
+                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-extrabold border-b border-slate-200">
                                 <th class="p-3.5 w-28 sm:w-32">Student ID</th>
                                 <th class="p-3.5">Full Student Name</th>
                                 <th class="p-3.5 w-52 sm:w-72">Enrolled Classes</th>
                                 <th class="p-3.5 w-24">Status</th>
-                                <th class="p-3.5 text-center w-28 sm:w-32">Actions</th>
+                                <th class="p-3.5 text-center w-36">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="masterStudentTableBody" class="divide-y divide-slate-100 text-xs font-medium text-slate-800"></tbody>
@@ -524,7 +567,7 @@
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Weekly Schedule</span>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Weekly Schedule</span>
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900">KLC Classes Calendar</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Community Hall Kaura Manggis class sessions schedule.</p>
                     </div>
@@ -549,7 +592,7 @@
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Audit Trail</span>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Audit Trail</span>
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900">Attendance Audit Log</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Detailed session history with date, class topics, and learning links.</p>
                     </div>
@@ -567,7 +610,7 @@
                 <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                     <table class="w-full text-left border-collapse min-w-[750px] table-fixed">
                         <thead>
-                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-bold border-b border-slate-200">
+                            <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-extrabold border-b border-slate-200">
                                 <th class="p-3.5 w-[13%]">Date</th>
                                 <th class="p-3.5 w-[22%]">Student Name & ID</th>
                                 <th class="p-3.5 w-[18%]">Class</th>
@@ -586,7 +629,7 @@
         <section id="tab-reports" class="tab-content space-y-5">
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="pb-4 border-b border-slate-100">
-                    <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Analytics</span>
+                    <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Analytics</span>
                     <h2 class="text-lg sm:text-xl font-bold text-slate-900">Period & Performance Report</h2>
                     <p class="text-xs text-slate-500 mt-0.5 font-medium">Session hours, class attendance breakdown, and AI Gemini Summary.</p>
                 </div>
@@ -594,26 +637,26 @@
                 <!-- Report Filters -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 p-4 bg-slate-50 rounded-xl border border-slate-200">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Filter Type</label>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Filter Type</label>
                         <select id="reportTypeSelect" onchange="window.toggleReportMode()" class="touch-btn w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white cursor-pointer">
                             <option value="month">Monthly Report</option>
                             <option value="range">Custom Date Range</option>
                         </select>
                     </div>
                     <div id="monthSelectorWrapper">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Select Month & Year</label>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Select Month & Year</label>
                         <input type="month" id="reportMonthInput" onchange="window.renderReportData()" class="touch-btn w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white cursor-pointer">
                     </div>
                     <div id="startDateWrapper" class="hidden">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Start Date</label>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Start Date</label>
                         <input type="date" id="reportStartDate" onchange="window.renderReportData()" class="touch-btn w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white cursor-pointer">
                     </div>
                     <div id="endDateWrapper" class="hidden">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">End Date</label>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">End Date</label>
                         <input type="date" id="reportEndDate" onchange="window.renderReportData()" class="touch-btn w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white cursor-pointer">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Class Filter</label>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Class Filter</label>
                         <select id="reportClassSelect" onchange="window.renderReportData()" class="touch-btn w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold bg-white cursor-pointer">
                             <option value="">All Classes</option>
                         </select>
@@ -629,11 +672,11 @@
                 <!-- Per-Class Monthly Report Overview Table -->
                 <div id="perClassReportContainer" class="space-y-3 pt-1">
                     <div class="flex items-center justify-between">
-                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-table-list text-klc-600"></i>
                             <span>Per-Class Summary Breakdown</span>
                         </h3>
-                        <span id="perClassReportCountBadge" class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-klc-100 text-klc-800 border border-klc-200">
+                        <span id="perClassReportCountBadge" class="px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-klc-100 text-klc-800 border border-klc-200">
                             0 Classes
                         </span>
                     </div>
@@ -641,7 +684,7 @@
                     <div class="overflow-x-auto border border-slate-200 rounded-xl bg-white">
                         <table class="w-full text-left border-collapse text-xs min-w-[500px]">
                             <thead>
-                                <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-bold border-b border-slate-200">
+                                <tr class="bg-slate-100 text-slate-700 text-xs uppercase tracking-wider font-extrabold border-b border-slate-200">
                                     <th class="p-3.5">KLC Class Name & Code</th>
                                     <th class="p-3.5 text-center w-32">Sessions</th>
                                     <th class="p-3.5 text-center w-28">Total Hours</th>
@@ -658,7 +701,7 @@
                 <div id="aiSummaryBox" class="hidden my-6 p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-soft space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-klc-700 text-white flex items-center justify-center text-lg shrink-0">
+                            <div class="w-9 h-9 rounded-xl bg-klc-700 text-white flex items-center justify-center text-lg shrink-0 shadow-xs">
                                 <i class="fa-solid fa-star"></i>
                             </div>
                             <div>
@@ -666,13 +709,13 @@
                                 <p class="text-xs text-slate-500 font-medium">Qualitative Learning Progress Report</p>
                             </div>
                         </div>
-                        <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">Executive</span>
+                        <span class="px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-klc-100 text-klc-800 border border-klc-200">Executive</span>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch pt-1">
                         <div class="lg:col-span-5 p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
                             <div>
-                                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-0.5">Curriculum Distribution</h4>
+                                <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-wider mb-0.5">Curriculum Distribution</h4>
                                 <p id="aiChartSubtitle" class="text-xs text-slate-400 font-medium mb-3">Selected Period Breakdown</p>
                             </div>
                             
@@ -683,7 +726,7 @@
                                         <div class="w-full bg-slate-100 rounded-lg flex-grow flex items-end p-1 border border-slate-200 min-h-[100px]">
                                             <div id="aiEngBar" class="w-full bg-sky-500 rounded-md transition-all duration-700 min-h-[8px]" style="height: 0%;"></div>
                                         </div>
-                                        <span class="text-[11px] font-bold text-slate-800 mt-2 uppercase">English</span>
+                                        <span class="text-[11px] font-extrabold text-slate-800 mt-2 uppercase">English</span>
                                         <span id="aiEngSessSub" class="text-[10px] text-slate-400 font-medium">0 Sessions</span>
                                     </div>
 
@@ -692,7 +735,7 @@
                                         <div class="w-full bg-slate-100 rounded-lg flex-grow flex items-end p-1 border border-slate-200 min-h-[100px]">
                                             <div id="aiCompBar" class="w-full bg-emerald-500 rounded-md transition-all duration-700 min-h-[8px]" style="height: 0%;"></div>
                                         </div>
-                                        <span class="text-[11px] font-bold text-slate-800 mt-2 uppercase">Computer</span>
+                                        <span class="text-[11px] font-extrabold text-slate-800 mt-2 uppercase">Computer</span>
                                         <span id="aiCompSessSub" class="text-[10px] text-slate-400 font-medium">0 Sessions</span>
                                     </div>
                                 </div>
@@ -719,7 +762,7 @@
             <div class="bg-white rounded-2xl shadow-card border border-slate-200/80 p-5 sm:p-7 space-y-5">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                     <div>
-                        <span class="bg-klc-100 text-klc-800 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Integration</span>
+                        <span class="bg-klc-100 text-klc-800 text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border border-klc-200 inline-block mb-1">Integration</span>
                         <h2 class="text-lg sm:text-xl font-bold text-slate-900">Google Sheets & AI Integration</h2>
                         <p class="text-xs text-slate-500 mt-0.5 font-medium">Web App Deployment Endpoint, Gemini API Key, and Apps Script Code.</p>
                     </div>
@@ -751,7 +794,7 @@
 
                 <!-- Endpoint URL Input -->
                 <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Google Apps Script Web App URL</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">Google Apps Script Web App URL</label>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <input type="url" id="gasEndpointUrl" placeholder="https://script.google.com/macros/s/.../exec" class="touch-btn flex-grow px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-mono bg-white">
                         <button onclick="window.saveGasEndpoint()" class="touch-btn px-5 py-2.5 bg-klc-700 hover:bg-klc-800 text-white font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
@@ -961,7 +1004,7 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
   } catch(err) {
     return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  } finally {
+  } flex {
     lock.releaseLock();
   }
 }
@@ -1136,24 +1179,24 @@ function doGet(e) {
             
             <form id="formAddModule" onsubmit="window.handleSaveManualModule(event)" class="p-5 space-y-4 overflow-y-auto custom-scrollbar">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Select KLC Class</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Select KLC Class</label>
                     <select id="newModuleClassSelect" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-800 bg-white cursor-pointer">
                         <option value="">-- General / All Classes --</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Topic / Lesson Title</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Topic / Lesson Title</label>
                     <input type="text" id="newModuleTopicInput" required placeholder="E.g. Digital Literacy Chapter 1" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Module / Material Link (URL)</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Module / Material Link (URL)</label>
                     <input type="url" id="newModuleLinkInput" required placeholder="https://drive.google.com/..." class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-mono">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Short Description (Optional)</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Short Description (Optional)</label>
                     <textarea id="newModuleDescInput" rows="2" placeholder="Additional module notes..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-medium bg-slate-50"></textarea>
                 </div>
 
@@ -1179,17 +1222,17 @@ function doGet(e) {
                 <input type="hidden" id="studentEditId" value="">
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Student ID</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Student ID</label>
                     <input type="text" id="studentIdInput" required placeholder="E.g., SD-B1-07" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 bg-slate-50">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Full Student Name</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Full Student Name</label>
                     <input type="text" id="studentNameInput" required placeholder="Enter student full name..." class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Enrolled Classes</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Enrolled Classes</label>
                     <div id="modalClassCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 max-h-40 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
@@ -1213,17 +1256,17 @@ function doGet(e) {
             
             <form id="formAddClass" onsubmit="window.handleSaveNewClass(event)" class="p-5 space-y-4 overflow-y-auto custom-scrollbar">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Class Code ID</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Class Code ID</label>
                     <input type="text" id="newClassIdInput" required placeholder="E.g., ENG-B3 or COMP-A1" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold uppercase text-slate-800 bg-slate-50">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Official Class Name</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Official Class Name</label>
                     <input type="text" id="newClassNameInput" required placeholder="E.g., Basic English Conversation" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Category</label>
                     <select id="newClassCategorySelect" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white cursor-pointer">
                         <option value="English">English</option>
                         <option value="Computer">Computer</option>
@@ -1231,12 +1274,12 @@ function doGet(e) {
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Schedule & Days</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Schedule & Days</label>
                     <input type="text" id="newClassScheduleInput" required placeholder="E.g. Monday, Wednesday (14:00 - 15:30)" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Room / Venue</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Room / Venue</label>
                     <input type="text" id="newClassRoomInput" required value="Community Hall Kaura Manggis" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs">
                 </div>
 
@@ -1262,17 +1305,17 @@ function doGet(e) {
                 <input type="hidden" id="modalClassEditId" value="">
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Class Code ID</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Class Code ID</label>
                     <input type="text" id="classIdInput" readonly class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-mono font-bold text-slate-500 bg-slate-100">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Official Class Name</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Official Class Name</label>
                     <input type="text" id="classNameInput" required class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Category</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Category</label>
                     <select id="classCategorySelect" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white cursor-pointer">
                         <option value="English">English</option>
                         <option value="Computer">Computer</option>
@@ -1280,12 +1323,12 @@ function doGet(e) {
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Schedule & Days</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Schedule & Days</label>
                     <input type="text" id="classScheduleInput" required placeholder="E.g. Monday, Wednesday (14:00 - 15:30)" class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs">
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Room / Venue</label>
+                    <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1">Room / Venue</label>
                     <input type="text" id="classRoomInput" required class="touch-btn w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs">
                 </div>
 
@@ -1300,7 +1343,7 @@ function doGet(e) {
     <!-- Generic Modal Delete/Confirm Custom Alternative -->
     <div id="modalDeleteConfirm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-5 text-center border border-slate-200">
-            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mx-auto text-xl mb-3">
+            <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mx-auto text-xl mb-3 shadow-xs">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
             <h3 id="deleteModalTitle" class="font-bold text-slate-900 text-base">Confirm Action</h3>
@@ -1312,44 +1355,44 @@ function doGet(e) {
         </div>
     </div>
 
-    <!-- Modal Detail Student Summary Report -->
+    <!-- Modal Detail Student Summary Report & ID Badge Card -->
     <div id="modalStudentSummary" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
         <div class="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh] border border-slate-200">
             <div id="studentReportCardArea" class="bg-white p-5 sm:p-6 space-y-4 overflow-y-auto custom-scrollbar">
-                <div class="bg-klc-950 p-4 rounded-xl text-white flex items-center justify-between shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center font-bold text-base shrink-0">K</div>
+                <div class="bg-klc-950 p-4 rounded-xl text-white flex items-center justify-between shadow-sm relative overflow-hidden">
+                    <div class="flex items-center space-x-3 z-10">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-klc-500 flex items-center justify-center font-extrabold text-lg shrink-0 border border-white/20">K</div>
                         <div>
                             <h3 id="modalSummaryName" class="font-bold text-sm sm:text-base leading-tight">Student Attendance History</h3>
-                            <p id="modalSummaryId" class="text-xs text-emerald-300 font-mono mt-0.5 font-semibold"></p>
+                            <p id="modalSummaryId" class="text-xs text-emerald-300 font-mono mt-0.5 font-bold"></p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="text-[10px] uppercase font-semibold text-slate-300 block">Report Card</span>
-                        <span class="text-xs font-bold text-emerald-400">KLC 2026/2027</span>
+                    <div class="text-right z-10">
+                        <span class="text-[10px] uppercase font-bold text-slate-300 block tracking-wider">Official Badge</span>
+                        <span class="text-xs font-extrabold text-emerald-400">KLC 2026/2027</span>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-3 text-center p-3 bg-slate-50 rounded-xl border border-slate-200">
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Present</p>
-                        <p id="modalCountHadir" class="text-lg sm:text-xl font-bold text-emerald-600 mt-0.5">0</p>
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Present</p>
+                        <p id="modalCountHadir" class="text-lg sm:text-xl font-black text-emerald-600 mt-0.5">0</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Absent</p>
-                        <p id="modalCountTidakHadir" class="text-lg sm:text-xl font-bold text-rose-500 mt-0.5">0</p>
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Absent</p>
+                        <p id="modalCountTidakHadir" class="text-lg sm:text-xl font-black text-rose-500 mt-0.5">0</p>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Sick</p>
-                        <p id="modalCountSakit" class="text-lg sm:text-xl font-bold text-amber-500 mt-0.5">0</p>
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Sick</p>
+                        <p id="modalCountSakit" class="text-lg sm:text-xl font-black text-amber-500 mt-0.5">0</p>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Session Log History</h4>
+                    <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Session Log History</h4>
                     <div class="border border-slate-200 rounded-xl overflow-x-auto text-xs bg-white custom-scrollbar">
                         <table class="w-full text-left border-collapse min-w-[320px]">
-                            <thead class="bg-slate-100 font-bold text-slate-700 border-b border-slate-200">
+                            <thead class="bg-slate-100 font-extrabold text-slate-700 border-b border-slate-200">
                                 <tr>
                                     <th class="py-2.5 px-3 w-24 whitespace-nowrap">Date</th>
                                     <th class="py-2.5 px-3 whitespace-nowrap">Class</th>
@@ -1384,7 +1427,44 @@ function doGet(e) {
         window.currentAttendanceState = {};
         window.pendingActionCallback = null;
 
-        // Validation & Helper Utility Functions
+        /* Helper Normalisasi Status Kehadiran (Multi-Bahasa & Case Insensitive) */
+        window.isStatusPresent = function(status) {
+            if (!status) return false;
+            const s = String(status).trim().toLowerCase();
+            return s === 'present' || s === 'hadir';
+        };
+
+        window.isStatusAbsent = function(status) {
+            if (!status) return false;
+            const s = String(status).trim().toLowerCase();
+            return s === 'absent' || s === 'tidak hadir' || s === 'alpa';
+        };
+
+        window.isStatusSick = function(status) {
+            if (!status) return false;
+            const s = String(status).trim().toLowerCase();
+            return s === 'sick' || s === 'sakit' || s === 'izin';
+        };
+
+        /* Helper Menentukan Kategori Kelas (English vs Computer) */
+        window.getClassCategory = function(classId, className) {
+            const cId = String(classId || '').trim().toUpperCase();
+            const cName = String(className || '').trim().toUpperCase();
+
+            // Cek dari entitas kelas teregistrasi
+            const matchedClass = (window.klcClasses || []).find(c => String(c.id || '').toUpperCase() === cId);
+            if (matchedClass && matchedClass.category) {
+                const cat = String(matchedClass.category).trim().toLowerCase();
+                if (cat.includes('eng')) return 'English';
+                if (cat.includes('comp')) return 'Computer';
+            }
+
+            if (cId.includes('ENG') || cName.includes('ENGLISH')) return 'English';
+            if (cId.includes('COMP') || cName.includes('COMPUTER')) return 'Computer';
+
+            return 'English'; // Default
+        };
+
         window.isValidRealClass = function(id, name) {
             return !!(id && String(id).trim() !== '');
         };
@@ -1506,7 +1586,7 @@ function doGet(e) {
             window.closeConfirmModal();
         };
 
-        /* Date Formatter Utilities */
+        /* Date Formatting Helpers */
         window.formatDisplayDate = function(dateStr) {
             if (!dateStr) return '-';
             const s = String(dateStr).trim();
@@ -1615,6 +1695,359 @@ function doGet(e) {
             if (tabId === 'tab-absensi') window.loadAttendanceStudentList();
         };
 
+        window.loadAttendanceStudentList = function() {
+            const selectKelas = document.getElementById('absensiSelectKelas');
+            const dateInput = document.getElementById('absensiTanggal');
+            const tbody = document.getElementById('attendanceTableBody');
+            const mobileCardList = document.getElementById('attendanceMobileCardList');
+
+            if (!selectKelas || !dateInput) return;
+
+            const classId = selectKelas.value.trim().toUpperCase();
+            const tanggal = dateInput.value;
+
+            if (!classId) {
+                window.clearAttendanceFormView();
+                return;
+            }
+
+            const filteredStudents = window.getUniqueStudents().filter(s => {
+                if (!s) return false;
+                if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
+                
+                if (Array.isArray(s.classes)) {
+                    return s.classes.some(item => {
+                        const cId = typeof item === 'object' ? item.id : item;
+                        return cId && String(cId).trim().toUpperCase() === classId;
+                    });
+                }
+                return false;
+            });
+
+            const countBadge = document.getElementById('countClassStudents');
+            if (countBadge) countBadge.innerText = `${filteredStudents.length} Students`;
+
+            const existingLog = window.logs.filter(l => {
+                const lCode = String(l.kodeKelas || '').toUpperCase();
+                const lDate = window.formatDisplayDate(l.tanggal);
+                return lCode === classId && lDate === tanggal;
+            });
+
+            const notice = document.getElementById('alreadySavedNotice');
+            if (notice) {
+                if (existingLog.length > 0) {
+                    notice.classList.remove('hidden');
+                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
+                    if (teacherNotesElem && existingLog[0].teacherNotes) {
+                        teacherNotesElem.value = existingLog[0].teacherNotes;
+                    }
+                    const topicElem = document.getElementById('absensiMateri');
+                    if (topicElem && existingLog[0].materi) {
+                        topicElem.value = existingLog[0].materi;
+                    }
+                    const modulLinkElem = document.getElementById('absensiModulLink');
+                    if (modulLinkElem && (existingLog[0].modulLink || existingLog[0].moduleLink)) {
+                        modulLinkElem.value = existingLog[0].modulLink || existingLog[0].moduleLink;
+                    }
+                } else {
+                    notice.classList.add('hidden');
+                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
+                    if (teacherNotesElem) teacherNotesElem.value = '';
+                    const topicElem = document.getElementById('absensiMateri');
+                    if (topicElem) topicElem.value = '';
+                    const modulLinkElem = document.getElementById('absensiModulLink');
+                    if (modulLinkElem) modulLinkElem.value = '';
+                }
+            }
+
+            /* At-risk student banner check khusus untuk kelas yang sedang dibuka */
+            const atRiskBanner = document.getElementById('atRiskAttendanceBanner');
+            let lowRateStudents = [];
+            filteredStudents.forEach(st => {
+                const stuClassLogs = window.logs.filter(l => String(l.idSiswa) === String(st.id) && String(l.kodeKelas || '').toUpperCase() === classId);
+                const total = stuClassLogs.length;
+                const present = stuClassLogs.filter(l => window.isStatusPresent(l.status)).length;
+                const rate = total > 0 ? Math.round((present / total) * 100) : 100;
+                if (rate < 75 && total > 0) lowRateStudents.push(st.name);
+            });
+
+            if (atRiskBanner) {
+                if (lowRateStudents.length > 0) {
+                    atRiskBanner.classList.remove('hidden');
+                    document.getElementById('atRiskStudentsText').innerText = `Attention: ${lowRateStudents.length} student(s) in this class (${lowRateStudents.slice(0,2).join(', ')}${lowRateStudents.length > 2 ? '...' : ''}) currently have attendance rate below 75%.`;
+                } else {
+                    atRiskBanner.classList.add('hidden');
+                }
+            }
+
+            if (filteredStudents.length === 0) {
+                const emptyHtml = `<div class="p-6 text-center text-slate-400 text-xs font-medium">No active students enrolled in this class.</div>`;
+                if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs font-medium">No active students enrolled in this class.</td></tr>`;
+                if (mobileCardList) mobileCardList.innerHTML = emptyHtml;
+                return;
+            }
+
+            window.currentAttendanceState = {};
+
+            let tableHtml = '';
+            let cardHtml = '';
+
+            filteredStudents.forEach((stu, idx) => {
+                const prevLog = existingLog.find(l => String(l.idSiswa) === String(stu.id));
+                const currentStatus = prevLog ? (prevLog.status || 'Present') : null;
+                const prevRemark = prevLog ? (prevLog.remarks || '') : '';
+
+                window.currentAttendanceState[stu.id] = {
+                    name: stu.name,
+                    status: currentStatus,
+                    remark: prevRemark
+                };
+
+                const isPresent = window.isStatusPresent(currentStatus);
+                const isAbsent = window.isStatusAbsent(currentStatus);
+                const isSick = window.isStatusSick(currentStatus);
+
+                tableHtml += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-3 px-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
+                        <td class="py-3 px-4 font-mono font-bold text-klc-700 text-xs">${stu.id}</td>
+                        <td class="py-3 px-4 font-bold text-slate-900 text-xs sm:text-sm">${stu.name}</td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Present')" id="btn-${stu.id}-Present" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${isPresent ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Present</button>
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Absent')" id="btn-${stu.id}-Absent" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${isAbsent ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Absent</button>
+                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Sick')" id="btn-${stu.id}-Sick" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${isSick ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Sick</button>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <input type="text" id="remark-${stu.id}" value="${prevRemark}" placeholder="Add note..." onchange="window.updateStudentRemark('${stu.id}', this.value)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-medium bg-white">
+                        </td>
+                    </tr>
+                `;
+
+                cardHtml += `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-soft space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center justify-center shrink-0 border border-slate-200">${idx + 1}</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm leading-tight">${stu.name}</h4>
+                                    <p class="font-mono text-[10px] font-bold text-klc-700">${stu.id}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200">
+                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Present')" id="btn-m-${stu.id}-Present" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isPresent ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                                <i class="fa-solid fa-check text-xs"></i> Present
+                            </button>
+                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Absent')" id="btn-m-${stu.id}-Absent" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isAbsent ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                                <i class="fa-solid fa-xmark text-xs"></i> Absent
+                            </button>
+                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Sick')" id="btn-m-${stu.id}-Sick" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isSick ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                                <i class="fa-solid fa-briefcase-medical text-xs"></i> Sick
+                            </button>
+                        </div>
+
+                        <div>
+                            <input type="text" id="remark-m-${stu.id}" value="${prevRemark}" placeholder="Student note/remark..." onchange="window.updateStudentRemark('${stu.id}', this.value)" class="touch-btn w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-medium bg-white">
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (tbody) tbody.innerHTML = tableHtml;
+            if (mobileCardList) mobileCardList.innerHTML = cardHtml;
+
+            window.updateLiveAttendancePill();
+        };
+
+        window.updateLiveAttendancePill = function() {
+            const counterPill = document.getElementById('liveAttendanceCounterPill');
+            if (!counterPill) return;
+
+            const values = Object.values(window.currentAttendanceState || {});
+            if (values.length === 0) {
+                counterPill.classList.add('hidden');
+                return;
+            }
+
+            counterPill.classList.remove('hidden');
+            let pCount = values.filter(v => window.isStatusPresent(v.status)).length;
+            let aCount = values.filter(v => window.isStatusAbsent(v.status)).length;
+            let sCount = values.filter(v => window.isStatusSick(v.status)).length;
+
+            counterPill.innerText = `Present: ${pCount} | Absent: ${aCount} | Sick: ${sCount}`;
+        };
+
+        window.markAllStatus = function(status) {
+            Object.keys(window.currentAttendanceState).forEach(sId => {
+                window.updateStudentStatus(sId, status);
+            });
+        };
+
+        window.updateStudentStatus = function(studentId, status) {
+            if (!window.currentAttendanceState[studentId]) return;
+            window.currentAttendanceState[studentId].status = status;
+
+            ['Present', 'Absent', 'Sick'].forEach(st => {
+                const btn = document.getElementById(`btn-${studentId}-${st}`);
+                if (btn) {
+                    if (st === status) {
+                        btn.className = `status-btn px-3 py-1 rounded-lg text-xs font-bold transition shadow-xs ${st === 'Present' ? 'bg-emerald-600 text-white' : st === 'Absent' ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'}`;
+                    } else {
+                        btn.className = 'status-btn px-3 py-1 rounded-lg text-xs font-bold transition text-slate-600 hover:text-slate-900';
+                    }
+                }
+
+                const btnM = document.getElementById(`btn-m-${studentId}-${st}`);
+                if (btnM) {
+                    if (st === status) {
+                        btnM.className = `touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 shadow-xs ${st === 'Present' ? 'bg-emerald-600 text-white' : st === 'Absent' ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'}`;
+                    } else {
+                        btnM.className = 'touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900';
+                    }
+                }
+            });
+
+            window.updateLiveAttendancePill();
+        };
+
+        window.updateStudentRemark = function(studentId, remarkVal) {
+            if (window.currentAttendanceState[studentId]) {
+                window.currentAttendanceState[studentId].remark = remarkVal;
+            }
+            const deskInput = document.getElementById(`remark-${studentId}`);
+            const mobInput = document.getElementById(`remark-m-${studentId}`);
+            if (deskInput) deskInput.value = remarkVal;
+            if (mobInput) mobInput.value = remarkVal;
+        };
+
+        window.filterAttendanceList = function() {
+            const query = (document.getElementById('attendanceSearchInput').value || '').toLowerCase();
+            
+            const rows = document.querySelectorAll('#attendanceTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+
+            const cards = document.querySelectorAll('#attendanceMobileCardList > div');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? '' : 'none';
+            });
+        };
+
+        window.submitAttendance = function() {
+            const selectKelas = document.getElementById('absensiSelectKelas');
+            const dateInput = document.getElementById('absensiTanggal');
+            const topicInput = document.getElementById('absensiMateri');
+            const teacherNotesInput = document.getElementById('absensiTeacherNotes');
+            const modulLinkInput = document.getElementById('absensiModulLink');
+
+            if (!selectKelas || !dateInput) return;
+
+            const classId = selectKelas.value.trim().toUpperCase();
+            const tanggal = dateInput.value;
+            const topic = topicInput ? topicInput.value.trim() : '';
+            const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
+            const modulLink = modulLinkInput ? modulLinkInput.value.trim() : '';
+
+            if (!classId) {
+                window.showToast('Please select a KLC class.', 'warning');
+                return;
+            }
+            if (!tanggal) {
+                window.showToast('Please select a session date.', 'warning');
+                return;
+            }
+
+            const studentIds = Object.keys(window.currentAttendanceState);
+            if (studentIds.length === 0) {
+                window.showToast('No students loaded for attendance recording.', 'warning');
+                return;
+            }
+
+            const className = window.getCleanClassName(classId);
+
+            window.logs = window.logs.filter(l => {
+                const lCode = String(l.kodeKelas || '').toUpperCase();
+                const lDate = window.formatDisplayDate(l.tanggal);
+                return !(lCode === classId && lDate === tanggal);
+            });
+
+            const newRecords = [];
+            studentIds.forEach(sId => {
+                const item = window.currentAttendanceState[sId];
+                const remarkVal = item.remark || '';
+
+                const logRecord = {
+                    timestamp: new Date().toISOString(),
+                    tanggal: tanggal,
+                    idSiswa: sId,
+                    namaSiswa: item.name,
+                    kodeKelas: classId,
+                    namaKelas: className,
+                    status: item.status || 'Present',
+                    materi: topic,
+                    teacherNotes: teacherNotes,
+                    modulLink: modulLink,
+                    moduleLink: modulLink,
+                    remarks: remarkVal
+                };
+
+                newRecords.push(logRecord);
+                window.logs.push(logRecord);
+            });
+
+            window.saveLogsToStorage();
+            window.renderSummaryTable();
+            window.renderLogTable();
+            window.renderMateriGrid();
+
+            let gasUrl = localStorage.getItem('klc_gas_url');
+            if (gasUrl) {
+                window.showToast('Syncing attendance to Google Sheets...', 'info');
+                fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ records: newRecords })
+                }).then(() => {
+                    window.showToast('Attendance saved and synced!', 'success');
+                }).catch(err => {
+                    console.warn(err);
+                    window.showToast('Saved locally. Google Sheet sync queued.', 'warning');
+                });
+            } else {
+                window.showToast('Attendance saved locally!', 'success');
+            }
+
+            selectKelas.value = "";
+            if (topicInput) topicInput.value = "";
+            if (teacherNotesInput) teacherNotesInput.value = "";
+            if (modulLinkInput) modulLinkInput.value = "";
+            window.currentAttendanceState = {};
+            window.clearAttendanceFormView();
+            window.updateDashboardStats();
+        };
+
+        window.clearAttendanceFormView = function() {
+            const tbody = document.getElementById('attendanceTableBody');
+            const mobileCardList = document.getElementById('attendanceMobileCardList');
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs font-medium">Please select a KLC Class above.</td></tr>`;
+            }
+            if (mobileCardList) {
+                mobileCardList.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs font-medium">Please select a KLC Class above.</div>`;
+            }
+            const countBadge = document.getElementById('countClassStudents');
+            if (countBadge) countBadge.innerText = '0 Students';
+            const counterPill = document.getElementById('liveAttendanceCounterPill');
+            if (counterPill) counterPill.classList.add('hidden');
+        };
+
         window.getUniqueLearningModules = function() {
             const modulesMap = new Map();
 
@@ -1700,8 +2133,8 @@ function doGet(e) {
             const compStat = document.getElementById('statCompModules');
 
             if (totalStat) totalStat.innerText = allModules.length;
-            if (engStat) engStat.innerText = allModules.filter(m => m.classId.includes('ENG') || m.className.toUpperCase().includes('ENG')).length;
-            if (compStat) compStat.innerText = allModules.filter(m => m.classId.includes('COMP') || m.className.toUpperCase().includes('COMP')).length;
+            if (engStat) engStat.innerText = allModules.filter(m => window.getClassCategory(m.classId, m.className) === 'English').length;
+            if (compStat) compStat.innerText = allModules.filter(m => window.getClassCategory(m.classId, m.className) === 'Computer').length;
 
             if (filtered.length === 0) {
                 container.innerHTML = `
@@ -1721,7 +2154,8 @@ function doGet(e) {
                     hrefUrl = 'https://' + hrefUrl;
                 }
 
-                const isEnglish = mod.classId.includes('ENG') || mod.className.toUpperCase().includes('ENGLISH');
+                const catName = window.getClassCategory(mod.classId, mod.className);
+                const isEnglish = catName === 'English';
                 const badgeColor = isEnglish ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200';
                 const classLabel = mod.classId ? window.getClassName(mod.classId, mod.className) : 'General / All Classes';
                 const cleanDate = window.parseToYYYYMMDD(mod.date);
@@ -1730,8 +2164,8 @@ function doGet(e) {
                     <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-soft flex flex-col justify-between hover:border-amber-400 transition group">
                         <div class="space-y-2">
                             <div class="flex items-center justify-between gap-2">
-                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md border ${badgeColor}">
-                                    ${isEnglish ? 'English' : 'Computer'}
+                                <span class="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md border ${badgeColor}">
+                                    ${catName}
                                 </span>
                                 <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200 flex items-center gap-1">
                                     <i class="fa-solid fa-layer-group text-[8px]"></i>
@@ -1892,14 +2326,15 @@ function doGet(e) {
                         return false;
                     }).length;
 
-                    const isEnglish = String(cls.category || cls.id).toUpperCase().includes('ENG');
+                    const catName = window.getClassCategory(cls.id, cls.name);
+                    const isEnglish = catName === 'English';
 
                     html += `
                         <div class="bg-white rounded-xl p-3.5 border border-slate-200 shadow-soft flex flex-col justify-between group">
                             <div>
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${isEnglish ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}">
-                                        ${isEnglish ? 'English' : 'Computer'}
+                                    <span class="px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md ${isEnglish ? 'bg-sky-50 text-sky-700 border border-sky-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}">
+                                        ${catName}
                                     </span>
                                     <div class="flex items-center gap-1">
                                         <span class="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">${cls.id}</span>
@@ -1944,7 +2379,7 @@ function doGet(e) {
             document.getElementById('modalClassEditId').value = cls.id;
             document.getElementById('classIdInput').value = cls.id;
             document.getElementById('classNameInput').value = cls.name;
-            document.getElementById('classCategorySelect').value = cls.category || (cls.id.toUpperCase().includes('ENG') ? 'English' : 'Computer');
+            document.getElementById('classCategorySelect').value = cls.category || window.getClassCategory(cls.id, cls.name);
             document.getElementById('classScheduleInput').value = cls.schedule || '';
             document.getElementById('classRoomInput').value = cls.room || 'Community Hall Kaura Manggis';
 
@@ -2006,7 +2441,7 @@ function doGet(e) {
             e.preventDefault();
             const id = document.getElementById('newClassIdInput').value.trim().toUpperCase();
             const name = document.getElementById('newClassNameInput').value.trim();
-            const category = id.startsWith('ENG') ? 'English' : (id.startsWith('COMP') ? 'Computer' : document.getElementById('newClassCategorySelect').value);
+            const category = document.getElementById('newClassCategorySelect').value || window.getClassCategory(id, name);
             const schedule = document.getElementById('newClassScheduleInput').value.trim();
             const room = document.getElementById('newClassRoomInput').value.trim();
 
@@ -2037,7 +2472,7 @@ function doGet(e) {
             e.preventDefault();
             const classId = document.getElementById('modalClassEditId').value;
             const name = document.getElementById('classNameInput').value.trim();
-            const category = classId.toUpperCase().startsWith('ENG') ? 'English' : document.getElementById('classCategorySelect').value;
+            const category = document.getElementById('classCategorySelect').value;
             const schedule = document.getElementById('classScheduleInput').value.trim();
             const room = document.getElementById('classRoomInput').value.trim();
 
@@ -2185,16 +2620,8 @@ function doGet(e) {
                 if (s.classId) {
                     const cid = String(s.classId).trim().toUpperCase();
                     let cname = String(s.className || '').trim();
-                    if (cid.startsWith('ENG') && cname.toUpperCase().includes('COMPUTER')) {
-                        cname = 'English Class ' + cid;
-                    }
                     if (cid && window.isValidRealClass(cid, cid)) {
-                        let finalName = cname;
-                        if (!finalName || (cid.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) || (cid.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH'))) {
-                            if (cid.startsWith('ENG')) finalName = 'English Class ' + cid;
-                            else if (cid.startsWith('COMP')) finalName = 'Computer Class ' + cid;
-                            else finalName = cid;
-                        }
+                        let finalName = cname || cid;
                         if (!validClassesMap.has(cid)) validClassesMap.set(cid, { id: cid, name: finalName });
                     }
                 }
@@ -2204,13 +2631,8 @@ function doGet(e) {
                         let cname = typeof c === 'object' ? (c.name || c.className) : '';
                         if (cid) {
                             const upperId = String(cid).trim().toUpperCase();
-                            if (upperId.startsWith('ENG') && cname.toUpperCase().includes('COMPUTER')) {
-                                cname = 'English Class ' + upperId;
-                            }
                             if (window.isValidRealClass(upperId, upperId) && !validClassesMap.has(upperId)) {
                                 let finalName = cname || upperId;
-                                if (upperId.startsWith('ENG') && finalName.toUpperCase().includes('COMPUTER')) finalName = 'English ' + upperId;
-                                if (upperId.startsWith('COMP') && finalName.toUpperCase().includes('ENGLISH')) finalName = 'Computer ' + upperId;
                                 validClassesMap.set(upperId, { id: upperId, name: finalName });
                             }
                         }
@@ -2221,9 +2643,6 @@ function doGet(e) {
             (window.klcClasses || []).forEach(c => {
                 const id = String(c.id || '').trim().toUpperCase();
                 let name = String(c.name || '').trim();
-                if (id.startsWith('ENG') && name.toUpperCase().includes('COMPUTER')) {
-                    name = name.replace(/computer/gi, 'English');
-                }
                 if (!id) return;
                 if (!window.isValidRealClass(id, name)) return;
                 if (!validClassesMap.has(id)) {
@@ -2248,316 +2667,6 @@ function doGet(e) {
             if (reportClassSelect) reportClassSelect.innerHTML = allOptionHtml;
             if (materiClassSelect) materiClassSelect.innerHTML = '<option value="">All Classes</option>' + optionsHtml;
             if (newModuleClassSelect) newModuleClassSelect.innerHTML = '<option value="">-- General / All Classes --</option>' + optionsHtml;
-        };
-
-        window.loadAttendanceStudentList = function() {
-            const selectKelas = document.getElementById('absensiSelectKelas');
-            const dateInput = document.getElementById('absensiTanggal');
-            const tbody = document.getElementById('attendanceTableBody');
-            const mobileCardList = document.getElementById('attendanceMobileCardList');
-
-            if (!selectKelas || !dateInput) return;
-
-            const classId = selectKelas.value.trim().toUpperCase();
-            const tanggal = dateInput.value;
-
-            if (!classId) {
-                window.clearAttendanceFormView();
-                return;
-            }
-
-            const filteredStudents = window.getUniqueStudents().filter(s => {
-                if (!s) return false;
-                if (s.status && s.status !== 'Active' && s.status !== 'Aktif') return false;
-                
-                if (Array.isArray(s.classes)) {
-                    return s.classes.some(item => {
-                        const cId = typeof item === 'object' ? item.id : item;
-                        return cId && String(cId).trim().toUpperCase() === classId;
-                    });
-                }
-                return false;
-            });
-
-            const countBadge = document.getElementById('countClassStudents');
-            if (countBadge) countBadge.innerText = `${filteredStudents.length} Students`;
-
-            const existingLog = window.logs.filter(l => {
-                const lCode = String(l.kodeKelas || '').toUpperCase();
-                const lDate = window.formatDisplayDate(l.tanggal);
-                return lCode === classId && lDate === tanggal;
-            });
-
-            const notice = document.getElementById('alreadySavedNotice');
-            
-            if (notice) {
-                if (existingLog.length > 0) {
-                    notice.classList.remove('hidden');
-                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
-                    if (teacherNotesElem && existingLog[0].teacherNotes) {
-                        teacherNotesElem.value = existingLog[0].teacherNotes;
-                    }
-                    const topicElem = document.getElementById('absensiMateri');
-                    if (topicElem && existingLog[0].materi) {
-                        topicElem.value = existingLog[0].materi;
-                    }
-                    const modulLinkElem = document.getElementById('absensiModulLink');
-                    if (modulLinkElem && (existingLog[0].modulLink || existingLog[0].moduleLink)) {
-                        modulLinkElem.value = existingLog[0].modulLink || existingLog[0].moduleLink;
-                    }
-                } else {
-                    notice.classList.add('hidden');
-                    const teacherNotesElem = document.getElementById('absensiTeacherNotes');
-                    if (teacherNotesElem) teacherNotesElem.value = '';
-                    const topicElem = document.getElementById('absensiMateri');
-                    if (topicElem) topicElem.value = '';
-                    const modulLinkElem = document.getElementById('absensiModulLink');
-                    if (modulLinkElem) modulLinkElem.value = '';
-                }
-            }
-
-            if (filteredStudents.length === 0) {
-                const emptyHtml = `<div class="p-6 text-center text-slate-400 text-xs font-medium">No active students enrolled in this class.</div>`;
-                if (tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs font-medium">No active students enrolled in this class.</td></tr>`;
-                if (mobileCardList) mobileCardList.innerHTML = emptyHtml;
-                return;
-            }
-
-            window.currentAttendanceState = {};
-
-            let tableHtml = '';
-            let cardHtml = '';
-
-            filteredStudents.forEach((stu, idx) => {
-                const prevLog = existingLog.find(l => String(l.idSiswa) === String(stu.id));
-                const currentStatus = prevLog ? (prevLog.status || 'Present') : null;
-                const prevRemark = prevLog ? (prevLog.remarks || '') : '';
-
-                window.currentAttendanceState[stu.id] = {
-                    name: stu.name,
-                    status: currentStatus,
-                    remark: prevRemark
-                };
-
-                tableHtml += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="py-3 px-4 text-center font-bold text-slate-400 text-xs">${idx + 1}</td>
-                        <td class="py-3 px-4 font-mono font-bold text-klc-700 text-xs">${stu.id}</td>
-                        <td class="py-3 px-4 font-bold text-slate-900 text-xs sm:text-sm">${stu.name}</td>
-                        <td class="py-3 px-4 text-center">
-                            <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
-                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Present')" id="btn-${stu.id}-Present" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${currentStatus === 'Present' || currentStatus === 'Hadir' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Present</button>
-                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Absent')" id="btn-${stu.id}-Absent" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${currentStatus === 'Absent' || currentStatus === 'Tidak Hadir' ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Absent</button>
-                                <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Sick')" id="btn-${stu.id}-Sick" class="status-btn px-3 py-1 rounded-lg text-xs font-bold transition ${currentStatus === 'Sick' || currentStatus === 'Sakit' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">Sick</button>
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 text-right">
-                            <input type="text" id="remark-${stu.id}" value="${prevRemark}" placeholder="Add note..." onchange="window.updateStudentRemark('${stu.id}', this.value)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-medium bg-white">
-                        </td>
-                    </tr>
-                `;
-
-                const isPresent = currentStatus === 'Present' || currentStatus === 'Hadir';
-                const isAbsent = currentStatus === 'Absent' || currentStatus === 'Tidak Hadir';
-                const isSick = currentStatus === 'Sick' || currentStatus === 'Sakit';
-
-                cardHtml += `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-soft space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-xs font-bold flex items-center justify-center shrink-0 border border-slate-200">${idx + 1}</span>
-                                <div>
-                                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm leading-tight">${stu.name}</h4>
-                                    <p class="font-mono text-[10px] font-bold text-klc-700">${stu.id}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200">
-                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Present')" id="btn-m-${stu.id}-Present" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isPresent ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
-                                <i class="fa-solid fa-check text-xs"></i> Present
-                            </button>
-                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Absent')" id="btn-m-${stu.id}-Absent" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isAbsent ? 'bg-rose-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
-                                <i class="fa-solid fa-xmark text-xs"></i> Absent
-                            </button>
-                            <button type="button" onclick="window.updateStudentStatus('${stu.id}', 'Sick')" id="btn-m-${stu.id}-Sick" class="touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 ${isSick ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
-                                <i class="fa-solid fa-briefcase-medical text-xs"></i> Sick
-                            </button>
-                        </div>
-
-                        <div>
-                            <input type="text" id="remark-m-${stu.id}" value="${prevRemark}" placeholder="Student note/remark..." onchange="window.updateStudentRemark('${stu.id}', this.value)" class="touch-btn w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-medium bg-white">
-                        </div>
-                    </div>
-                `;
-            });
-
-            if (tbody) tbody.innerHTML = tableHtml;
-            if (mobileCardList) mobileCardList.innerHTML = cardHtml;
-        };
-
-        window.markAllStatus = function(status) {
-            Object.keys(window.currentAttendanceState).forEach(sId => {
-                window.updateStudentStatus(sId, status);
-            });
-        };
-
-        window.updateStudentStatus = function(studentId, status) {
-            if (!window.currentAttendanceState[studentId]) return;
-            window.currentAttendanceState[studentId].status = status;
-
-            ['Present', 'Absent', 'Sick'].forEach(st => {
-                const btn = document.getElementById(`btn-${studentId}-${st}`);
-                if (btn) {
-                    if (st === status) {
-                        btn.className = `status-btn px-3 py-1 rounded-lg text-xs font-bold transition shadow-xs ${st === 'Present' ? 'bg-emerald-600 text-white' : st === 'Absent' ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'}`;
-                    } else {
-                        btn.className = 'status-btn px-3 py-1 rounded-lg text-xs font-bold transition text-slate-600 hover:text-slate-900';
-                    }
-                }
-
-                const btnM = document.getElementById(`btn-m-${studentId}-${st}`);
-                if (btnM) {
-                    if (st === status) {
-                        btnM.className = `touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 shadow-xs ${st === 'Present' ? 'bg-emerald-600 text-white' : st === 'Absent' ? 'bg-rose-600 text-white' : 'bg-amber-500 text-white'}`;
-                    } else {
-                        btnM.className = 'touch-btn text-xs font-bold rounded-lg py-1.5 transition flex items-center justify-center gap-1 text-slate-600 hover:text-slate-900';
-                    }
-                }
-            });
-        };
-
-        window.updateStudentRemark = function(studentId, remarkVal) {
-            if (window.currentAttendanceState[studentId]) {
-                window.currentAttendanceState[studentId].remark = remarkVal;
-            }
-            const deskInput = document.getElementById(`remark-${studentId}`);
-            const mobInput = document.getElementById(`remark-m-${studentId}`);
-            if (deskInput) deskInput.value = remarkVal;
-            if (mobInput) mobInput.value = remarkVal;
-        };
-
-        window.filterAttendanceList = function() {
-            const query = (document.getElementById('attendanceSearchInput').value || '').toLowerCase();
-            
-            const rows = document.querySelectorAll('#attendanceTableBody tr');
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(query) ? '' : 'none';
-            });
-
-            const cards = document.querySelectorAll('#attendanceMobileCardList > div');
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(query) ? '' : 'none';
-            });
-        };
-
-        window.submitAttendance = function() {
-            const selectKelas = document.getElementById('absensiSelectKelas');
-            const dateInput = document.getElementById('absensiTanggal');
-            const topicInput = document.getElementById('absensiMateri');
-            const teacherNotesInput = document.getElementById('absensiTeacherNotes');
-            const modulLinkInput = document.getElementById('absensiModulLink');
-
-            if (!selectKelas || !dateInput) return;
-
-            const classId = selectKelas.value.trim().toUpperCase();
-            const tanggal = dateInput.value;
-            const topic = topicInput ? topicInput.value.trim() : '';
-            const teacherNotes = teacherNotesInput ? teacherNotesInput.value.trim() : '';
-            const modulLink = modulLinkInput ? modulLinkInput.value.trim() : '';
-
-            if (!classId) {
-                window.showToast('Please select a KLC class.', 'warning');
-                return;
-            }
-            if (!tanggal) {
-                window.showToast('Please select a session date.', 'warning');
-                return;
-            }
-
-            const studentIds = Object.keys(window.currentAttendanceState);
-            if (studentIds.length === 0) {
-                window.showToast('No students loaded for attendance recording.', 'warning');
-                return;
-            }
-
-            const className = window.getCleanClassName(classId);
-
-            window.logs = window.logs.filter(l => {
-                const lCode = String(l.kodeKelas || '').toUpperCase();
-                const lDate = window.formatDisplayDate(l.tanggal);
-                return !(lCode === classId && lDate === tanggal);
-            });
-
-            const newRecords = [];
-            studentIds.forEach(sId => {
-                const item = window.currentAttendanceState[sId];
-                const remarkVal = item.remark || '';
-
-                const logRecord = {
-                    timestamp: new Date().toISOString(),
-                    tanggal: tanggal,
-                    idSiswa: sId,
-                    namaSiswa: item.name,
-                    kodeKelas: classId,
-                    namaKelas: className,
-                    status: item.status || 'Present',
-                    materi: topic,
-                    teacherNotes: teacherNotes,
-                    modulLink: modulLink,
-                    moduleLink: modulLink,
-                    remarks: remarkVal
-                };
-
-                newRecords.push(logRecord);
-                window.logs.push(logRecord);
-            });
-
-            window.saveLogsToStorage();
-            window.renderSummaryTable();
-            window.renderLogTable();
-            window.renderMateriGrid();
-
-            let gasUrl = localStorage.getItem('klc_gas_url');
-            if (gasUrl) {
-                window.showToast('Syncing attendance to Google Sheets...', 'info');
-                fetch(gasUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ records: newRecords })
-                }).then(() => {
-                    window.showToast('Attendance saved and synced!', 'success');
-                }).catch(err => {
-                    console.warn(err);
-                    window.showToast('Saved locally. Google Sheet sync queued.', 'warning');
-                });
-            } else {
-                window.showToast('Attendance saved locally!', 'success');
-            }
-
-            selectKelas.value = "";
-            if (topicInput) topicInput.value = "";
-            if (teacherNotesInput) teacherNotesInput.value = "";
-            if (modulLinkInput) modulLinkInput.value = "";
-            window.currentAttendanceState = {};
-            window.clearAttendanceFormView();
-            window.updateDashboardStats();
-        };
-
-        window.clearAttendanceFormView = function() {
-            const tbody = document.getElementById('attendanceTableBody');
-            const mobileCardList = document.getElementById('attendanceMobileCardList');
-            if (tbody) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400 text-xs font-medium">Please select a KLC Class above.</td></tr>`;
-            }
-            if (mobileCardList) {
-                mobileCardList.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs font-medium">Please select a KLC Class above.</div>`;
-            }
-            const countBadge = document.getElementById('countClassStudents');
-            if (countBadge) countBadge.innerText = '0 Students';
         };
 
         window.renderStudentTable = function() {
@@ -2626,6 +2735,101 @@ function doGet(e) {
             tbody.innerHTML = html;
         };
 
+        window.toggleSummaryViewMode = function(mode) {
+            const tableDiv = document.getElementById('summaryTableView');
+            const matrixDiv = document.getElementById('summaryMatrixView');
+            const btnTable = document.getElementById('btnViewTable');
+            const btnMatrix = document.getElementById('btnViewMatrix');
+
+            if (mode === 'matrix') {
+                if (tableDiv) tableDiv.classList.add('hidden');
+                if (matrixDiv) matrixDiv.classList.remove('hidden');
+                if (btnTable) btnTable.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer';
+                if (btnMatrix) btnMatrix.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs cursor-pointer';
+                window.renderSummaryMatrix();
+            } else {
+                if (tableDiv) tableDiv.classList.remove('hidden');
+                if (matrixDiv) matrixDiv.classList.add('hidden');
+                if (btnTable) btnTable.className = 'px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-xs cursor-pointer';
+                if (btnMatrix) btnMatrix.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer';
+            }
+        };
+
+        window.renderSummaryMatrix = function() {
+            const container = document.getElementById('matrixGridContainer');
+            if (!container) return;
+
+            const classFilter = document.getElementById('summaryFilterClass').value.toUpperCase();
+            const search = document.getElementById('summarySearchInput').value.toLowerCase();
+
+            const uniqueStudents = window.getUniqueStudents().filter(s => {
+                const matchClass = classFilter ? s.classes.some(item => {
+                    const cId = typeof item === 'object' ? item.id : item;
+                    return cId && String(cId).toUpperCase() === classFilter;
+                }) : true;
+                const matchSearch = s.name.toLowerCase().includes(search) || s.id.toLowerCase().includes(search);
+                return matchClass && matchSearch;
+            });
+
+            // Extract unique session dates
+            const dateSet = new Set();
+            (window.logs || []).forEach(l => {
+                if (l.tanggal) {
+                    const d = window.formatDisplayDate(l.tanggal);
+                    if (d && d !== '-') dateSet.add(d);
+                }
+            });
+
+            const dateArray = Array.from(dateSet).sort();
+            const badge = document.getElementById('matrixSessionCountBadge');
+            if (badge) badge.innerText = `${dateArray.length} Session Dates`;
+
+            if (uniqueStudents.length === 0 || dateArray.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">No session history data available for visual matrix grid.</div>`;
+                return;
+            }
+
+            let html = `
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 font-bold text-slate-700 border-b border-slate-200">
+                            <th class="p-2.5 min-w-[180px] sticky left-0 bg-slate-100 shadow-xs">Student Name</th>
+                            ${dateArray.map(d => `<th class="p-2.5 text-center min-w-[50px] font-mono text-[10px]">${window.parseToYYYYMMDD(d).slice(5)}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+            `;
+
+            uniqueStudents.forEach(stu => {
+                html += `<tr>`;
+                html += `<td class="p-2.5 font-bold text-slate-900 sticky left-0 bg-white border-r border-slate-100 truncate max-w-[180px]">${stu.name}</td>`;
+
+                dateArray.forEach(d => {
+                    const logMatch = (window.logs || []).find(l => String(l.idSiswa) === String(stu.id) && window.formatDisplayDate(l.tanggal) === d);
+                    let dotColor = 'bg-slate-200';
+                    let statusTitle = 'No Session';
+
+                    if (logMatch) {
+                        const st = logMatch.status || 'Present';
+                        if (window.isStatusPresent(st)) { dotColor = 'bg-emerald-500'; statusTitle = 'Present'; }
+                        else if (window.isStatusAbsent(st)) { dotColor = 'bg-rose-500'; statusTitle = 'Absent'; }
+                        else if (window.isStatusSick(st)) { dotColor = 'bg-amber-500'; statusTitle = 'Sick'; }
+                    }
+
+                    html += `
+                        <td class="p-2 text-center">
+                            <div class="w-4 h-4 mx-auto rounded-full ${dotColor} transition hover:scale-125" title="${d}: ${statusTitle}"></div>
+                        </td>
+                    `;
+                });
+
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        };
+
         window.renderSummaryTable = function() {
             const tbody = document.getElementById('summaryTableBody');
             if (!tbody) return;
@@ -2658,10 +2862,12 @@ function doGet(e) {
             filtered.forEach(stu => {
                 const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
                 const total = stuLogs.length;
-                const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-                const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
-                const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
-                const rate = total > 0 ? Math.round((present / total) * 100) : 100;
+                const present = stuLogs.filter(l => window.isStatusPresent(l.status)).length;
+                const absent = stuLogs.filter(l => window.isStatusAbsent(l.status)).length;
+                const sick = stuLogs.filter(l => window.isStatusSick(l.status)).length;
+                
+                // Jika belum ada record absensi, set persentase ke 0% (bukan 100%)
+                const rate = total > 0 ? Math.round((present / total) * 100) : 0;
 
                 totalHadirAll += present;
                 totalSessionsAll += total;
@@ -2669,13 +2875,13 @@ function doGet(e) {
                 if (rate < 75 && total > 0) lowCount++;
 
                 stuLogs.forEach(l => {
-                    const cId = (l.kodeKelas || '').toUpperCase();
-                    if (cId.includes('ENG')) {
+                    const catName = window.getClassCategory(l.kodeKelas, l.namaKelas);
+                    if (catName === 'English') {
                         englishTotal++;
-                        if (l.status === 'Present' || l.status === 'Hadir') englishHadir++;
-                    } else if (cId.includes('COMP')) {
+                        if (window.isStatusPresent(l.status)) englishHadir++;
+                    } else if (catName === 'Computer') {
                         computerTotal++;
-                        if (l.status === 'Present' || l.status === 'Hadir') computerHadir++;
+                        if (window.isStatusPresent(l.status)) computerHadir++;
                     }
                 });
 
@@ -2691,6 +2897,9 @@ function doGet(e) {
                     const displayName = window.getClassName(cId, cName);
                     return `<span class="px-2 py-0.5 text-[10px] font-bold bg-slate-100 rounded-md text-slate-700 mr-1 inline-block border border-slate-200">${displayName}</span>`;
                 }).join('');
+
+                const rateBadgeStyle = total === 0 ? 'bg-slate-100 text-slate-500 border-slate-200' : (rate >= 75 ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200');
+                const rateLabel = total === 0 ? 'No Data' : (rate >= 75 ? 'Good' : 'Review');
 
                 html += `
                     <tr class="hover:bg-slate-50 transition">
@@ -2712,14 +2921,16 @@ function doGet(e) {
                             </div>
                         </td>
                         <td class="p-3.5 text-center">
-                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md border ${rate >= 75 ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'}">
-                                ${rate >= 75 ? 'Good' : 'Review'}
+                            <span class="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-md border ${rateBadgeStyle}">
+                                ${rateLabel}
                             </span>
                         </td>
                         <td class="p-3.5 text-center">
-                            <button onclick="window.openStudentDetail('${stu.id}')" class="px-3 py-1 bg-slate-100 hover:bg-klc-50 text-slate-700 hover:text-klc-700 rounded-lg text-xs font-bold transition cursor-pointer border border-slate-200">
-                                History
-                            </button>
+                            <div class="flex items-center justify-center">
+                                <button onclick="window.openStudentDetail('${stu.id}')" class="px-3 py-1 bg-slate-100 hover:bg-klc-50 text-slate-700 hover:text-klc-700 rounded-lg text-xs font-bold transition cursor-pointer border border-slate-200">
+                                    History
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -2768,8 +2979,8 @@ function doGet(e) {
                 const statusVal = l.status || 'Present';
                 
                 let statusBadgeBg = 'bg-emerald-50 text-emerald-800 border-emerald-200';
-                if (statusVal === 'Absent' || statusVal === 'Tidak Hadir') statusBadgeBg = 'bg-rose-50 text-rose-800 border-rose-200';
-                if (statusVal === 'Sick' || statusVal === 'Sakit') statusBadgeBg = 'bg-amber-50 text-amber-800 border-amber-200';
+                if (window.isStatusAbsent(statusVal)) statusBadgeBg = 'bg-rose-50 text-rose-800 border-rose-200';
+                if (window.isStatusSick(statusVal)) statusBadgeBg = 'bg-amber-50 text-amber-800 border-amber-200';
 
                 const displayStatus = statusVal.toUpperCase();
                 const topicText = l.materi || l.topic || '-';
@@ -2797,7 +3008,7 @@ function doGet(e) {
                             <div class="font-bold text-slate-800 text-xs">${l.namaKelas || l.kodeKelas || '-'}</div>
                         </td>
                         <td class="py-3 px-3.5 text-center">
-                            <span class="px-2 py-0.5 rounded-md font-bold text-[10px] uppercase tracking-wider border ${statusBadgeBg}">${displayStatus}</span>
+                            <span class="px-2 py-0.5 rounded-md font-extrabold text-[10px] uppercase tracking-wider border ${statusBadgeBg}">${displayStatus}</span>
                         </td>
                         <td class="py-3 px-3.5 text-xs text-slate-700 font-semibold max-w-xs truncate">${topicText}</td>
                         <td class="py-3 px-3.5 text-center text-xs">${modulLinkHtml}</td>
@@ -2852,16 +3063,13 @@ function doGet(e) {
                 const classCode = String(l.kodeKelas || 'GENERAL').trim().toUpperCase();
                 const rawClassName = l.namaKelas || classCode;
                 const displayName = window.getClassName(classCode, rawClassName);
-                // Group by normalized class name instead of class code
-                const groupKey = displayName.trim().toUpperCase();
-                const dateClean = window.formatDisplayDate(l.tanggal);
-                const sessionKey = `${dateClean}_${classCode}`;
+                // Group by distinct Class Code to preserve individual class attendance percentages
+                const groupKey = classCode;
 
                 if (!classMap.has(groupKey)) {
                     classMap.set(groupKey, {
                         code: classCode,
                         name: displayName,
-                        codes: new Set([classCode]),
                         uniqueSessions: new Set(),
                         totalLogs: 0,
                         presentLogs: 0
@@ -2869,12 +3077,14 @@ function doGet(e) {
                 }
 
                 const entry = classMap.get(groupKey);
-                entry.codes.add(classCode);
+                const dateClean = window.formatDisplayDate(l.tanggal);
+                const sessionKey = `${dateClean}_${classCode}`;
+
                 if (dateClean && dateClean !== '-') {
                     entry.uniqueSessions.add(sessionKey);
                 }
                 entry.totalLogs += 1;
-                if (l.status === 'Present' || l.status === 'Hadir') {
+                if (window.isStatusPresent(l.status)) {
                     entry.presentLogs += 1;
                 }
             });
@@ -2882,7 +3092,7 @@ function doGet(e) {
             const perClassList = Array.from(classMap.values());
 
             if (countBadge) {
-                countBadge.innerText = `${perClassList.length} Class Categories`;
+                countBadge.innerText = `${perClassList.length} Classes`;
             }
 
             if (perClassList.length === 0) {
@@ -2899,32 +3109,34 @@ function doGet(e) {
 
             let totalSessionsConductedSum = 0;
             let totalHoursSum = 0;
-            let totalLogsOverall = 0;
-            let totalPresentOverall = 0;
+            let sumClassRates = 0;
+            let activeClassesCount = 0;
 
             let rowsHtml = '';
             perClassList.forEach(item => {
                 const sessionsConducted = item.uniqueSessions.size > 0 ? item.uniqueSessions.size : (item.totalLogs > 0 ? 1 : 0);
                 const totalHours = sessionsConducted * 1;
-                const rate = item.totalLogs > 0 ? Math.round((item.presentLogs / item.totalLogs) * 100) : 0;
+                const exactRate = item.totalLogs > 0 ? (item.presentLogs / item.totalLogs) * 100 : 0;
+                const rate = Math.round(exactRate);
+
+                if (item.totalLogs > 0) {
+                    sumClassRates += exactRate;
+                    activeClassesCount++;
+                }
 
                 totalSessionsConductedSum += sessionsConducted;
                 totalHoursSum += totalHours;
-                totalLogsOverall += item.totalLogs;
-                totalPresentOverall += item.presentLogs;
 
                 let rateColor = 'text-emerald-700 bg-emerald-50';
                 if (rate < 75) rateColor = 'text-rose-700 bg-rose-50';
-
-                const codesArray = Array.from(item.codes).filter(Boolean);
-                const codesLabel = codesArray.length > 0 ? ` <span class="text-[10px] text-slate-400 font-mono font-normal">(${codesArray.join(', ')})</span>` : '';
 
                 rowsHtml += `
                     <tr class="hover:bg-slate-50 transition">
                         <td class="p-3.5 font-bold text-slate-900">
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-klc-600 shrink-0"></span>
-                                <span>${item.name}${codesLabel}</span>
+                                <span>${item.name}</span>
+                                <span class="text-[10px] text-slate-400 font-mono font-bold bg-slate-100 px-2 py-0.5 rounded border border-slate-200">${item.code}</span>
                             </div>
                         </td>
                         <td class="p-3.5 text-center font-bold text-slate-800">${sessionsConducted} Sessions</td>
@@ -2940,11 +3152,12 @@ function doGet(e) {
 
             tbody.innerHTML = rowsHtml;
 
-            const overallAvgRate = totalLogsOverall > 0 ? Math.round((totalPresentOverall / totalLogsOverall) * 100) : 0;
+            // Calculate overall average as the unweighted mean (macro-average) of class rates
+            const overallAvgRate = activeClassesCount > 0 ? Math.round(sumClassRates / activeClassesCount) : 0;
 
             tfoot.innerHTML = `
                 <tr class="bg-slate-100 border-t-2 border-slate-200">
-                    <td class="p-3.5 text-slate-900 font-bold uppercase text-[10px] sm:text-[11px] tracking-wider">Overall Average</td>
+                    <td class="p-3.5 text-slate-900 font-extrabold uppercase text-[10px] sm:text-[11px] tracking-wider">Overall Class Average</td>
                     <td class="p-3.5 text-center font-bold text-slate-900">${totalSessionsConductedSum} Sessions</td>
                     <td class="p-3.5 text-center font-bold text-indigo-800">${totalHoursSum} Hours</td>
                     <td class="p-3.5 text-center">
@@ -2979,16 +3192,13 @@ function doGet(e) {
         window.cleanGeminiHtmlOutput = function(rawText) {
             if (!rawText) return '';
             
-            // 1. Remove markdown code fence indicators
             let clean = rawText.replace(/```html/gi, '').replace(/```/gi, '').trim();
 
-            // 2. Extract ONLY valid HTML <div>...</div> containers
             const divMatches = clean.match(/<div[\s\S]*?<\/div>/gi);
             if (divMatches && divMatches.length > 0) {
                 return divMatches.join('');
             }
 
-            // 3. Fallback cleanup if div regex didn't match (strip markdown prompts and labels)
             return clean.replace(/\*+/g, '').replace(/Section \d+ HTML:/gi, '').trim();
         };
 
@@ -3008,20 +3218,70 @@ function doGet(e) {
             }
 
             const filteredLogs = window.renderReportData();
-            
-            const totalLogEntries = filteredLogs.length;
-            const presentEntries = filteredLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const avgRate = totalLogEntries > 0 ? Math.round((presentEntries / totalLogEntries) * 100) : 0;
 
-            let engLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().includes('ENG'));
-            let engPresent = engLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            let engRate = engLogs.length > 0 ? Math.round((engPresent / engLogs.length) * 100) : 0;
+            // Calculate overall rate as mean of per-class attendance rates
+            const classLogsMap = new Map();
+            filteredLogs.forEach(l => {
+                const cKey = String(l.kodeKelas || l.namaKelas || 'GENERAL').trim().toUpperCase();
+                if (!classLogsMap.has(cKey)) classLogsMap.set(cKey, { total: 0, present: 0 });
+                const rec = classLogsMap.get(cKey);
+                rec.total++;
+                if (window.isStatusPresent(l.status)) rec.present++;
+            });
+
+            let sumRates = 0;
+            let activeClassesForAi = 0;
+            classLogsMap.forEach(c => {
+                if (c.total > 0) {
+                    sumRates += (c.present / c.total) * 100;
+                    activeClassesForAi++;
+                }
+            });
+            const avgRate = activeClassesForAi > 0 ? Math.round(sumRates / activeClassesForAi) : 0;
+
+            // English classes macro-average
+            const engClassMap = new Map();
+            filteredLogs.filter(l => window.getClassCategory(l.kodeKelas, l.namaKelas) === 'English').forEach(l => {
+                const cKey = String(l.kodeKelas || l.namaKelas || 'ENG').trim().toUpperCase();
+                if (!engClassMap.has(cKey)) engClassMap.set(cKey, { total: 0, present: 0 });
+                const rec = engClassMap.get(cKey);
+                rec.total++;
+                if (window.isStatusPresent(l.status)) rec.present++;
+            });
+
+            let engSumRates = 0, engClassCount = 0;
+            engClassMap.forEach(c => {
+                if (c.total > 0) {
+                    engSumRates += (c.present / c.total) * 100;
+                    engClassCount++;
+                }
+            });
+            let engRate = engClassCount > 0 ? Math.round(engSumRates / engClassCount) : 0;
+            let engLogs = filteredLogs.filter(l => window.getClassCategory(l.kodeKelas, l.namaKelas) === 'English');
             let engSessionsCount = new Set(engLogs.map(l => `${window.formatDisplayDate(l.tanggal)}_${l.kodeKelas}`)).size;
 
-            let compLogs = filteredLogs.filter(l => l.kodeKelas && l.kodeKelas.toUpperCase().includes('COMP'));
-            let compPresent = compLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            let compRate = compLogs.length > 0 ? Math.round((compPresent / compLogs.length) * 100) : 0;
+            // Computer classes macro-average
+            const compClassMap = new Map();
+            filteredLogs.filter(l => window.getClassCategory(l.kodeKelas, l.namaKelas) === 'Computer').forEach(l => {
+                const cKey = String(l.kodeKelas || l.namaKelas || 'COMP').trim().toUpperCase();
+                if (!compClassMap.has(cKey)) compClassMap.set(cKey, { total: 0, present: 0 });
+                const rec = compClassMap.get(cKey);
+                rec.total++;
+                if (window.isStatusPresent(l.status)) rec.present++;
+            });
+
+            let compSumRates = 0, compClassCount = 0;
+            compClassMap.forEach(c => {
+                if (c.total > 0) {
+                    compSumRates += (c.present / c.total) * 100;
+                    compClassCount++;
+                }
+            });
+            let compRate = compClassCount > 0 ? Math.round(compSumRates / compClassCount) : 0;
+            let compLogs = filteredLogs.filter(l => window.getClassCategory(l.kodeKelas, l.namaKelas) === 'Computer');
             let compSessionsCount = new Set(compLogs.map(l => `${window.formatDisplayDate(l.tanggal)}_${l.kodeKelas}`)).size;
+
+            const totalLogEntries = filteredLogs.length;
 
             const engBadge = document.getElementById('aiEngRateBadge');
             const engBar = document.getElementById('aiEngBar');
@@ -3067,7 +3327,7 @@ function doGet(e) {
             }
 
             try {
-                const systemPromptText = "You are an educational analyst for Kaura Learning Centre (KLC). Output ONLY raw HTML div elements containing the analysis report. Do NOT output any preamble, role prompt echo, section labels (such as '**Section 1 HTML:**'), meta-text, bullet checklists outside div, or markdown code fences.";
+                const systemPromptText = "You are an educational analyst for Kaura Learning Centre (KLC). Output ONLY raw HTML div elements containing the analysis report. Do NOT output any preamble, role prompt echo, section labels, meta-text, or markdown code fences.";
                 
                 const userQuery = `Analyze the following KLC attendance data and produce EXACTLY 3 clean HTML card containers. Each card MUST combine a concise overview paragraph AND 2-3 structured bullet points (<ul class="list-disc pl-4 mt-2 space-y-1"><li>...</li></ul>) to highlight key findings:
 
@@ -3099,7 +3359,7 @@ Data Summary:
                         }
                     }
                 } catch (e) {
-                    console.warn('Could not list models automatically from API key:', e);
+                    console.warn('Could not list models automatically:', e);
                 }
 
                 const fallbackModels = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-flash-lite', 'gemini-1.5-flash-latest'];
@@ -3167,13 +3427,12 @@ Data Summary:
             }
         };
 
-
         window.showToast = function(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const toast = document.createElement('div');
-            toast.className = `pointer-events-auto p-3.5 rounded-xl text-xs font-semibold text-white shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-3 ${
+            toast.className = `pointer-events-auto p-3.5 rounded-xl text-xs font-bold text-white shadow-lg transition-all duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-3 ${
                 type === 'success' ? 'bg-emerald-700' :
                 type === 'error' ? 'bg-rose-600' :
                 type === 'warning' ? 'bg-amber-600' : 'bg-slate-800'
@@ -3225,7 +3484,6 @@ Data Summary:
             const avgAttendanceElem = document.getElementById('statAvgAttendanceRate');
             const totalStudentsElem = document.getElementById('statTotalStudents');
 
-            // Compute actual conducted sessions count to date directly from attendance logs
             const uniqueConductedSessions = new Set(
                 (window.logs || [])
                     .filter(l => l && l.tanggal && l.kodeKelas)
@@ -3235,9 +3493,29 @@ Data Summary:
             const uniqueStudents = window.getUniqueStudents();
             const totalStudents = uniqueStudents.length;
 
-            const totalLogs = (window.logs || []).length;
-            const presentLogs = (window.logs || []).filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const avgRate = totalLogs > 0 ? Math.round((presentLogs / totalLogs) * 100) : 0;
+            // Calculate overall attendance rate as mean of per-class attendance rates
+            const classStats = new Map();
+            (window.logs || []).forEach(l => {
+                if (!l || !l.kodeKelas) return;
+                const cId = String(l.kodeKelas).trim().toUpperCase();
+                if (!classStats.has(cId)) {
+                    classStats.set(cId, { total: 0, present: 0 });
+                }
+                const stat = classStats.get(cId);
+                stat.total++;
+                if (window.isStatusPresent(l.status)) stat.present++;
+            });
+
+            let sumClassRates = 0;
+            let activeClassesCount = 0;
+            classStats.forEach(st => {
+                if (st.total > 0) {
+                    sumClassRates += (st.present / st.total) * 100;
+                    activeClassesCount++;
+                }
+            });
+
+            const avgRate = activeClassesCount > 0 ? Math.round(sumClassRates / activeClassesCount) : 0;
 
             if (totalClassesElem) totalClassesElem.innerHTML = `${uniqueConductedSessions} <span class="text-xs font-normal text-slate-500">Conducted</span>`;
             if (avgAttendanceElem) avgAttendanceElem.innerText = `${avgRate}%`;
@@ -3433,9 +3711,9 @@ Data Summary:
             if (modalId) modalId.innerText = `ID: ${student.id}`;
 
             const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(student.id));
-            const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-            const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
-            const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
+            const present = stuLogs.filter(l => window.isStatusPresent(l.status)).length;
+            const absent = stuLogs.filter(l => window.isStatusAbsent(l.status)).length;
+            const sick = stuLogs.filter(l => window.isStatusSick(l.status)).length;
 
             document.getElementById('modalCountHadir').innerText = present;
             document.getElementById('modalCountTidakHadir').innerText = absent;
@@ -3451,8 +3729,8 @@ Data Summary:
                         const dateClean = window.parseToYYYYMMDD(window.formatDisplayDate(l.tanggal));
                         const statusVal = l.status || 'Present';
                         let stBadge = 'bg-emerald-100 text-emerald-800';
-                        if (statusVal === 'Absent' || statusVal === 'Tidak Hadir') stBadge = 'bg-rose-100 text-rose-800';
-                        if (statusVal === 'Sick' || statusVal === 'Sakit') stBadge = 'bg-amber-100 text-amber-800';
+                        if (window.isStatusAbsent(statusVal)) stBadge = 'bg-rose-100 text-rose-800';
+                        if (window.isStatusSick(statusVal)) stBadge = 'bg-amber-100 text-amber-800';
 
                         html += `
                             <tr>
@@ -3482,14 +3760,59 @@ Data Summary:
             }
 
             window.showToast('Generating report card image...', 'info');
-            html2canvas(cardArea, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+
+            // Save original styling
+            const originalMaxHeight = cardArea.style.maxHeight;
+            const originalOverflow = cardArea.style.overflow;
+
+            // Temporarily disable scroll / max height limits so html2canvas renders the full height & text
+            cardArea.style.maxHeight = 'none';
+            cardArea.style.overflow = 'visible';
+
+            // Un-restrict inner scrolling containers
+            const innerScrolls = cardArea.querySelectorAll('.overflow-x-auto, .overflow-y-auto, .custom-scrollbar');
+            const originalInnerOverflows = [];
+            innerScrolls.forEach(el => {
+                originalInnerOverflows.push({
+                    el: el,
+                    overflow: el.style.overflow,
+                    maxHeight: el.style.maxHeight
+                });
+                el.style.overflow = 'visible';
+                el.style.maxHeight = 'none';
+            });
+
+            html2canvas(cardArea, { 
+                scale: 2, 
+                useCORS: true, 
+                backgroundColor: '#ffffff',
+                windowWidth: Math.max(cardArea.scrollWidth, 800),
+                windowHeight: cardArea.scrollHeight
+            }).then(canvas => {
+                // Restore original styling
+                cardArea.style.maxHeight = originalMaxHeight;
+                cardArea.style.overflow = originalOverflow;
+                originalInnerOverflows.forEach(item => {
+                    item.el.style.overflow = item.overflow;
+                    item.el.style.maxHeight = item.maxHeight;
+                });
+
                 const link = document.createElement('a');
-                link.download = `KLC_ReportCard_${new Date().toISOString().split('T')[0]}.png`;
+                const studentName = document.getElementById('modalSummaryName')?.innerText || 'Student';
+                const cleanName = studentName.replace(/[^a-zA-Z0-9]/g, '_');
+                link.download = `KLC_Raport_${cleanName}_${new Date().toISOString().split('T')[0]}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                window.showToast('Report card downloaded!', 'success');
+                window.showToast('Raport image downloaded successfully!', 'success');
             }).catch(err => {
                 console.error(err);
+                // Restore original styling in catch
+                cardArea.style.maxHeight = originalMaxHeight;
+                cardArea.style.overflow = originalOverflow;
+                originalInnerOverflows.forEach(item => {
+                    item.el.style.overflow = item.overflow;
+                    item.el.style.maxHeight = item.maxHeight;
+                });
                 window.showToast('Failed to download image.', 'error');
             });
         };
@@ -3506,10 +3829,10 @@ Data Summary:
             uniqueStudents.forEach(stu => {
                 const stuLogs = window.logs.filter(l => String(l.idSiswa) === String(stu.id));
                 const total = stuLogs.length;
-                const present = stuLogs.filter(l => l.status === 'Present' || l.status === 'Hadir').length;
-                const absent = stuLogs.filter(l => l.status === 'Absent' || l.status === 'Tidak Hadir').length;
-                const sick = stuLogs.filter(l => l.status === 'Sick' || l.status === 'Sakit').length;
-                const rate = total > 0 ? Math.round((present / total) * 100) : 100;
+                const present = stuLogs.filter(l => window.isStatusPresent(l.status)).length;
+                const absent = stuLogs.filter(l => window.isStatusAbsent(l.status)).length;
+                const sick = stuLogs.filter(l => window.isStatusSick(l.status)).length;
+                const rate = total > 0 ? Math.round((present / total) * 100) : 0;
                 const classNames = (stu.classes || []).map(c => typeof c === 'object' ? c.name : c).join('; ');
 
                 csvContent += `"${stu.id}","${stu.name}","${classNames}",${total},${present},${absent},${sick},${rate}%\n`;
